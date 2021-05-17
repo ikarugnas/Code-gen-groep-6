@@ -20,6 +20,7 @@ import javax.validation.constraints.*;
 
 
 public class AccountWithTransactions   {
+
   @JsonProperty("iban")
   private String iban = null;
 
