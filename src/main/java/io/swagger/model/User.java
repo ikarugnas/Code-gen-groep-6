@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.model.AccountWithTransactions;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -16,8 +20,11 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-17T11:49:32.019Z[GMT]")
 
-
+@Entity
 public class User   {
+
+  @Id
+  @GeneratedValue
   @JsonProperty("id")
   private Long id = null;
 
@@ -33,47 +40,30 @@ public class User   {
   @JsonProperty("email")
   private String email = null;
 
-  /**
-   * Gets or Sets role
-   */
-  public enum RoleEnum {
-    CUSTOMER("Customer"),
-    
-    EMPLOYEE("Employee");
-
-    private String value;
-
-    RoleEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static RoleEnum fromValue(String text) {
-      for (RoleEnum b : RoleEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
   @JsonProperty("role")
-  private RoleEnum role = null;
+  private UserRole role = null;
 
-  @JsonProperty("account")
-  private AccountWithTransactions account = null;
+//  @JsonProperty("account")
+//  private AccountWithTransactions account = null;
 
   @JsonProperty("dayLimit")
   private Double dayLimit = null;
 
   @JsonProperty("transactionLimit")
   private Double transactionLimit = null;
+
+  public User() {
+  }
+
+  public User(String username, String password, String name, String email, UserRole role, Double dayLimit, Double transactionLimit) {
+    this.username = username;
+    this.password = password;
+    this.name = name;
+    this.email = email;
+    this.role = role;
+    this.dayLimit = dayLimit;
+    this.transactionLimit = transactionLimit;
+  }
 
   public User id(Long id) {
     this.id = id;
@@ -174,7 +164,7 @@ public class User   {
     this.email = email;
   }
 
-  public User role(RoleEnum role) {
+  public User role(UserRole role) {
     this.role = role;
     return this;
   }
@@ -186,38 +176,38 @@ public class User   {
   @Schema(example = "Customer", required = true, description = "")
       @NotNull
 
-    public RoleEnum getRole() {
+    public UserRole getRole() {
     return role;
   }
 
-  public void setRole(RoleEnum role) {
+  public void setRole(UserRole role) {
     this.role = role;
   }
 
-  public User account(AccountWithTransactions account) {
-    this.account = account;
-    return this;
-  }
+//  public User account(AccountWithTransactions account) {
+//    this.account = account;
+//    return this;
+//  }
 
   /**
    * Get account
    * @return account
    **/
-  @Schema(description = "")
-  
-    @Valid
-    public AccountWithTransactions getAccount() {
-    return account;
-  }
-
-  public void setAccount(AccountWithTransactions account) {
-    this.account = account;
-  }
-
-  public User dayLimit(Double dayLimit) {
-    this.dayLimit = dayLimit;
-    return this;
-  }
+//  @Schema(description = "")
+//
+//    @Valid
+//    public AccountWithTransactions getAccount() {
+//    return account;
+//  }
+//
+//  public void setAccount(AccountWithTransactions account) {
+//    this.account = account;
+//  }
+//
+//  public User dayLimit(Double dayLimit) {
+//    this.dayLimit = dayLimit;
+//    return this;
+//  }
 
   /**
    * Get dayLimit
@@ -268,14 +258,15 @@ public class User   {
         Objects.equals(this.name, user.name) &&
         Objects.equals(this.email, user.email) &&
         Objects.equals(this.role, user.role) &&
-        Objects.equals(this.account, user.account) &&
+//        Objects.equals(this.account, user.account) &&
         Objects.equals(this.dayLimit, user.dayLimit) &&
         Objects.equals(this.transactionLimit, user.transactionLimit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, password, name, email, role, account, dayLimit, transactionLimit);
+//    return Objects.hash(id, username, password, name, email, role, account, dayLimit, transactionLimit);
+    return Objects.hash(id, username, password, name, email, role, dayLimit, transactionLimit);
   }
 
   @Override
@@ -289,7 +280,7 @@ public class User   {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    role: ").append(toIndentedString(role)).append("\n");
-    sb.append("    account: ").append(toIndentedString(account)).append("\n");
+//    sb.append("    account: ").append(toIndentedString(account)).append("\n");
     sb.append("    dayLimit: ").append(toIndentedString(dayLimit)).append("\n");
     sb.append("    transactionLimit: ").append(toIndentedString(transactionLimit)).append("\n");
     sb.append("}");

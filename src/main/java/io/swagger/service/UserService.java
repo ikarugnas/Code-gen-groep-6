@@ -16,6 +16,10 @@ public class UserService {
     }
 
     public User createUser(RegisterDTO userDTO){
+        User user = new User(userDTO.getUsername(), userDTO.getPassword(), userDTO.getName(), userDTO.getEmail(), userDTO.getRole(), userDTO.getDayLimit(), userDTO.getTransactionLimit());
+
+        userRepository.save(user);
+
         return userRepository.findUserByUsername(userDTO.getUsername());
     }
 }

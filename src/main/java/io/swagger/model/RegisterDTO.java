@@ -32,35 +32,8 @@ public class RegisterDTO   {
   /**
    * If no role is given default will be Customer.
    */
-  public enum RoleEnum {
-    CUSTOMER("Customer"),
-    
-    EMPLOYEE("Employee");
-
-    private String value;
-
-    RoleEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static RoleEnum fromValue(String text) {
-      for (RoleEnum b : RoleEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
   @JsonProperty("role")
-  private RoleEnum role = RoleEnum.CUSTOMER;
+  private UserRole role = UserRole.ROLE_Customer;
 
   @JsonProperty("dayLimit")
   private Double dayLimit = null;
@@ -148,7 +121,7 @@ public class RegisterDTO   {
     this.email = email;
   }
 
-  public RegisterDTO role(RoleEnum role) {
+  public RegisterDTO role(UserRole role) {
     this.role = role;
     return this;
   }
@@ -159,11 +132,11 @@ public class RegisterDTO   {
    **/
   @Schema(description = "If no role is given default will be Customer.")
   
-    public RoleEnum getRole() {
+    public UserRole getRole() {
     return role;
   }
 
-  public void setRole(RoleEnum role) {
+  public void setRole(UserRole role) {
     this.role = role;
   }
 
