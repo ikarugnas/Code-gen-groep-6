@@ -9,23 +9,23 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Body
+ * TransactionRequestBody
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-17T11:49:32.019Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-18T09:53:50.692Z[GMT]")
 
 
-public class Body   {
+public class TransactionRequestBody   {
   @JsonProperty("accountFrom")
   private String accountFrom = null;
 
   @JsonProperty("amount")
-  private Long amount = null;
+  private Double amount = null;
 
   @JsonProperty("accountTo")
   private String accountTo = null;
 
-  public Body accountFrom(String accountFrom) {
+  public TransactionRequestBody accountFrom(String accountFrom) {
     this.accountFrom = accountFrom;
     return this;
   }
@@ -45,7 +45,7 @@ public class Body   {
     this.accountFrom = accountFrom;
   }
 
-  public Body amount(Long amount) {
+  public TransactionRequestBody amount(Double amount) {
     this.amount = amount;
     return this;
   }
@@ -57,15 +57,15 @@ public class Body   {
   @Schema(example = "20", required = true, description = "")
       @NotNull
 
-    public Long getAmount() {
+    public Double getAmount() {
     return amount;
   }
 
-  public void setAmount(Long amount) {
+  public void setAmount(Double amount) {
     this.amount = amount;
   }
 
-  public Body accountTo(String accountTo) {
+  public TransactionRequestBody accountTo(String accountTo) {
     this.accountTo = accountTo;
     return this;
   }
@@ -94,10 +94,10 @@ public class Body   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Body body = (Body) o;
-    return Objects.equals(this.accountFrom, body.accountFrom) &&
-        Objects.equals(this.amount, body.amount) &&
-        Objects.equals(this.accountTo, body.accountTo);
+    TransactionRequestBody transactionRequestBody = (TransactionRequestBody) o;
+    return Objects.equals(this.accountFrom, transactionRequestBody.accountFrom) &&
+        Objects.equals(this.amount, transactionRequestBody.amount) &&
+        Objects.equals(this.accountTo, transactionRequestBody.accountTo);
   }
 
   @Override
@@ -108,7 +108,7 @@ public class Body   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Body {\n");
+    sb.append("class TransactionRequestBody {\n");
     
     sb.append("    accountFrom: ").append(toIndentedString(accountFrom)).append("\n");
     sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
