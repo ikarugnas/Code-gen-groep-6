@@ -5,7 +5,8 @@
  */
 package io.swagger.api;
 
-import io.swagger.model.Login;
+import io.swagger.model.LoginDTO;
+import io.swagger.model.RegisterDTO;
 import io.swagger.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -110,7 +111,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/login",
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> loginUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Login body);
+    ResponseEntity<Void> loginUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody LoginDTO body);
 
 
     @Operation(summary = "Register a user to the system.", description = "Register a user to the system.", security = {
@@ -126,7 +127,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users",
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> registerUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody User body);
+    ResponseEntity<Void> registerUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody RegisterDTO body);
 
 
     @Operation(summary = "Update a user", description = "Update the values of a user with the information that is given.", security = {

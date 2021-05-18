@@ -1,10 +1,10 @@
 package io.swagger.api;
 
-import io.swagger.model.Body;
 import io.swagger.model.Deposit;
 import io.swagger.model.DepositRequestBody;
 import org.threeten.bp.LocalDate;
 import io.swagger.model.Transaction;
+import io.swagger.model.TransactionRequestBody;
 import io.swagger.model.Withdrawal;
 import io.swagger.model.WithdrawalRequestBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,7 +68,7 @@ public class TransactionsApiController implements TransactionsApi {
         return new ResponseEntity<Deposit>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Transaction> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Body body) {
+    public ResponseEntity<Transaction> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody TransactionRequestBody body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
