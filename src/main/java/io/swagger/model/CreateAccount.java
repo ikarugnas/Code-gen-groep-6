@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
  * CreateAccount
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-17T11:49:32.019Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
 
 public class CreateAccount   {
@@ -23,7 +23,7 @@ public class CreateAccount   {
   public enum TypeEnum {
     CURRENT("Current"),
     
-    SAVING("Saving");
+    SAVINGS("Savings");
 
     private String value;
 
@@ -52,6 +52,42 @@ public class CreateAccount   {
 
   @JsonProperty("owner")
   private String owner = null;
+
+  @JsonProperty("absoluteLimit")
+  private Double absoluteLimit = null;
+
+  /**
+   * Gets or Sets active
+   */
+  public enum ActiveEnum {
+    ACTIVE("Active"),
+    
+    INACTIVE("Inactive");
+
+    private String value;
+
+    ActiveEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ActiveEnum fromValue(String text) {
+      for (ActiveEnum b : ActiveEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+  @JsonProperty("active")
+  private ActiveEnum active = ActiveEnum.ACTIVE;
 
   public CreateAccount type(TypeEnum type) {
     this.type = type;
@@ -93,6 +129,44 @@ public class CreateAccount   {
     this.owner = owner;
   }
 
+  public CreateAccount absoluteLimit(Double absoluteLimit) {
+    this.absoluteLimit = absoluteLimit;
+    return this;
+  }
+
+  /**
+   * Get absoluteLimit
+   * @return absoluteLimit
+   **/
+  @Schema(example = "0", description = "")
+  
+    public Double getAbsoluteLimit() {
+    return absoluteLimit;
+  }
+
+  public void setAbsoluteLimit(Double absoluteLimit) {
+    this.absoluteLimit = absoluteLimit;
+  }
+
+  public CreateAccount active(ActiveEnum active) {
+    this.active = active;
+    return this;
+  }
+
+  /**
+   * Get active
+   * @return active
+   **/
+  @Schema(description = "")
+  
+    public ActiveEnum getActive() {
+    return active;
+  }
+
+  public void setActive(ActiveEnum active) {
+    this.active = active;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -104,12 +178,14 @@ public class CreateAccount   {
     }
     CreateAccount createAccount = (CreateAccount) o;
     return Objects.equals(this.type, createAccount.type) &&
-        Objects.equals(this.owner, createAccount.owner);
+        Objects.equals(this.owner, createAccount.owner) &&
+        Objects.equals(this.absoluteLimit, createAccount.absoluteLimit) &&
+        Objects.equals(this.active, createAccount.active);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, owner);
+    return Objects.hash(type, owner, absoluteLimit, active);
   }
 
   @Override
@@ -119,6 +195,8 @@ public class CreateAccount   {
     
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    owner: ").append(toIndentedString(owner)).append("\n");
+    sb.append("    absoluteLimit: ").append(toIndentedString(absoluteLimit)).append("\n");
+    sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("}");
     return sb.toString();
   }

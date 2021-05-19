@@ -18,7 +18,7 @@ import javax.validation.constraints.*;
  * User
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-17T11:49:32.019Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
 @Entity
 public class User   {
@@ -64,6 +64,38 @@ public class User   {
     this.dayLimit = dayLimit;
     this.transactionLimit = transactionLimit;
   }
+  /**
+   * Gets or Sets userStatus
+   */
+  public enum UserStatusEnum {
+    ACTIVE("Active"),
+    
+    INACTIVE("Inactive");
+
+    private String value;
+
+    UserStatusEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static UserStatusEnum fromValue(String text) {
+      for (UserStatusEnum b : UserStatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+  @JsonProperty("userStatus")
+  private UserStatusEnum userStatus = null;
 
   public User id(Long id) {
     this.id = id;
@@ -213,8 +245,9 @@ public class User   {
    * Get dayLimit
    * @return dayLimit
    **/
-  @Schema(description = "")
-  
+  @Schema(required = true, description = "")
+      @NotNull
+
     public Double getDayLimit() {
     return dayLimit;
   }
@@ -232,14 +265,35 @@ public class User   {
    * Get transactionLimit
    * @return transactionLimit
    **/
-  @Schema(description = "")
-  
+  @Schema(required = true, description = "")
+      @NotNull
+
     public Double getTransactionLimit() {
     return transactionLimit;
   }
 
   public void setTransactionLimit(Double transactionLimit) {
     this.transactionLimit = transactionLimit;
+  }
+
+  public User userStatus(UserStatusEnum userStatus) {
+    this.userStatus = userStatus;
+    return this;
+  }
+
+  /**
+   * Get userStatus
+   * @return userStatus
+   **/
+  @Schema(required = true, description = "")
+      @NotNull
+
+    public UserStatusEnum getUserStatus() {
+    return userStatus;
+  }
+
+  public void setUserStatus(UserStatusEnum userStatus) {
+    this.userStatus = userStatus;
   }
 
 
@@ -260,13 +314,14 @@ public class User   {
         Objects.equals(this.role, user.role) &&
 //        Objects.equals(this.account, user.account) &&
         Objects.equals(this.dayLimit, user.dayLimit) &&
-        Objects.equals(this.transactionLimit, user.transactionLimit);
+        Objects.equals(this.transactionLimit, user.transactionLimit) &&
+        Objects.equals(this.userStatus, user.userStatus);
   }
 
   @Override
   public int hashCode() {
-//    return Objects.hash(id, username, password, name, email, role, account, dayLimit, transactionLimit);
-    return Objects.hash(id, username, password, name, email, role, dayLimit, transactionLimit);
+//    return Objects.hash(id, username, password, name, email, role, account, dayLimit, transactionLimit , userStatus);
+    return Objects.hash(id, username, password, name, email, role, dayLimit, transactionLimit, userStatus);
   }
 
   @Override
@@ -283,6 +338,7 @@ public class User   {
 //    sb.append("    account: ").append(toIndentedString(account)).append("\n");
     sb.append("    dayLimit: ").append(toIndentedString(dayLimit)).append("\n");
     sb.append("    transactionLimit: ").append(toIndentedString(transactionLimit)).append("\n");
+    sb.append("    userStatus: ").append(toIndentedString(userStatus)).append("\n");
     sb.append("}");
     return sb.toString();
   }

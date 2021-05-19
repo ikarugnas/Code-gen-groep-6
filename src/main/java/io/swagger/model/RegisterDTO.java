@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
  * RegisterDTO
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-18T09:53:50.692Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
 
 public class RegisterDTO   {
@@ -40,6 +40,39 @@ public class RegisterDTO   {
 
   @JsonProperty("transactionLimit")
   private Double transactionLimit = null;
+
+  /**
+   * Gets or Sets userStatus
+   */
+  public enum UserStatusEnum {
+    ACTIVE("Active"),
+    
+    INACTIVE("Inactive");
+
+    private String value;
+
+    UserStatusEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static UserStatusEnum fromValue(String text) {
+      for (UserStatusEnum b : UserStatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+  @JsonProperty("userStatus")
+  private UserStatusEnum userStatus = UserStatusEnum.ACTIVE;
 
   public RegisterDTO username(String username) {
     this.username = username;
@@ -178,6 +211,25 @@ public class RegisterDTO   {
     this.transactionLimit = transactionLimit;
   }
 
+  public RegisterDTO userStatus(UserStatusEnum userStatus) {
+    this.userStatus = userStatus;
+    return this;
+  }
+
+  /**
+   * Get userStatus
+   * @return userStatus
+   **/
+  @Schema(description = "")
+  
+    public UserStatusEnum getUserStatus() {
+    return userStatus;
+  }
+
+  public void setUserStatus(UserStatusEnum userStatus) {
+    this.userStatus = userStatus;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -194,12 +246,13 @@ public class RegisterDTO   {
         Objects.equals(this.email, registerDTO.email) &&
         Objects.equals(this.role, registerDTO.role) &&
         Objects.equals(this.dayLimit, registerDTO.dayLimit) &&
-        Objects.equals(this.transactionLimit, registerDTO.transactionLimit);
+        Objects.equals(this.transactionLimit, registerDTO.transactionLimit) &&
+        Objects.equals(this.userStatus, registerDTO.userStatus);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(username, password, name, email, role, dayLimit, transactionLimit);
+    return Objects.hash(username, password, name, email, role, dayLimit, transactionLimit, userStatus);
   }
 
   @Override
@@ -214,6 +267,7 @@ public class RegisterDTO   {
     sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("    dayLimit: ").append(toIndentedString(dayLimit)).append("\n");
     sb.append("    transactionLimit: ").append(toIndentedString(transactionLimit)).append("\n");
+    sb.append("    userStatus: ").append(toIndentedString(userStatus)).append("\n");
     sb.append("}");
     return sb.toString();
   }
