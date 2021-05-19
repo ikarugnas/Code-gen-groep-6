@@ -110,6 +110,10 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity registerUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody RegisterDTO body) {
         String accept = request.getHeader("Accept");
 
+        if (userService.usernameAlreadyExist(body.getUsername())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exits");
+        }
+
         User user = userService.createUser(body);
 
         return ResponseEntity

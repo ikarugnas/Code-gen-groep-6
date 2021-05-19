@@ -22,4 +22,8 @@ public class UserService {
 
         return userRepository.findUserByUsername(userDTO.getUsername());
     }
+
+    public boolean usernameAlreadyExist(String username) {
+        return (userRepository.findUserByUsername(username) != null);
+    }
 }
