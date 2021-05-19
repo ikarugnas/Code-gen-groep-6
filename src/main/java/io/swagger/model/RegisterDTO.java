@@ -36,43 +36,13 @@ public class RegisterDTO   {
   private UserRole role = UserRole.ROLE_Customer;
 
   @JsonProperty("dayLimit")
-  private Double dayLimit = null;
+  private Double dayLimit = 1000.00;
 
   @JsonProperty("transactionLimit")
-  private Double transactionLimit = null;
+  private Double transactionLimit = 500.00;
 
-  /**
-   * Gets or Sets userStatus
-   */
-  public enum UserStatusEnum {
-    ACTIVE("Active"),
-    
-    INACTIVE("Inactive");
-
-    private String value;
-
-    UserStatusEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static UserStatusEnum fromValue(String text) {
-      for (UserStatusEnum b : UserStatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
   @JsonProperty("userStatus")
-  private UserStatusEnum userStatus = UserStatusEnum.ACTIVE;
+  private UserStatus userStatus = UserStatus.Active;
 
   public RegisterDTO username(String username) {
     this.username = username;
@@ -211,7 +181,7 @@ public class RegisterDTO   {
     this.transactionLimit = transactionLimit;
   }
 
-  public RegisterDTO userStatus(UserStatusEnum userStatus) {
+  public RegisterDTO userStatus(UserStatus userStatus) {
     this.userStatus = userStatus;
     return this;
   }
@@ -222,11 +192,11 @@ public class RegisterDTO   {
    **/
   @Schema(description = "")
   
-    public UserStatusEnum getUserStatus() {
+    public UserStatus getUserStatus() {
     return userStatus;
   }
 
-  public void setUserStatus(UserStatusEnum userStatus) {
+  public void setUserStatus(UserStatus userStatus) {
     this.userStatus = userStatus;
   }
 

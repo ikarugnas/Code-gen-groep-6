@@ -16,7 +16,7 @@ public class UserService {
     }
 
     public User createUser(RegisterDTO userDTO){
-        User user = new User(userDTO.getUsername(), userDTO.getPassword(), userDTO.getName(), userDTO.getEmail(), userDTO.getRole(), userDTO.getDayLimit(), userDTO.getTransactionLimit());
+        User user = new User(userDTO.getUsername(), userDTO.getPassword(), userDTO.getName(), userDTO.getEmail(), userDTO.getRole(), userDTO.getDayLimit(), userDTO.getTransactionLimit(), userDTO.getUserStatus());
 
         userRepository.save(user);
 

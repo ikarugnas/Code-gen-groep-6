@@ -52,10 +52,13 @@ public class User   {
   @JsonProperty("transactionLimit")
   private Double transactionLimit = null;
 
+  @JsonProperty("userStatus")
+  private UserStatus userStatus = null;
+
   public User() {
   }
 
-  public User(String username, String password, String name, String email, UserRole role, Double dayLimit, Double transactionLimit) {
+  public User(String username, String password, String name, String email, UserRole role, Double dayLimit, Double transactionLimit, UserStatus userStatus) {
     this.username = username;
     this.password = password;
     this.name = name;
@@ -63,39 +66,8 @@ public class User   {
     this.role = role;
     this.dayLimit = dayLimit;
     this.transactionLimit = transactionLimit;
+    this.userStatus = userStatus;
   }
-  /**
-   * Gets or Sets userStatus
-   */
-  public enum UserStatusEnum {
-    ACTIVE("Active"),
-    
-    INACTIVE("Inactive");
-
-    private String value;
-
-    UserStatusEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static UserStatusEnum fromValue(String text) {
-      for (UserStatusEnum b : UserStatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("userStatus")
-  private UserStatusEnum userStatus = null;
 
   public User id(Long id) {
     this.id = id;
@@ -276,7 +248,7 @@ public class User   {
     this.transactionLimit = transactionLimit;
   }
 
-  public User userStatus(UserStatusEnum userStatus) {
+  public User userStatus(UserStatus userStatus) {
     this.userStatus = userStatus;
     return this;
   }
@@ -288,11 +260,11 @@ public class User   {
   @Schema(required = true, description = "")
       @NotNull
 
-    public UserStatusEnum getUserStatus() {
+    public UserStatus getUserStatus() {
     return userStatus;
   }
 
-  public void setUserStatus(UserStatusEnum userStatus) {
+  public void setUserStatus(UserStatus userStatus) {
     this.userStatus = userStatus;
   }
 
