@@ -1,10 +1,14 @@
 package io.swagger.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -251,5 +255,54 @@ public class RegisterDTO   {
       return "null";
     }
     return o.toString().replace("\n", "\n    ");
+  }
+
+  /**
+   * Looks for an empty property in this object
+   * returns what is empty/null or returns null
+   */
+  public String getNullOrEmptyProperties(){
+    List<String> emptyProperties = new ArrayList<String>();
+
+    if (this.username == null || this.username.isEmpty()){
+      emptyProperties.add("username");
+    }
+    if (this.password == null || this.password.isEmpty()){
+      emptyProperties.add("password");
+    }
+    if (this.name == null || this.name.isEmpty()){
+      emptyProperties.add("name");
+    }
+    if (this.email == null || this.email.isEmpty()){
+      emptyProperties.add("email");
+    }
+
+    int totalEmptyProperties = emptyProperties.size();
+
+    if (totalEmptyProperties > 0) {
+      // Get the first empty property and uppercase the first letter
+      StringBuilder emptyString = new StringBuilder();
+      emptyString.append(StringUtils.capitalize(emptyProperties.get(0)));
+      emptyProperties.remove(0);
+
+      // Add all properties to the string
+      if (emptyProperties.size() >= 1) {
+        while (emptyProperties.size() > 1) {
+          emptyString.append(", ").append(emptyProperties.get(0));
+          emptyProperties.remove(0);
+        }
+        emptyString.append(" and ").append(emptyProperties.get(0));
+      }
+
+      if (totalEmptyProperties > 1){
+        emptyString.append(" are empty");
+      } else {
+        emptyString.append(" is empty");
+      }
+
+      return emptyString.toString();
+    }
+
+    return null;
   }
 }

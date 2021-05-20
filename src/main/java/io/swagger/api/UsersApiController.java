@@ -102,13 +102,28 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<List<User>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> loginUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody LoginDTO body) {
+    public ResponseEntity loginUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody LoginDTO body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+
+        String emptyProperty = body.HasNullOrEmptyProperties();
+        if (emptyProperty != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
+        }
+
+        if (userService.loginUser(body)) {
+            return ResponseEntity.status(HttpStatus.OK).body("User logged in succesfull");
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Password is incorrect");
     }
 
     public ResponseEntity registerUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody RegisterDTO body) {
         String accept = request.getHeader("Accept");
+
+        String emptyProperty = body.getNullOrEmptyProperties();
+        if (emptyProperty != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
+        }
 
         if (userService.usernameAlreadyExist(body.getUsername())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exits");

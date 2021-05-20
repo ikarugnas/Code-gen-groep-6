@@ -102,4 +102,36 @@ public class LoginDTO   {
     }
     return o.toString().replace("\n", "\n    ");
   }
+
+  /**
+   * Looks for an empty property in this object
+   * returns what is empty/null or returns null
+   */
+  public String HasNullOrEmptyProperties(){
+    String emptyProperties = "";
+    int total = 0;
+
+    if (this.username == null || this.username.isEmpty()){
+      emptyProperties += "Username";
+      total++;
+    }
+    if (this.password == null || this.password.isEmpty()){
+      if (total >= 1){
+        emptyProperties += " and password";
+      } else { emptyProperties += "Password"; }
+      total++;
+    }
+
+    if (!emptyProperties.isEmpty()) {
+      if (total > 1) {
+        emptyProperties += " are empty";
+      } else {
+        emptyProperties += " is empty";
+      }
+
+      return emptyProperties;
+    }
+    return null;
+  }
+
 }
