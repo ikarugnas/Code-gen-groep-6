@@ -120,13 +120,20 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity registerUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody RegisterDTO body) {
         String accept = request.getHeader("Accept");
 
+        // Check if any property of the requestbody is empty or null
         String emptyProperty = body.getNullOrEmptyProperties();
         if (emptyProperty != null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
         }
 
+        // Check if username already exists
         if (userService.usernameAlreadyExist(body.getUsername())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exits");
+        }
+
+        //Check if email is valid
+        if (!validEmail(body.getEmail())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email address is invalid");
         }
 
         User user = userService.createUser(body);
@@ -141,4 +148,20 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    private boolean validEmail(String email) {
+        // Checks if email has an @
+        if (!email.matches("(.+)(\\@)(.+)")) { return false; }
+
+        String[] splitEmail = email.split("@");
+        String prefix = splitEmail[0];
+        String domain = splitEmail[1];
+
+        // Checks if prefix is valid
+        if (!(prefix.matches("[a-zA-Z0-9]+") || prefix.matches("([a-zA-Z0-9]+)([\\-\\.\\_])([a-zA-Z0-9]+)"))) { return false; }
+
+        // Checks if domain is valid
+        if (!(domain.matches("([a-zA-Z0-9]+)([\\.])([a-z]{2,})") || domain.matches("([a-zA-Z0-9]+)(\\-)([a-zA-Z0-9]+)([\\.])([a-z]{2,})"))) { return false; }
+
+        return true;
+    }
 }
