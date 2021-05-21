@@ -6,6 +6,8 @@ import io.swagger.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -21,5 +23,11 @@ public class UserService {
         userRepository.save(user);
 
         return userRepository.findUserByUsername(userDTO.getUsername());
+    }
+
+    public List<User> getAllUsers() {
+
+
+        return userRepository.findAll();
     }
 }
