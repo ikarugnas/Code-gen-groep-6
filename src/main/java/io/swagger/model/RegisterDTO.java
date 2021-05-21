@@ -58,7 +58,6 @@ public class RegisterDTO   {
    * @return username
    **/
   @Schema(example = "BG12345", required = true, description = "")
-      @NotNull
 
     public String getUsername() {
     return username;
@@ -78,7 +77,6 @@ public class RegisterDTO   {
    * @return password
    **/
   @Schema(example = "hiIamapassword4$", required = true, description = "")
-      @NotNull
 
     public String getPassword() {
     return password;
@@ -98,7 +96,6 @@ public class RegisterDTO   {
    * @return name
    **/
   @Schema(example = "Bert Geersen", required = true, description = "")
-      @NotNull
 
     public String getName() {
     return name;
@@ -118,7 +115,6 @@ public class RegisterDTO   {
    * @return email
    **/
   @Schema(example = "BertGeersen1@gmail.com", required = true, description = "")
-      @NotNull
 
     public String getEmail() {
     return email;
