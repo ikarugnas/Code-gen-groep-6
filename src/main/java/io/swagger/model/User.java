@@ -1,6 +1,8 @@
 package io.swagger.model;
 
 import java.util.Objects;
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -26,7 +28,7 @@ public class User   {
   @Id
   @GeneratedValue
   @JsonProperty("id")
-  private Long id = null;
+  private UUID id = null;
 
   @JsonProperty("username")
   private String username = null;
@@ -69,7 +71,7 @@ public class User   {
     this.userStatus = userStatus;
   }
 
-  public User id(Long id) {
+  public User id(UUID id) {
     this.id = id;
     return this;
   }
@@ -80,11 +82,11 @@ public class User   {
    **/
   @Schema(example = "1", description = "")
   
-    public Long getId() {
+    public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

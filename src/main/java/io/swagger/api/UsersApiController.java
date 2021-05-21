@@ -141,7 +141,7 @@ public class UsersApiController implements UsersApi {
         if (passwordValidation != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(passwordValidation);
         }
-        
+
         User user = userService.createUser(body);
 
         return ResponseEntity
@@ -184,15 +184,14 @@ public class UsersApiController implements UsersApi {
         }
 
         // Check if password has a number
-        if ((password.matches("(.*)([0-9])(.*)"))) {
+        if (!(password.matches("(.*)([0-9])(.*)"))) {
             return "Password is invalid (password misses a number)!";
         }
 
         // Check if password has one of these special characters (!, @, #, $, %, ^, & or *)
-        if ((password.matches("(.*)([\\!\\@\\#\\$\\%\\^\\&\\*])(.*)"))) {
+        if (!(password.matches("(.*)([\\!\\@\\#\\$\\%\\^\\&\\*])(.*)"))) {
             return "Password is invalid (password misses one of these special characters [!, @, #, $, %, ^, & or *])!";
         }
-
 
         // returns null if password is valid
         return null;
