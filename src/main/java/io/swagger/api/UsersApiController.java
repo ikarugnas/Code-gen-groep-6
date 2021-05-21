@@ -131,11 +131,17 @@ public class UsersApiController implements UsersApi {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exits");
         }
 
-        //Check if email is valid
+        // Check if email is valid
         if (!validEmail(body.getEmail())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email address is invalid");
         }
 
+        // Check if password meets requirements
+        String passwordValidation = validatePassword(body.getPassword());
+        if (passwordValidation != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(passwordValidation);
+        }
+        
         User user = userService.createUser(body);
 
         return ResponseEntity
@@ -164,4 +170,32 @@ public class UsersApiController implements UsersApi {
 
         return true;
     }
+
+    private String validatePassword(String password) {
+
+        // Check if password length is 8 or more
+        if (password.length() < 8) {
+            return "Password is invalid (password length must be 8 or more)";
+        }
+
+        // Check if password has a capital letter
+        if (!(password.matches("(.*)([A-Z])(.*)"))) {
+            return "Password is invalid (password misses a captital letter)!";
+        }
+
+        // Check if password has a number
+        if ((password.matches("(.*)([0-9])(.*)"))) {
+            return "Password is invalid (password misses a number)!";
+        }
+
+        // Check if password has one of these special characters (!, @, #, $, %, ^, & or *)
+        if ((password.matches("(.*)([\\!\\@\\#\\$\\%\\^\\&\\*])(.*)"))) {
+            return "Password is invalid (password misses one of these special characters [!, @, #, $, %, ^, & or *])!";
+        }
+
+
+        // returns null if password is valid
+        return null;
+    }
+
 }
