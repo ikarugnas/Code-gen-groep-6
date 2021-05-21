@@ -105,7 +105,7 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity loginUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody LoginDTO body) {
         String accept = request.getHeader("Accept");
 
-        String emptyProperty = body.HasNullOrEmptyProperties();
+        String emptyProperty = body.getNullOrEmptyProperties();
         if (emptyProperty != null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
         }

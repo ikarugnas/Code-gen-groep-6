@@ -107,29 +107,29 @@ public class LoginDTO   {
    * Looks for an empty property in this object
    * returns what is empty/null or returns null
    */
-  public String HasNullOrEmptyProperties(){
-    String emptyProperties = "";
+  public String getNullOrEmptyProperties(){
+    StringBuilder emptyProperties = new StringBuilder();
     int total = 0;
 
     if (this.username == null || this.username.isEmpty()){
-      emptyProperties += "Username";
+      emptyProperties.append("Username");
       total++;
     }
     if (this.password == null || this.password.isEmpty()){
       if (total >= 1){
-        emptyProperties += " and password";
-      } else { emptyProperties += "Password"; }
+        emptyProperties.append(" and password");
+      } else { emptyProperties.append("Password"); }
       total++;
     }
 
-    if (!emptyProperties.isEmpty()) {
+    if (total > 0) {
       if (total > 1) {
-        emptyProperties += " are empty";
+        emptyProperties.append(" are empty");
       } else {
-        emptyProperties += " is empty";
+        emptyProperties.append(" is empty");
       }
 
-      return emptyProperties;
+      return emptyProperties.toString();
     }
     return null;
   }

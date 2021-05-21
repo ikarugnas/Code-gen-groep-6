@@ -264,6 +264,7 @@ public class RegisterDTO   {
   public String getNullOrEmptyProperties(){
     List<String> emptyProperties = new ArrayList<String>();
 
+    // Empty properties are added to the list
     if (this.username == null || this.username.isEmpty()){
       emptyProperties.add("username");
     }
