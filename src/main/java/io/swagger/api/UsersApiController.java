@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -106,15 +107,15 @@ public class UsersApiController implements UsersApi {
         String accept = request.getHeader("Accept");
 
         String emptyProperty = body.getNullOrEmptyProperties();
-        if (emptyProperty != null){
+        if (emptyProperty != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
         }
 
-        if (userService.loginUser(body)) {
-            return ResponseEntity.status(HttpStatus.OK).body("User logged in succesfull");
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(body));
+        } catch (ResponseStatusException responseStatusException) {
+            return ResponseEntity.status(responseStatusException.getStatus()).body(responseStatusException.getReason());
         }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Password is incorrect");
     }
 
     public ResponseEntity registerUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody RegisterDTO body) {
@@ -128,18 +129,18 @@ public class UsersApiController implements UsersApi {
 
         // Check if username already exists
         if (userService.usernameAlreadyExist(body.getUsername())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exits");
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username already exits");
         }
 
         // Check if email is valid
         if (!validEmail(body.getEmail())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email address is invalid");
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Email address is invalid");
         }
 
         // Check if password meets requirements
         String passwordValidation = validatePassword(body.getPassword());
         if (passwordValidation != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(passwordValidation);
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(passwordValidation);
         }
 
         User user = userService.createUser(body);

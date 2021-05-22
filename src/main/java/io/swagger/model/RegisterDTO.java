@@ -48,6 +48,24 @@ public class RegisterDTO   {
   @JsonProperty("userStatus")
   private UserStatus userStatus = UserStatus.Active;
 
+  public RegisterDTO() {
+  }
+
+  public RegisterDTO(String username, String password, String name, String email) {
+    this.username = username;
+    this.password = password;
+    this.name = name;
+    this.email = email;
+  }
+
+  public RegisterDTO(String username, String password, String name, String email, UserRole role) {
+    this.username = username;
+    this.password = password;
+    this.name = name;
+    this.email = email;
+    this.role = role;
+  }
+
   public RegisterDTO username(String username) {
     this.username = username;
     return this;
