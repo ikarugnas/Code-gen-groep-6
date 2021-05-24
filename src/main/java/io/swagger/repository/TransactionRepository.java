@@ -19,4 +19,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("username") String username);
 
     Transaction findTransactionByDate(DateFormat dateFrom, DateFormat dateTo);
+    
 }
