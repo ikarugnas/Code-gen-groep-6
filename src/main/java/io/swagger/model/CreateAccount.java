@@ -20,9 +20,35 @@ public class CreateAccount   {
   /**
    * Gets or Sets type
    */
+  public enum TypeEnum {
+    CURRENT("Current"),
+    
+    SAVINGS("Savings");
 
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
   @JsonProperty("type")
-  private AccountType type = null;
+  private TypeEnum type = null;
 
   @JsonProperty("owner")
   private String owner = null;
@@ -33,11 +59,37 @@ public class CreateAccount   {
   /**
    * Gets or Sets active
    */
+  public enum ActiveEnum {
+    ACTIVE("Active"),
+    
+    INACTIVE("Inactive");
 
+    private String value;
+
+    ActiveEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ActiveEnum fromValue(String text) {
+      for (ActiveEnum b : ActiveEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
   @JsonProperty("active")
-  private UserStatus active = null;
+  private ActiveEnum active = ActiveEnum.ACTIVE;
 
-  public CreateAccount type(AccountType type) {
+  public CreateAccount type(TypeEnum type) {
     this.type = type;
     return this;
   }
@@ -49,11 +101,11 @@ public class CreateAccount   {
   @Schema(required = true, description = "")
       @NotNull
 
-    public AccountType getType() {
+    public TypeEnum getType() {
     return type;
   }
 
-  public void setType(AccountType type) {
+  public void setType(TypeEnum type) {
     this.type = type;
   }
 
@@ -96,7 +148,7 @@ public class CreateAccount   {
     this.absoluteLimit = absoluteLimit;
   }
 
-  public CreateAccount active(UserStatus active) {
+  public CreateAccount active(ActiveEnum active) {
     this.active = active;
     return this;
   }
@@ -107,11 +159,11 @@ public class CreateAccount   {
    **/
   @Schema(description = "")
   
-    public UserStatus getActive() {
+    public ActiveEnum getActive() {
     return active;
   }
 
-  public void setActive(UserStatus active) {
+  public void setActive(ActiveEnum active) {
     this.active = active;
   }
 

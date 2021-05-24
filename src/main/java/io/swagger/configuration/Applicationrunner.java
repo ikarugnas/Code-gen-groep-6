@@ -1,8 +1,8 @@
 package io.swagger.configuration;
 
-import io.swagger.model.RegisterDTO;
 import io.swagger.model.User;
 import io.swagger.model.UserRole;
+import io.swagger.model.UserStatus;
 import io.swagger.repository.UserRepository;
 import io.swagger.service.UserService;
 import org.springframework.boot.ApplicationArguments;
@@ -17,19 +17,21 @@ import java.util.List;
 @ConditionalOnProperty(prefix = "bankingAPI.autorun", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class Applicationrunner implements ApplicationRunner {
 
-    UserService userService;
+    UserRepository userRepository;
 
-
-    public Applicationrunner(UserService userService) {
-      this.userService = userService;
+    public Applicationrunner(UserRepository userRepository) {
+      this.userRepository = userRepository;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        RegisterDTO customer = new RegisterDTO("customer", "hoi", "customer hoi", "customer@bankapi.com");
-        RegisterDTO employee = new RegisterDTO("employee", "hoi", "employee hoi", "employee@bankapi.com", UserRole.ROLE_Employee);
+        List<User> users =
+                Arrays.asList(
+                        new User("test1", "test1", "testname1", "test1@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, UserStatus.Active),
+                        new User("test2", "test2", "testname2", "test2@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, UserStatus.Active),
+                        new User("test3", "test3", "testname3", "test3@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, UserStatus.Active)
+                        );
 
-        userService.createUser(customer);
-        userService.createUser(employee);
+        users.forEach(userRepository::save);
     }
 }

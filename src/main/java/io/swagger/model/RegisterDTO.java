@@ -1,14 +1,10 @@
 package io.swagger.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -48,24 +44,6 @@ public class RegisterDTO   {
   @JsonProperty("userStatus")
   private UserStatus userStatus = UserStatus.Active;
 
-  public RegisterDTO() {
-  }
-
-  public RegisterDTO(String username, String password, String name, String email) {
-    this.username = username;
-    this.password = password;
-    this.name = name;
-    this.email = email;
-  }
-
-  public RegisterDTO(String username, String password, String name, String email, UserRole role) {
-    this.username = username;
-    this.password = password;
-    this.name = name;
-    this.email = email;
-    this.role = role;
-  }
-
   public RegisterDTO username(String username) {
     this.username = username;
     return this;
@@ -76,6 +54,7 @@ public class RegisterDTO   {
    * @return username
    **/
   @Schema(example = "BG12345", required = true, description = "")
+      @NotNull
 
     public String getUsername() {
     return username;
@@ -95,6 +74,7 @@ public class RegisterDTO   {
    * @return password
    **/
   @Schema(example = "hiIamapassword4$", required = true, description = "")
+      @NotNull
 
     public String getPassword() {
     return password;
@@ -114,6 +94,7 @@ public class RegisterDTO   {
    * @return name
    **/
   @Schema(example = "Bert Geersen", required = true, description = "")
+      @NotNull
 
     public String getName() {
     return name;
@@ -133,6 +114,7 @@ public class RegisterDTO   {
    * @return email
    **/
   @Schema(example = "BertGeersen1@gmail.com", required = true, description = "")
+      @NotNull
 
     public String getEmail() {
     return email;
@@ -269,55 +251,5 @@ public class RegisterDTO   {
       return "null";
     }
     return o.toString().replace("\n", "\n    ");
-  }
-
-  /**
-   * Looks for an empty property in this object
-   * returns what is empty/null or returns null
-   */
-  public String getNullOrEmptyProperties(){
-    List<String> emptyProperties = new ArrayList<String>();
-
-    // Empty properties are added to the list
-    if (this.username == null || this.username.isEmpty()){
-      emptyProperties.add("username");
-    }
-    if (this.password == null || this.password.isEmpty()){
-      emptyProperties.add("password");
-    }
-    if (this.name == null || this.name.isEmpty()){
-      emptyProperties.add("name");
-    }
-    if (this.email == null || this.email.isEmpty()){
-      emptyProperties.add("email");
-    }
-
-    int totalEmptyProperties = emptyProperties.size();
-
-    if (totalEmptyProperties > 0) {
-      // Get the first empty property and uppercase the first letter
-      StringBuilder emptyString = new StringBuilder();
-      emptyString.append(StringUtils.capitalize(emptyProperties.get(0)));
-      emptyProperties.remove(0);
-
-      // Add all properties to the string
-      if (emptyProperties.size() >= 1) {
-        while (emptyProperties.size() > 1) {
-          emptyString.append(", ").append(emptyProperties.get(0));
-          emptyProperties.remove(0);
-        }
-        emptyString.append(" and ").append(emptyProperties.get(0));
-      }
-
-      if (totalEmptyProperties > 1){
-        emptyString.append(" are empty");
-      } else {
-        emptyString.append(" is empty");
-      }
-
-      return emptyString.toString();
-    }
-
-    return null;
   }
 }

@@ -9,9 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -21,33 +18,11 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
-@Entity
+
 public class AccountWithTransactions   {
 
-  public AccountWithTransactions(){
-
-  }
-
-  public AccountWithTransactions( Double absoluteLimit,UserStatus active, String owner, AccountType type) {
-    this.type = type;
-    this.owner = owner;
-    this.absoluteLimit = absoluteLimit;
-    this.active = active;
-  }
-
-  public AccountWithTransactions(String iban, Double balance, AccountType type, String owner, List<Transaction> transaction, Double absoluteLimit, UserStatus active) {
-    this.iban = iban;
-    this.balance = balance;
-    this.type = type;
-    this.owner = owner;
-//    this.transaction = transaction;
-    this.absoluteLimit = absoluteLimit;
-    this.active = active;
-  }
-
-  @Id
   @JsonProperty("iban")
-  private String iban = "NL41 INGB 0008 7353 93";
+  private String iban = null;
 
   @JsonProperty("balance")
   private Double balance = null;
@@ -55,17 +30,42 @@ public class AccountWithTransactions   {
   /**
    * Gets or Sets type
    */
+  public enum TypeEnum {
+    CURRENT("Current"),
+    
+    SAVINGS("Savings");
 
+    private String value;
 
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
   @JsonProperty("type")
-  private AccountType type = null;
+  private TypeEnum type = null;
 
   @JsonProperty("owner")
   private String owner = null;
 
-//  @JsonProperty("transaction")
-//  @Valid
-//  private List<Transaction> transaction = null;
+  @JsonProperty("transaction")
+  @Valid
+  private List<Transaction> transaction = null;
 
   @JsonProperty("absoluteLimit")
   private Double absoluteLimit = null;
@@ -73,9 +73,35 @@ public class AccountWithTransactions   {
   /**
    * Gets or Sets active
    */
+  public enum ActiveEnum {
+    ACTIVE("Active"),
+    
+    INACTIVE("Inactive");
 
+    private String value;
+
+    ActiveEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ActiveEnum fromValue(String text) {
+      for (ActiveEnum b : ActiveEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
   @JsonProperty("active")
-  private UserStatus active = null;
+  private ActiveEnum active = null;
 
   public AccountWithTransactions iban(String iban) {
     this.iban = iban;
@@ -115,7 +141,7 @@ public class AccountWithTransactions   {
     this.balance = balance;
   }
 
-  public AccountWithTransactions type(AccountType type) {
+  public AccountWithTransactions type(TypeEnum type) {
     this.type = type;
     return this;
   }
@@ -127,11 +153,11 @@ public class AccountWithTransactions   {
   @Schema(required = true, description = "")
       @NotNull
 
-    public AccountType getType() {
+    public TypeEnum getType() {
     return type;
   }
 
-  public void setType(AccountType type) {
+  public void setType(TypeEnum type) {
     this.type = type;
   }
 
@@ -154,33 +180,33 @@ public class AccountWithTransactions   {
   public void setOwner(String owner) {
     this.owner = owner;
   }
-//
-//  public AccountWithTransactions transaction(List<Transaction> transaction) {
-//    this.transaction = transaction;
-//    return this;
-//  }
-//
-//  public AccountWithTransactions addTransactionItem(Transaction transactionItem) {
-//    if (this.transaction == null) {
-//      this.transaction = new ArrayList<Transaction>();
-//    }
-//    this.transaction.add(transactionItem);
-//    return this;
-//  }
+
+  public AccountWithTransactions transaction(List<Transaction> transaction) {
+    this.transaction = transaction;
+    return this;
+  }
+
+  public AccountWithTransactions addTransactionItem(Transaction transactionItem) {
+    if (this.transaction == null) {
+      this.transaction = new ArrayList<Transaction>();
+    }
+    this.transaction.add(transactionItem);
+    return this;
+  }
 
   /**
    * List of the last 50 transaction of this account
    * @return transaction
    **/
-//  @Schema(description = "List of the last 50 transaction of this account")
-//      @Valid
-//    public List<Transaction> getTransaction() {
-//    return transaction;
-//  }
+  @Schema(description = "List of the last 50 transaction of this account")
+      @Valid
+    public List<Transaction> getTransaction() {
+    return transaction;
+  }
 
-//  public void setTransaction(List<Transaction> transaction) {
-//    this.transaction = transaction;
-//  }
+  public void setTransaction(List<Transaction> transaction) {
+    this.transaction = transaction;
+  }
 
   public AccountWithTransactions absoluteLimit(Double absoluteLimit) {
     this.absoluteLimit = absoluteLimit;
@@ -201,7 +227,7 @@ public class AccountWithTransactions   {
     this.absoluteLimit = absoluteLimit;
   }
 
-  public AccountWithTransactions active(UserStatus active) {
+  public AccountWithTransactions active(ActiveEnum active) {
     this.active = active;
     return this;
   }
@@ -212,11 +238,11 @@ public class AccountWithTransactions   {
    **/
   @Schema(description = "")
   
-    public UserStatus getActive() {
+    public ActiveEnum getActive() {
     return active;
   }
 
-  public void setActive(UserStatus active) {
+  public void setActive(ActiveEnum active) {
     this.active = active;
   }
 
@@ -234,14 +260,14 @@ public class AccountWithTransactions   {
         Objects.equals(this.balance, accountWithTransactions.balance) &&
         Objects.equals(this.type, accountWithTransactions.type) &&
         Objects.equals(this.owner, accountWithTransactions.owner) &&
-//        Objects.equals(this.transaction, accountWithTransactions.transaction) &&
+        Objects.equals(this.transaction, accountWithTransactions.transaction) &&
         Objects.equals(this.absoluteLimit, accountWithTransactions.absoluteLimit) &&
         Objects.equals(this.active, accountWithTransactions.active);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(iban, balance, type, owner, absoluteLimit, active);
+    return Objects.hash(iban, balance, type, owner, transaction, absoluteLimit, active);
   }
 
   @Override
@@ -253,7 +279,7 @@ public class AccountWithTransactions   {
     sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    owner: ").append(toIndentedString(owner)).append("\n");
-//    sb.append("    transaction: ").append(toIndentedString(transaction)).append("\n");
+    sb.append("    transaction: ").append(toIndentedString(transaction)).append("\n");
     sb.append("    absoluteLimit: ").append(toIndentedString(absoluteLimit)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("}");

@@ -32,6 +32,7 @@ public class LoginDTO   {
    * @return username
    **/
   @Schema(example = "BG12345", required = true, description = "")
+      @NotNull
 
     public String getUsername() {
     return username;
@@ -51,6 +52,7 @@ public class LoginDTO   {
    * @return password
    **/
   @Schema(example = "hiIamapassword4$", required = true, description = "")
+      @NotNull
 
     public String getPassword() {
     return password;
@@ -100,36 +102,4 @@ public class LoginDTO   {
     }
     return o.toString().replace("\n", "\n    ");
   }
-
-  /**
-   * Looks for an empty property in this object
-   * returns what is empty/null or returns null
-   */
-  public String getNullOrEmptyProperties(){
-    StringBuilder emptyProperties = new StringBuilder();
-    int total = 0;
-
-    if (this.username == null || this.username.isEmpty()){
-      emptyProperties.append("Username");
-      total++;
-    }
-    if (this.password == null || this.password.isEmpty()){
-      if (total >= 1){
-        emptyProperties.append(" and password");
-      } else { emptyProperties.append("Password"); }
-      total++;
-    }
-
-    if (total > 0) {
-      if (total > 1) {
-        emptyProperties.append(" are empty");
-      } else {
-        emptyProperties.append(" is empty");
-      }
-
-      return emptyProperties.toString();
-    }
-    return null;
-  }
-
 }
