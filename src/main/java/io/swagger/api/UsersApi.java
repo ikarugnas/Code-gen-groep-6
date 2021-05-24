@@ -79,10 +79,10 @@ public interface UsersApi {
         @ApiResponse(responseCode = "401", description = "Unauthorized."),
         
         @ApiResponse(responseCode = "404", description = "An unexpected error has occurred. Please contact support if this persists.") })
-    @RequestMapping(value = "/users/{username}",
+    @RequestMapping(value = "/users/username/{username}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<User>> getUserByUsername(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("username") String username);
+    ResponseEntity<User> getUserByUsername(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("username") String username);
 
 
     @Operation(summary = "gets all users", description = "Shows all the users that are existing on the system.", security = {
