@@ -31,12 +31,15 @@ public class UserService {
     @Autowired
     JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public UserService() {
     }
 
     public User createUser(RegisterDTO registerDTO){
         User user = new User(registerDTO.getUsername(),
-                passwordEncoder().encode(registerDTO.getPassword()),
+                passwordEncoder.encode(registerDTO.getPassword()),
                 registerDTO.getName(),
                 registerDTO.getEmail(),
                 registerDTO.getRole(),
@@ -60,10 +63,5 @@ public class UserService {
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username or Password is incorrect");
         }
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
     }
 }

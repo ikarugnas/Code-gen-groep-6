@@ -4,6 +4,7 @@ import io.swagger.model.LoginDTO;
 import io.swagger.model.RegisterDTO;
 import io.swagger.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.service.MyUserDetailsService;
 import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +45,9 @@ public class UsersApiController implements UsersApi {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    MyUserDetailsService myUserDetailsService;
 
     private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
 
@@ -118,6 +123,7 @@ public class UsersApiController implements UsersApi {
         }
     }
 
+    @PreAuthorize("hasRole('Employee')")
     public ResponseEntity registerUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody RegisterDTO body) {
         String accept = request.getHeader("Accept");
 
