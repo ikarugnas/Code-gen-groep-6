@@ -4,7 +4,6 @@ import io.swagger.model.AccountWithTransactions;
 import io.swagger.model.AllAccountsWithoutTransactions;
 import io.swagger.model.CreateAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,13 +34,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 @RestController
 public class AccountsApiController implements AccountsApi {
-
-    @Autowired
-    AccountService accountService;
 
     private static final Logger log = LoggerFactory.getLogger(AccountsApiController.class);
 
@@ -56,14 +50,9 @@ public class AccountsApiController implements AccountsApi {
         this.request = request;
     }
 
-    public ResponseEntity createAccount(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateAccount body) {
+    public ResponseEntity<Void> createAccount(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateAccount body) {
         String accept = request.getHeader("Accept");
-
-        AccountWithTransactions createAccount = accountService.createAccount(body);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createAccount);
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public ResponseEntity<List<AccountWithTransactions>> getAccount(@Parameter(in = ParameterIn.PATH, description = "Iban of the account", required=true, schema=@Schema()) @PathVariable("iban") String iban) {
