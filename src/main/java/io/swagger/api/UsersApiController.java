@@ -4,6 +4,7 @@ import io.swagger.model.LoginDTO;
 import io.swagger.model.RegisterDTO;
 import io.swagger.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.service.MyUserDetailsService;
 import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -42,6 +45,9 @@ public class UsersApiController implements UsersApi {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    MyUserDetailsService myUserDetailsService;
 
     private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
 
@@ -102,13 +108,46 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<List<User>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> loginUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody LoginDTO body) {
+    public ResponseEntity loginUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody LoginDTO body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+
+        String emptyProperty = body.getNullOrEmptyProperties();
+        if (emptyProperty != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
+        }
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(body));
+        } catch (ResponseStatusException responseStatusException) {
+            return ResponseEntity.status(responseStatusException.getStatus()).body(responseStatusException.getReason());
+        }
     }
 
+    @PreAuthorize("hasRole('Employee')")
     public ResponseEntity registerUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody RegisterDTO body) {
         String accept = request.getHeader("Accept");
+
+        // Check if any property of the requestbody is empty or null
+        String emptyProperty = body.getNullOrEmptyProperties();
+        if (emptyProperty != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
+        }
+
+        // Check if username already exists
+        if (userService.usernameAlreadyExist(body.getUsername())){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username already exits");
+        }
+
+        // Check if email is valid
+        if (!validEmail(body.getEmail())){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Email address is invalid");
+        }
+
+        // Check if password meets requirements
+        String passwordValidation = validatePassword(body.getPassword());
+        if (passwordValidation != null) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(passwordValidation);
+        }
 
         User user = userService.createUser(body);
 
@@ -120,6 +159,49 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") Long id,@Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    private boolean validEmail(String email) {
+        // Checks if email has an @
+        if (!email.matches("(.+)(\\@)(.+)")) { return false; }
+
+        String[] splitEmail = email.split("@");
+        String prefix = splitEmail[0];
+        String domain = splitEmail[1];
+
+        // Checks if prefix is valid
+        if (!(prefix.matches("[a-zA-Z0-9]+") || prefix.matches("([a-zA-Z0-9]+)([\\-\\.\\_])([a-zA-Z0-9]+)"))) { return false; }
+
+        // Checks if domain is valid
+        if (!(domain.matches("([a-zA-Z0-9]+)([\\.])([a-z]{2,})") || domain.matches("([a-zA-Z0-9]+)(\\-)([a-zA-Z0-9]+)([\\.])([a-z]{2,})"))) { return false; }
+
+        return true;
+    }
+
+    private String validatePassword(String password) {
+
+        // Check if password length is 8 or more
+        if (password.length() < 8) {
+            return "Password is invalid (password length must be 8 or more)";
+        }
+
+        // Check if password has a capital letter
+        if (!(password.matches("(.*)([A-Z])(.*)"))) {
+            return "Password is invalid (password misses a captital letter)!";
+        }
+
+        // Check if password has a number
+        if (!(password.matches("(.*)([0-9])(.*)"))) {
+            return "Password is invalid (password misses a number)!";
+        }
+
+        // Check if password has one of these special characters (!, @, #, $, %, ^, & or *)
+        if (!(password.matches("(.*)([\\!\\@\\#\\$\\%\\^\\&\\*])(.*)"))) {
+            return "Password is invalid (password misses one of these special characters [!, @, #, $, %, ^, & or *])!";
+        }
+
+        // returns null if password is valid
+        return null;
     }
 
 }
