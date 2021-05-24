@@ -52,10 +52,6 @@ public class UserService {
         return userRepository.findByUsername(registerDTO.getUsername());
     }
 
-    public boolean usernameAlreadyExist(String username) {
-        return (userRepository.findByUsername(username) != null);
-    }
-
     public String loginUser(LoginDTO loginDTO) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
@@ -63,5 +59,18 @@ public class UserService {
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username or Password is incorrect");
         }
+
+    }
+
+    public boolean usernameAlreadyExist(String username) {
+        return (userRepository.findByUsername(username) != null);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserByUsername(String usernameToSearchFor) {
+        return userRepository.findUserByUsernameQuery(usernameToSearchFor);
     }
 }
