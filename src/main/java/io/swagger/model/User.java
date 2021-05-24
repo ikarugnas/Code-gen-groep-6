@@ -1,6 +1,7 @@
 package io.swagger.model;
 
-import java.util.Objects;
+import java.util.*;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -8,9 +9,7 @@ import io.swagger.model.AccountWithTransactions;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -26,7 +25,7 @@ public class User   {
   @Id
   @GeneratedValue
   @JsonProperty("id")
-  private Long id = null;
+  private UUID id = null;
 
   @JsonProperty("username")
   private String username = null;
@@ -41,7 +40,8 @@ public class User   {
   private String email = null;
 
   @JsonProperty("role")
-  private UserRole role = null;
+  @ElementCollection(fetch = FetchType.EAGER)
+  private List<UserRole> roles = null;
 
 //  @JsonProperty("account")
 //  private AccountWithTransactions account = null;
@@ -63,13 +63,13 @@ public class User   {
     this.password = password;
     this.name = name;
     this.email = email;
-    this.role = role;
+    this.roles = Arrays.asList(role);
     this.dayLimit = dayLimit;
     this.transactionLimit = transactionLimit;
     this.userStatus = userStatus;
   }
 
-  public User id(Long id) {
+  public User id(UUID id) {
     this.id = id;
     return this;
   }
@@ -80,11 +80,11 @@ public class User   {
    **/
   @Schema(example = "1", description = "")
   
-    public Long getId() {
+    public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
@@ -168,8 +168,8 @@ public class User   {
     this.email = email;
   }
 
-  public User role(UserRole role) {
-    this.role = role;
+  public User roles(List<UserRole> roles) {
+    this.roles = roles;
     return this;
   }
 
@@ -180,12 +180,12 @@ public class User   {
   @Schema(example = "Customer", required = true, description = "")
       @NotNull
 
-    public UserRole getRole() {
-    return role;
+    public List<UserRole> getRoles() {
+    return roles;
   }
 
-  public void setRole(UserRole role) {
-    this.role = role;
+  public void setRoles(List<UserRole> roles) {
+    this.roles = roles;
   }
 
 //  public User account(AccountWithTransactions account) {
@@ -283,7 +283,7 @@ public class User   {
         Objects.equals(this.password, user.password) &&
         Objects.equals(this.name, user.name) &&
         Objects.equals(this.email, user.email) &&
-        Objects.equals(this.role, user.role) &&
+        Objects.equals(this.roles, user.roles) &&
 //        Objects.equals(this.account, user.account) &&
         Objects.equals(this.dayLimit, user.dayLimit) &&
         Objects.equals(this.transactionLimit, user.transactionLimit) &&
@@ -292,8 +292,8 @@ public class User   {
 
   @Override
   public int hashCode() {
-//    return Objects.hash(id, username, password, name, email, role, account, dayLimit, transactionLimit , userStatus);
-    return Objects.hash(id, username, password, name, email, role, dayLimit, transactionLimit, userStatus);
+//    return Objects.hash(id, username, password, name, email, roles, account, dayLimit, transactionLimit , userStatus);
+    return Objects.hash(id, username, password, name, email, roles, dayLimit, transactionLimit, userStatus);
   }
 
   @Override
@@ -306,7 +306,7 @@ public class User   {
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
-    sb.append("    role: ").append(toIndentedString(role)).append("\n");
+    sb.append("    role: ").append(toIndentedString(roles)).append("\n");
 //    sb.append("    account: ").append(toIndentedString(account)).append("\n");
     sb.append("    dayLimit: ").append(toIndentedString(dayLimit)).append("\n");
     sb.append("    transactionLimit: ").append(toIndentedString(transactionLimit)).append("\n");
