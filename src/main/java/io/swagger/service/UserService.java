@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -70,7 +71,24 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserById(UUID id) {
+        return userRepository.findUserById(id);
+    }
+
     public User getUserByUsername(String usernameToSearchFor) {
         return userRepository.findUserByUsernameQuery(usernameToSearchFor);
+    }
+
+    //First implementation to delete a user from the system without firing a query.
+    public void deleteUser(UUID uuid) {
+        int index = 0;
+        for (User u : userRepository.findAll()) {
+
+            if (u.getId() == uuid) {
+                userRepository.delete(u);
+                return;
+            }
+            index++;
+        }
     }
 }
