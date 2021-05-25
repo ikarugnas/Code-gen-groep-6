@@ -8,6 +8,7 @@ import io.swagger.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -77,6 +79,26 @@ public class UserService {
 
     public User getUserByUsername(String usernameToSearchFor) {
         return userRepository.findUserByUsernameQuery(usernameToSearchFor);
+    }
+
+    public User updateUser(UUID idOfUserToUpdate, User updatedUser) {
+        System.out.println("step1");
+        User userToUpdate = userRepository.getOne(idOfUserToUpdate);
+        //Commented line under may be used if Id needs to be changed.
+        //userToUpdate.setId(updatedUser.getId());
+        userToUpdate.setUsername(updatedUser.getUsername());
+        userToUpdate.setPassword(updatedUser.getPassword());
+        userToUpdate.setName(updatedUser.getName());
+        userToUpdate.setEmail(updatedUser.getEmail());
+        userToUpdate.setRoles(updatedUser.getRoles());
+        //Commented line under may be used once accounts are functional.
+        //userToUpdate.setAccount(updatedUser.getAccount());
+        userToUpdate.setDayLimit(updatedUser.getDayLimit());
+        userToUpdate.setTransactionLimit(updatedUser.getTransactionLimit());
+        userToUpdate.setUserStatus(updatedUser.getUserStatus());
+        userRepository.save(userToUpdate);
+        System.out.println("step2");
+        return userToUpdate;
     }
 
     //First implementation to delete a user from the system without firing a query.

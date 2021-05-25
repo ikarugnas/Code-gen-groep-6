@@ -1,8 +1,6 @@
 package io.swagger.api;
 
-import io.swagger.model.LoginDTO;
-import io.swagger.model.RegisterDTO;
-import io.swagger.model.User;
+import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.MyUserDetailsService;
 import io.swagger.service.UserService;
@@ -167,9 +165,20 @@ public class UsersApiController implements UsersApi {
                 .body(user);
     }
 
-    public ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") Long id,@Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User body) {
+    @PreAuthorize("hasRole('Employee')")
+    public ResponseEntity<User> updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") UUID id, @Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User updatedUserData) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                System.out.println("test1");
+                return new ResponseEntity<User>(userService.updateUser(id, updatedUserData), HttpStatus.OK);
+            } catch (Exception e) {
+                log.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        log.error("Could not find user to update.");
+        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
     }
 
     private boolean validEmail(String email) {
