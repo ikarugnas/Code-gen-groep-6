@@ -3,14 +3,10 @@ package io.swagger.model;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.model.AccountWithTransactions;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -53,12 +49,12 @@ public class User   {
   private Double transactionLimit = null;
 
   @JsonProperty("userStatus")
-  private UserStatus userStatus = null;
+  private Status userStatus = null;
 
   public User() {
   }
 
-  public User(String username, String password, String name, String email, UserRole role, Double dayLimit, Double transactionLimit, UserStatus userStatus) {
+  public User(String username, String password, String name, String email, UserRole role, Double dayLimit, Double transactionLimit, Status userStatus) {
     this.username = username;
     this.password = password;
     this.name = name;
@@ -248,7 +244,7 @@ public class User   {
     this.transactionLimit = transactionLimit;
   }
 
-  public User userStatus(UserStatus userStatus) {
+  public User userStatus(Status userStatus) {
     this.userStatus = userStatus;
     return this;
   }
@@ -260,11 +256,11 @@ public class User   {
   @Schema(required = true, description = "")
       @NotNull
 
-    public UserStatus getUserStatus() {
+    public Status getUserStatus() {
     return userStatus;
   }
 
-  public void setUserStatus(UserStatus userStatus) {
+  public void setUserStatus(Status userStatus) {
     this.userStatus = userStatus;
   }
 
