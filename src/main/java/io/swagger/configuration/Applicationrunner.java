@@ -40,8 +40,10 @@ public class Applicationrunner implements ApplicationRunner {
 
         RegisterDTO customer = new RegisterDTO("customer", "hoi", "customer hoi", "customer@bankapi.com");
         RegisterDTO employee = new RegisterDTO("employee", "hoi", "employee hoi", "employee@bankapi.com", UserRole.ROLE_Employee);
+        RegisterDTO inactiveUser = new RegisterDTO("inactive", "hoi", "inactive hoi", "inactive@bankapi.com", Status.Inactive);
 
         userService.createUser(customer);
         userService.createUser(employee);
+        userService.createUser(inactiveUser);
     }
 }

@@ -61,6 +61,14 @@ public class RegisterDTO   {
     this.role = role;
   }
 
+  public RegisterDTO(String username, String password, String name, String email, Status userStatus) {
+    this.username = username;
+    this.password = password;
+    this.name = name;
+    this.email = email;
+    this.userStatus = userStatus;
+  }
+
   public RegisterDTO username(String username) {
     this.username = username;
     return this;
