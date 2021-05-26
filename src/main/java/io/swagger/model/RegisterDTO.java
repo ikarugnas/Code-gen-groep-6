@@ -1,17 +1,12 @@
 package io.swagger.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * RegisterDTO
@@ -46,7 +41,7 @@ public class RegisterDTO   {
   private Double transactionLimit = 500.00;
 
   @JsonProperty("userStatus")
-  private UserStatus userStatus = UserStatus.Active;
+  private Status userStatus = Status.Active;
 
   public RegisterDTO() {
   }
@@ -199,7 +194,7 @@ public class RegisterDTO   {
     this.transactionLimit = transactionLimit;
   }
 
-  public RegisterDTO userStatus(UserStatus userStatus) {
+  public RegisterDTO userStatus(Status userStatus) {
     this.userStatus = userStatus;
     return this;
   }
@@ -210,11 +205,11 @@ public class RegisterDTO   {
    **/
   @Schema(description = "")
   
-    public UserStatus getUserStatus() {
+    public Status getUserStatus() {
     return userStatus;
   }
 
-  public void setUserStatus(UserStatus userStatus) {
+  public void setUserStatus(Status userStatus) {
     this.userStatus = userStatus;
   }
 

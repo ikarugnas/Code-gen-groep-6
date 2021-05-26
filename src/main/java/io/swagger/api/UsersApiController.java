@@ -116,6 +116,8 @@ public class UsersApiController implements UsersApi {
             return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(body));
         } catch (ResponseStatusException responseStatusException) {
             return ResponseEntity.status(responseStatusException.getStatus()).body(responseStatusException.getReason());
+        } catch (Exception exception){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
         }
     }
 

@@ -1,5 +1,5 @@
 package io.swagger.model;
 
-public enum UserStatus {
+public enum Status {
     Active, Inactive
 }
