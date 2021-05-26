@@ -1,3 +1,5 @@
+package io.swagger.model;
+
 import io.swagger.model.LoginDTO;
 import org.junit.jupiter.api.Test;
 

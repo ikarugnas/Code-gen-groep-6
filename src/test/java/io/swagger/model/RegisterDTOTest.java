@@ -1,3 +1,5 @@
+package io.swagger.model;
+
 import io.swagger.model.RegisterDTO;
 import org.junit.jupiter.api.Test;
 
