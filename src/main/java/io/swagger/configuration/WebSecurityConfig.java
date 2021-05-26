@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +23,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     JwtTokenFilter jwtTokenFilter;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/users/login",
+            "/h2-console/**/**",
+            "/swagger-ui/**/**",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/api-docs",
+            "webjars/**"
+    };
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // No CSRF protection needed
@@ -31,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 // Disallow endpoints for unauthenticated users
-                .antMatchers("/users/login").permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/users").authenticated()
                 .antMatchers("/users/**/*").authenticated()
                 .antMatchers("/account").authenticated()
@@ -44,6 +56,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Add the jwt filter
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(AUTH_WHITELIST);
     }
 
     @Override
