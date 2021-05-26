@@ -1,9 +1,8 @@
 package io.swagger.model;
 
-import io.swagger.model.RegisterDTO;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegisterDTOTest {
 
@@ -11,6 +10,18 @@ class RegisterDTOTest {
     public void createRegisterDTOShouldNotBeNull() {
         RegisterDTO registerDTO = new RegisterDTO();
         assertNotNull(registerDTO);
+    }
+
+    @Test
+    public void getNullOrEmptyPropertiesShouldGiveStringWhenPropertiesAreEmpty(){
+        RegisterDTO registerDTO = new RegisterDTO();
+        assertEquals(registerDTO.getNullOrEmptyProperties(), "Username, password, name and email are empty");
+    }
+
+    @Test
+    public void getNullOrEmptyPropertiesShouldGiveNullWhenNoPropertiesAreEmpty(){
+        RegisterDTO registerDTO = new RegisterDTO("customer", "hoi", "customer hoi", "customer@bankapi.com");
+        assertEquals(registerDTO.getNullOrEmptyProperties(), null);
     }
 
 }
