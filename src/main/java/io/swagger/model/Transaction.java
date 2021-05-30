@@ -68,6 +68,15 @@ public class Transaction   {
   @JsonProperty("dateAndTime")
   private OffsetDateTime dateAndTime = null;
 
+  public Transaction() {
+  }
+
+  public Transaction(String accountFrom, Double amount, String accountTo) {
+    this.accountFrom = accountFrom;
+    this.amount = amount;
+    this.accountTo = accountTo;
+  }
+
   public Transaction userPerforming(String userPerforming) {
     this.userPerforming = userPerforming;
     return this;

@@ -19,7 +19,7 @@ import javax.validation.constraints.*;
 
 public class Deposit   {
   @JsonProperty("userPerforming")
-  private String userPerforming = null;
+  public String userPerforming = null;
 
   @JsonProperty("accountFrom")
   private String accountFrom = null;
@@ -68,6 +68,17 @@ public class Deposit   {
   @JsonProperty("dateAndTime")
   private OffsetDateTime dateAndTime = null;
 
+  public Deposit() {
+  }
+
+  public Deposit(String userPerforming, String accountTo, Double amount, TransactionTypeEnum transactionTypeEnum, OffsetDateTime dateAndTime) {
+    this.userPerforming = userPerforming;
+    this.accountTo = accountTo;
+    this.amount = amount;
+    this.transactionType = transactionTypeEnum;
+    this.dateAndTime = dateAndTime;
+  }
+
   public Deposit userPerforming(String userPerforming) {
     this.userPerforming = userPerforming;
     return this;
@@ -80,9 +91,11 @@ public class Deposit   {
   @Schema(example = "BG12345", required = true, description = "")
       @NotNull
 
-    public String getUserPerforming() {
-    return userPerforming;
-  }
+//    public String getUserPerforming() {
+//    return userPerforming;
+//  }
+
+  public String getUserPerforming() { return userPerforming; }
 
   public void setUserPerforming(String userPerforming) {
     this.userPerforming = userPerforming;

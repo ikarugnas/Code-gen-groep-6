@@ -2,6 +2,9 @@ package io.swagger.api;
 
 import io.swagger.model.Deposit;
 import io.swagger.model.DepositRequestBody;
+import io.swagger.service.DepositService;
+import io.swagger.service.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.threeten.bp.LocalDate;
 import io.swagger.model.Transaction;
 import io.swagger.model.TransactionRequestBody;
@@ -42,6 +45,12 @@ import java.util.Map;
 @RestController
 public class TransactionsApiController implements TransactionsApi {
 
+    @Autowired
+    TransactionService transactionService;
+
+    @Autowired
+    DepositService depositService;
+
     private static final Logger log = LoggerFactory.getLogger(TransactionsApiController.class);
 
     private final ObjectMapper objectMapper;
@@ -56,30 +65,22 @@ public class TransactionsApiController implements TransactionsApi {
 
     public ResponseEntity<Deposit> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
         String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Deposit>(objectMapper.readValue("{\n  \"transactionType\" : \"Deposit\",\n  \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n  \"amount\" : 20.23,\n  \"userPerforming\" : \"BG12345\",\n  \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n  \"accountFrom\" : \"\"\n}", Deposit.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Deposit>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
 
-        return new ResponseEntity<Deposit>(HttpStatus.NOT_IMPLEMENTED);
+        Deposit createDeposit = depositService.createDeposit(body);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createDeposit);
     }
 
     public ResponseEntity<Transaction> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody TransactionRequestBody body) {
         String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Transaction>(objectMapper.readValue("{\n  \"transactionType\" : \"Transaction\",\n  \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n  \"amount\" : 6.027456183070403,\n  \"userPerforming\" : \"BG12345\",\n  \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n  \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n}", Transaction.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Transaction>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
 
-        return new ResponseEntity<Transaction>(HttpStatus.NOT_IMPLEMENTED);
+        Transaction createtransaction = transactionService.createTransaction(body);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createtransaction);
     }
 
     public ResponseEntity<Withdrawal> createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
