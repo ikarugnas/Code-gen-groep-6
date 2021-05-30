@@ -2,7 +2,6 @@ package io.swagger.model;
 
 import java.util.*;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -44,10 +43,8 @@ public class User   {
   @ElementCollection(fetch = FetchType.EAGER)
   private List<UserRole> roles = null;
 
-  @OneToMany
-  @JsonManagedReference
-  @JsonProperty("account")
-  private Set<AccountWithTransactions> account = null;
+//  @JsonProperty("account")
+//  private AccountWithTransactions account = null;
 
   @JsonProperty("dayLimit")
   private Double dayLimit = null;

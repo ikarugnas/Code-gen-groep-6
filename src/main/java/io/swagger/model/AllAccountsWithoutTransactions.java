@@ -1,16 +1,11 @@
 package io.swagger.model;
 
 import java.util.Objects;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -20,70 +15,49 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
-public class AllAccountsWithoutTransactions   {
 
+public class AllAccountsWithoutTransactions   {
   @JsonProperty("iban")
   private String iban = null;
 
   @JsonProperty("balance")
   private Double balance = null;
 
-  public AllAccountsWithoutTransactions(String iban, Double balance, AccountType type, UUID owner, Double absoluteLimit, UserStatus active) {
-    this.iban = iban;
-    this.balance = balance;
-    this.type = type;
-    this.owner = owner;
-    this.absoluteLimit = absoluteLimit;
-    this.active = active;
-  }
-
-  public AllAccountsWithoutTransactions(Double absoluteLimit, UserStatus active, UUID owner, AccountType type) {
-    this.type = type;
-    this.owner = owner;
-    this.absoluteLimit = absoluteLimit;
-    this.active = active;
-  }
-
-  public AllAccountsWithoutTransactions() {
-
-  }
-
   /**
    * Gets or Sets type
    */
-//  public enum TypeEnum {
-//    CURRENT("Current"),
-//
-//    SAVINGS("Savings");
-//
-//    private String value;
-//
-//    TypeEnum(String value) {
-//      this.value = value;
-//    }
-//
-//    @Override
-//    @JsonValue
-//    public String toString() {
-//      return String.valueOf(value);
-//    }
-//
-//    @JsonCreator
-//    public static TypeEnum fromValue(String text) {
-//      for (TypeEnum b : TypeEnum.values()) {
-//        if (String.valueOf(b.value).equals(text)) {
-//          return b;
-//        }
-//      }
-//      return null;
-//    }
-//  }
+  public enum TypeEnum {
+    CURRENT("Current"),
+    
+    SAVINGS("Savings");
 
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
   @JsonProperty("type")
-  private AccountType type = AccountType.Current;
+  private TypeEnum type = null;
 
   @JsonProperty("owner")
-  private UUID owner = null;
+  private String owner = null;
 
   @JsonProperty("absoluteLimit")
   private Double absoluteLimit = null;
@@ -91,35 +65,35 @@ public class AllAccountsWithoutTransactions   {
   /**
    * Gets or Sets active
    */
-//  public enum ActiveEnum {
-//    ACTIVE("Active"),
-//
-//    INACTIVE("Inactive");
-//
-//    private String value;
-//
-//    ActiveEnum(String value) {
-//      this.value = value;
-//    }
-//
-//    @Override
-//    @JsonValue
-//    public String toString() {
-//      return String.valueOf(value);
-//    }
-//
-//    @JsonCreator
-//    public static ActiveEnum fromValue(String text) {
-//      for (ActiveEnum b : ActiveEnum.values()) {
-//        if (String.valueOf(b.value).equals(text)) {
-//          return b;
-//        }
-//      }
-//      return null;
-//    }
-//  }
+  public enum ActiveEnum {
+    ACTIVE("Active"),
+    
+    INACTIVE("Inactive");
+
+    private String value;
+
+    ActiveEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ActiveEnum fromValue(String text) {
+      for (ActiveEnum b : ActiveEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
   @JsonProperty("active")
-  private UserStatus active = UserStatus.Active;
+  private ActiveEnum active = null;
 
   public AllAccountsWithoutTransactions iban(String iban) {
     this.iban = iban;
@@ -159,7 +133,7 @@ public class AllAccountsWithoutTransactions   {
     this.balance = balance;
   }
 
-  public AllAccountsWithoutTransactions type(AccountType type) {
+  public AllAccountsWithoutTransactions type(TypeEnum type) {
     this.type = type;
     return this;
   }
@@ -171,23 +145,15 @@ public class AllAccountsWithoutTransactions   {
   @Schema(required = true, description = "")
       @NotNull
 
-//    public TypeEnum getType() {
-//    return type;
-//  }
-//
-//  public void setType(TypeEnum type) {
-//    this.type = type;
-//  }
-
-  public AccountType getType() {
+    public TypeEnum getType() {
     return type;
   }
 
-  public void setType(AccountType type) {
+  public void setType(TypeEnum type) {
     this.type = type;
   }
 
-  public AllAccountsWithoutTransactions owner(UUID owner) {
+  public AllAccountsWithoutTransactions owner(String owner) {
     this.owner = owner;
     return this;
   }
@@ -199,11 +165,11 @@ public class AllAccountsWithoutTransactions   {
   @Schema(required = true, description = "")
       @NotNull
 
-    public UUID getOwner() {
+    public String getOwner() {
     return owner;
   }
 
-  public void setOwner(UUID owner) {
+  public void setOwner(String owner) {
     this.owner = owner;
   }
 
@@ -226,7 +192,7 @@ public class AllAccountsWithoutTransactions   {
     this.absoluteLimit = absoluteLimit;
   }
 
-  public AllAccountsWithoutTransactions active(UserStatus active) {
+  public AllAccountsWithoutTransactions active(ActiveEnum active) {
     this.active = active;
     return this;
   }
@@ -237,11 +203,11 @@ public class AllAccountsWithoutTransactions   {
    **/
   @Schema(description = "")
   
-    public UserStatus getActive() {
+    public ActiveEnum getActive() {
     return active;
   }
 
-  public void setActive(UserStatus active) {
+  public void setActive(ActiveEnum active) {
     this.active = active;
   }
 

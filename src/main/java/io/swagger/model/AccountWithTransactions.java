@@ -1,8 +1,6 @@
 package io.swagger.model;
 
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -10,11 +8,10 @@ import io.swagger.model.Transaction;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -24,23 +21,21 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
-@Entity(name = "Account")
+@Entity
 public class AccountWithTransactions   {
 
   public AccountWithTransactions(){
 
   }
 
-
-  public AccountWithTransactions(String iban, Double absoluteLimit,UserStatus active, User owner, AccountType type) {
-    this.iban = iban;
+  public AccountWithTransactions( Double absoluteLimit,UserStatus active, String owner, AccountType type) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
   }
 
-  public AccountWithTransactions(String iban, Double balance, AccountType type, User owner, Double absoluteLimit, UserStatus active) {
+  public AccountWithTransactions(String iban, Double balance, AccountType type, String owner, List<Transaction> transaction, Double absoluteLimit, UserStatus active) {
     this.iban = iban;
     this.balance = balance;
     this.type = type;
@@ -48,16 +43,14 @@ public class AccountWithTransactions   {
 //    this.transaction = transaction;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
-
   }
-
 
   @Id
   @JsonProperty("iban")
-  private String iban = "NL" + String.format("%01d",1) + "INHO" + String.format("%09d", 1);
+  private String iban = "NL41 INGB 0008 7353 93";
 
   @JsonProperty("balance")
-  private Double balance = 0.00;
+  private Double balance = null;
 
   /**
    * Gets or Sets type
@@ -65,26 +58,24 @@ public class AccountWithTransactions   {
 
 
   @JsonProperty("type")
-  private AccountType type = AccountType.Current;
+  private AccountType type = null;
 
-  @ManyToOne
-  @JsonBackReference
   @JsonProperty("owner")
-  private User owner;
+  private String owner = null;
 
 //  @JsonProperty("transaction")
 //  @Valid
 //  private List<Transaction> transaction = null;
 
   @JsonProperty("absoluteLimit")
-  private Double absoluteLimit = 0.00;
+  private Double absoluteLimit = null;
 
   /**
    * Gets or Sets active
    */
 
   @JsonProperty("active")
-  private UserStatus active = UserStatus.Active;
+  private UserStatus active = null;
 
   public AccountWithTransactions iban(String iban) {
     this.iban = iban;
@@ -144,7 +135,7 @@ public class AccountWithTransactions   {
     this.type = type;
   }
 
-  public AccountWithTransactions owner(User owner) {
+  public AccountWithTransactions owner(String owner) {
     this.owner = owner;
     return this;
   }
@@ -156,11 +147,11 @@ public class AccountWithTransactions   {
   @Schema(required = true, description = "")
       @NotNull
 
-    public User getOwner() {
+    public String getOwner() {
     return owner;
   }
 
-  public void setOwner(User owner) {
+  public void setOwner(String owner) {
     this.owner = owner;
   }
 //

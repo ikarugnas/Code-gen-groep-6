@@ -1,14 +1,10 @@
 package io.swagger.configuration;
 
-
 import io.swagger.model.RegisterDTO;
 import io.swagger.model.User;
 import io.swagger.model.UserRole;
 import io.swagger.model.UserStatus;
-import io.swagger.model.*;
-import io.swagger.repository.AccountRepository;
 import io.swagger.repository.UserRepository;
-import io.swagger.service.AccountService;
 import io.swagger.service.UserService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -17,23 +13,20 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 @ConditionalOnProperty(prefix = "bankingAPI.autorun", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class Applicationrunner implements ApplicationRunner {
 
-
     UserRepository userRepository;
-    AccountService accountService;
-    AccountRepository accountRepository;
+
     UserService userService;
 
-    public Applicationrunner(UserRepository userRepository, UserService userService, AccountService accountService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.accountService = accountService;
+    public Applicationrunner(UserRepository userRepository, UserService userService) {
+      this.userRepository = userRepository;
+      this.userService = userService;
     }
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         List<User> users =
@@ -50,26 +43,5 @@ public class Applicationrunner implements ApplicationRunner {
 
         userService.createUser(customer);
         userService.createUser(employee);
-
-        // create bank user to create a bank account
-        RegisterDTO bank = new RegisterDTO("bank", "bank123", "Inholland Bank ", "inhollandBank@bankapi.com");
-        userService.createUser(bank);
-
-        // get bank user uuid
-        UUID userId = userService.getUserByUsername("bank").getId();
-
-        // create bank account which is a requirement
-        AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 1000.00, UserStatus.Active);
-        accountService.createBankAccount(bankAccount);
-
-        // test account
-        CreateAccount account2 = new CreateAccount(0.00, UserStatus.Active, "test1", AccountType.Current);
-        accountService.createNewAccount(account2);
-
-
-
-
-
     }
-
 }
