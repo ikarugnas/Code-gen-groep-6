@@ -2,13 +2,17 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.model.Transaction;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -24,14 +28,14 @@ public class AccountWithTransactions   {
 
   }
 
-  public AccountWithTransactions(Double absoluteLimit, Status active, String owner, AccountType type) {
+  public AccountWithTransactions( Double absoluteLimit,UserStatus active, String owner, AccountType type) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
   }
 
-  public AccountWithTransactions(String iban, Double balance, AccountType type, String owner, List<Transaction> transaction, Double absoluteLimit, Status active) {
+  public AccountWithTransactions(String iban, Double balance, AccountType type, String owner, List<Transaction> transaction, Double absoluteLimit, UserStatus active) {
     this.iban = iban;
     this.balance = balance;
     this.type = type;
@@ -71,7 +75,7 @@ public class AccountWithTransactions   {
    */
 
   @JsonProperty("active")
-  private Status active = null;
+  private UserStatus active = null;
 
   public AccountWithTransactions iban(String iban) {
     this.iban = iban;
@@ -197,7 +201,7 @@ public class AccountWithTransactions   {
     this.absoluteLimit = absoluteLimit;
   }
 
-  public AccountWithTransactions active(Status active) {
+  public AccountWithTransactions active(UserStatus active) {
     this.active = active;
     return this;
   }
@@ -208,11 +212,11 @@ public class AccountWithTransactions   {
    **/
   @Schema(description = "")
   
-    public Status getActive() {
+    public UserStatus getActive() {
     return active;
   }
 
-  public void setActive(Status active) {
+  public void setActive(UserStatus active) {
     this.active = active;
   }
 
