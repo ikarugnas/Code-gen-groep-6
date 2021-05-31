@@ -2,6 +2,7 @@ package io.swagger.service;
 
 import io.swagger.model.LoginDTO;
 import io.swagger.model.RegisterDTO;
+import io.swagger.model.Status;
 import io.swagger.model.User;
 import io.swagger.repository.UserRepository;
 import io.swagger.security.JwtTokenProvider;
@@ -55,12 +56,20 @@ public class UserService {
         return userRepository.findByUsername(registerDTO.getUsername());
     }
 
-    public String loginUser(LoginDTO loginDTO) {
+    public String loginUser(LoginDTO loginDTO) throws Exception {
         try {
+            //Check userStatus
+            User user = userRepository.findByUsername(loginDTO.getUsername());
+            if (user.getUserStatus().equals(Status.Inactive)){
+                throw new Exception("User account is inactive, please take contact with an employee!");
+            }
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
-            return jwtTokenProvider.createToken(loginDTO.getUsername(), userRepository.findByUsername(loginDTO.getUsername()).getRoles());
+            return jwtTokenProvider.createToken(loginDTO.getUsername(), user.getRoles());
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username or Password is incorrect");
+        } catch (Exception ex){
+            throw new Exception(ex.getMessage());
         }
 
     }
