@@ -1,6 +1,8 @@
 package io.swagger.model;
 
 import java.util.Objects;
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -22,24 +24,31 @@ public class CreateAccount   {
    */
 
   @JsonProperty("type")
-  private AccountType type = null;
+  private AccountType type = AccountType.Current;
 
   @JsonProperty("owner")
-  private String owner = null;
+  private String owner;
 
   @JsonProperty("absoluteLimit")
-  private Double absoluteLimit = null;
+  private Double absoluteLimit = 0.00;
 
   /**
    * Gets or Sets active
    */
 
   @JsonProperty("active")
-  private UserStatus active = null;
+  private UserStatus active = UserStatus.Active;
 
   public CreateAccount type(AccountType type) {
     this.type = type;
     return this;
+  }
+
+  public CreateAccount(Double absoluteLimit, UserStatus active, String owner, AccountType type) {
+    this.type = type;
+    this.owner = owner;
+    this.absoluteLimit = absoluteLimit;
+    this.active = active;
   }
 
   /**
