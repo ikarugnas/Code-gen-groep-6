@@ -83,7 +83,7 @@ public class UserService {
 
     public User updateUser(UUID idOfUserToUpdate, User updatedUser) {
         System.out.println("step1");
-        User userToUpdate = userRepository.getOne(idOfUserToUpdate);
+        User userToUpdate = userRepository.findUserById(idOfUserToUpdate);
         //Commented line under may be used if Id needs to be changed.
         //userToUpdate.setId(updatedUser.getId());
         userToUpdate.setUsername(updatedUser.getUsername());
