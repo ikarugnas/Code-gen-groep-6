@@ -137,12 +137,12 @@ public class UsersApiController implements UsersApi {
         }
 
         // Check if email is valid
-        if (!validEmail(body.getEmail())){
+        if (!body.hasValidEmail()){
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Email address is invalid");
         }
 
         // Check if password meets requirements
-        String passwordValidation = validatePassword(body.getPassword());
+        String passwordValidation = body.validatePassword();
         if (passwordValidation != null) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(passwordValidation);
         }
@@ -157,49 +157,6 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") Long id,@Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    private boolean validEmail(String email) {
-        // Checks if email has an @
-        if (!email.matches("(.+)(\\@)(.+)")) { return false; }
-
-        String[] splitEmail = email.split("@");
-        String prefix = splitEmail[0];
-        String domain = splitEmail[1];
-
-        // Checks if prefix is valid
-        if (!(prefix.matches("[a-zA-Z0-9]+") || prefix.matches("([a-zA-Z0-9]+)([\\-\\.\\_])([a-zA-Z0-9]+)"))) { return false; }
-
-        // Checks if domain is valid
-        if (!(domain.matches("([a-zA-Z0-9]+)([\\.])([a-z]{2,})") || domain.matches("([a-zA-Z0-9]+)(\\-)([a-zA-Z0-9]+)([\\.])([a-z]{2,})"))) { return false; }
-
-        return true;
-    }
-
-    private String validatePassword(String password) {
-
-        // Check if password length is 8 or more
-        if (password.length() < 8) {
-            return "Password is invalid (password length must be 8 or more)";
-        }
-
-        // Check if password has a capital letter
-        if (!(password.matches("(.*)([A-Z])(.*)"))) {
-            return "Password is invalid (password misses a captital letter)!";
-        }
-
-        // Check if password has a number
-        if (!(password.matches("(.*)([0-9])(.*)"))) {
-            return "Password is invalid (password misses a number)!";
-        }
-
-        // Check if password has one of these special characters (!, @, #, $, %, ^, & or *)
-        if (!(password.matches("(.*)([\\!\\@\\#\\$\\%\\^\\&\\*])(.*)"))) {
-            return "Password is invalid (password misses one of these special characters [!, @, #, $, %, ^, & or *])!";
-        }
-
-        // returns null if password is valid
-        return null;
     }
 
 }

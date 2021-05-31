@@ -1,29 +1,46 @@
 package io.swagger.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginDTOTest {
 
+    private LoginDTO loginDTO;
+
+    @BeforeEach
+    public void setUp(){
+        loginDTO = new LoginDTO();
+    }
+
     @Test
     public void createLoginDTOShouldNotBeNull() {
-        LoginDTO loginDTO = new LoginDTO();
         assertNotNull(loginDTO);
     }
 
     @Test
     public void getNullOrEmptyPropertiesShouldGiveStringWhenPropertiesAreEmpty(){
-        LoginDTO loginDTO = new LoginDTO();
         assertEquals(loginDTO.getNullOrEmptyProperties(), "Username and password are empty");
     }
 
     @Test
+    public void getNullOrEmptyPropertiesShouldGiveStringWhenUsernameIsEmpty(){
+        loginDTO.setPassword("password");
+        assertEquals(loginDTO.getNullOrEmptyProperties(), "Username is empty");
+    }
+
+    @Test
+    public void getNullOrEmptyPropertiesShouldGiveStringWhenPasswordIsEmpty(){
+        loginDTO.setUsername("username");
+        assertEquals(loginDTO.getNullOrEmptyProperties(), "Password is empty");
+    }
+
+    @Test
     public void getNullOrEmptyPropertiesShouldGiveNullWhenNoPropertiesAreEmpty(){
-        LoginDTO loginDTO = new LoginDTO();
         loginDTO.setUsername("username");
         loginDTO.setPassword("password");
 
-        assertEquals(loginDTO.getNullOrEmptyProperties(), null);
+        assertNull(loginDTO.getNullOrEmptyProperties());
     }
 }

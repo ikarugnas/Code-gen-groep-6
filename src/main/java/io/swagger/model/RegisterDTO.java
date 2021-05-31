@@ -315,4 +315,47 @@ public class RegisterDTO   {
 
     return null;
   }
+
+  public boolean hasValidEmail() {
+    // Checks if email has an @
+    if (!this.email.matches("(.+)(\\@)(.+)")) { return false; }
+
+    String[] splitEmail = this.email.split("@");
+    String prefix = splitEmail[0];
+    String domain = splitEmail[1];
+
+    // Checks if prefix is valid
+    if (!(prefix.matches("[a-zA-Z0-9]+") || prefix.matches("([a-zA-Z0-9]+)([\\-\\.\\_])([a-zA-Z0-9]+)"))) { return false; }
+
+    // Checks if domain is valid
+    if (!(domain.matches("([a-zA-Z0-9]+)([\\.])([a-z]{2,})") || domain.matches("([a-zA-Z0-9]+)(\\-)([a-zA-Z0-9]+)([\\.])([a-z]{2,})"))) { return false; }
+
+    return true;
+  }
+
+  public String validatePassword() {
+
+    // Check if password length is 8 or more
+    if (this.password.length() < 8) {
+      return "Password is invalid (password length must be 8 or more)";
+    }
+
+    // Check if password has a capital letter
+    if (!(this.password.matches("(.*)([A-Z])(.*)"))) {
+      return "Password is invalid (password misses a captital letter)!";
+    }
+
+    // Check if password has a number
+    if (!(this.password.matches("(.*)([0-9])(.*)"))) {
+      return "Password is invalid (password misses a number)!";
+    }
+
+    // Check if password has one of these special characters (!, @, #, $, %, ^, & or *)
+    if (!(this.password.matches("(.*)([\\!\\@\\#\\$\\%\\^\\&\\*])(.*)"))) {
+      return "Password is invalid (password misses one of these special characters [!, @, #, $, %, ^, & or *])!";
+    }
+
+    // returns null if password is valid
+    return null;
+  }
 }
