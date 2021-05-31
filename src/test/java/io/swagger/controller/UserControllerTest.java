@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.LoginDTO;
 import io.swagger.model.RegisterDTO;
-import io.swagger.model.User;
+import io.swagger.model.UserRole;
 import io.swagger.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Arrays;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,6 +52,8 @@ public class UserControllerTest {
         loginDTO.setPassword("test1");
 
         registerDTO = new RegisterDTO("customer", "hoi", "customer hoi", "customer@bankapi.com");
+
+
     }
 
     // Login tests
@@ -96,6 +105,8 @@ public class UserControllerTest {
     // Register tests
     @Test
     public void whenRegisterUserWithEmptyBodyShouldReturnBadRequestAndErrorMessage() throws Exception {
+
+
         this.mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("{}"))
@@ -111,7 +122,21 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(registerDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value("Username, password, name and email are empty"));
+                .andExpect(jsonPath("$").value("Username already exits"));
     }
+
+    @Test
+    public void whenRegisterUserWithInvalidUsernameShouldReturnUnprocessableEntityAndErrorString() throws Exception {
+        registerDTO.setEmail("test.bankingApi.com");
+
+        this.mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(registerDTO)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$").value("Email address is invalid"));
+    }
+
+//    @Test
+//    public void when
 
 }
