@@ -90,6 +90,14 @@ public class UserService {
         return userRepository.findUserByUsernameQuery(usernameToSearchFor);
     }
 
+    public User getUserByName(String name){
+        return userRepository.findUserByName(name);
+    }
+
+    public User getUserByEmail(String email){
+        return userRepository.findUserByEmail(email);
+    }
+    
     public User updateUser(UUID idOfUserToUpdate, User updatedUser) {
         System.out.println("step1");
         User userToUpdate = userRepository.findUserById(idOfUserToUpdate);

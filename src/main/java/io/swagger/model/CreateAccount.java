@@ -1,6 +1,8 @@
 package io.swagger.model;
 
 import java.util.Objects;
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
@@ -20,13 +22,13 @@ public class CreateAccount   {
    */
 
   @JsonProperty("type")
-  private AccountType type = null;
+  private AccountType type = AccountType.Current;
 
   @JsonProperty("owner")
-  private String owner = null;
+  private String owner;
 
   @JsonProperty("absoluteLimit")
-  private Double absoluteLimit = null;
+  private Double absoluteLimit = 0.00;
 
   /**
    * Gets or Sets active
@@ -38,6 +40,13 @@ public class CreateAccount   {
   public CreateAccount type(AccountType type) {
     this.type = type;
     return this;
+  }
+
+  public CreateAccount(Double absoluteLimit, Status active, String owner, AccountType type) {
+    this.type = type;
+    this.owner = owner;
+    this.absoluteLimit = absoluteLimit;
+    this.active = active;
   }
 
   /**
