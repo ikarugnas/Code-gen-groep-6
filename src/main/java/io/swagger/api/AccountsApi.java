@@ -6,8 +6,9 @@
 package io.swagger.api;
 
 import io.swagger.model.AccountWithTransactions;
-import io.swagger.model.AllAccountsWithoutTransactions;
+import io.swagger.model.AccountWithTransactions;
 import io.swagger.model.CreateAccount;
+import io.swagger.model.UpdateAccountDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -21,18 +22,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 @Validated
@@ -65,13 +60,13 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/{iban}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<AccountWithTransactions>> getAccount(@Parameter(in = ParameterIn.PATH, description = "Iban of the account", required=true, schema=@Schema()) @PathVariable("iban") String iban);
+    ResponseEntity<AccountWithTransactions> getAccount(@Parameter(in = ParameterIn.PATH, description = "Iban of the account", required=true, schema=@Schema()) @PathVariable("iban") String iban);
 
 
     @Operation(summary = "get ALL accounts", description = "get ALL existing accounts (employee use only)", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "accounts", "employee" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "successfully got accounts", content = @Content(array = @ArraySchema(schema = @Schema(implementation = AllAccountsWithoutTransactions.class)))),
+        @ApiResponse(responseCode = "200", description = "successfully got accounts", content = @Content(array = @ArraySchema(schema = @Schema(implementation = AccountWithTransactions.class)))),
         
         @ApiResponse(responseCode = "400", description = "invalid input"),
         
@@ -81,21 +76,21 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<AllAccountsWithoutTransactions>> getAllAccounts(@Parameter(in = ParameterIn.QUERY, description = "amount of accounts to skip" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of accounts to get" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this first name or last name" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this username" ,schema=@Schema()) @Valid @RequestParam(value = "username", required = false) String username, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this email" ,schema=@Schema()) @Valid @RequestParam(value = "email", required = false) String email);
+    ResponseEntity<List<AccountWithTransactions>> getAllAccounts(@Parameter(in = ParameterIn.QUERY, description = "amount of accounts to skip" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of accounts to get" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this first name or last name" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this username" ,schema=@Schema()) @Valid @RequestParam(value = "username", required = false) String username, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this email" ,schema=@Schema()) @Valid @RequestParam(value = "email", required = false) String email);
 
 
     @Operation(summary = "get user accounts", description = "get all accounts for user", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "accounts", "customer", "employee" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "successfully got accounts", content = @Content(array = @ArraySchema(schema = @Schema(implementation = AllAccountsWithoutTransactions.class)))),
+        @ApiResponse(responseCode = "200", description = "successfully got accounts", content = @Content(array = @ArraySchema(schema = @Schema(implementation = AccountWithTransactions.class)))),
         
         @ApiResponse(responseCode = "401", description = "Unauthorized."),
         
         @ApiResponse(responseCode = "404", description = "No accounts found") })
-    @RequestMapping(value = "/accounts/{username}",
+    @RequestMapping(value = "/accounts/username/{username}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<AllAccountsWithoutTransactions>> getUserAccounts(@Parameter(in = ParameterIn.PATH, description = "User of accounts to get", required=true, schema=@Schema()) @PathVariable("username") String username);
+    ResponseEntity<List<AccountWithTransactions>> getUserAccounts(@Parameter(in = ParameterIn.PATH, description = "User of accounts to get", required=true, schema=@Schema()) @PathVariable("username") String username);
 
 
     @Operation(summary = "Update account", description = "update an account", security = {
@@ -111,7 +106,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/{iban}",
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateAcount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.DEFAULT, description = "Update account", required=true, schema=@Schema()) @Valid @RequestBody AccountWithTransactions body);
+    ResponseEntity<Void> updateAcount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.DEFAULT, description = "Update account", required=true, schema=@Schema()) @Valid @RequestBody UpdateAccountDTO body);
 
 }
 

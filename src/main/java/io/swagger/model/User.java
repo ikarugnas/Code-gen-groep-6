@@ -2,6 +2,7 @@ package io.swagger.model;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
@@ -39,8 +40,10 @@ public class User   {
   @ElementCollection(fetch = FetchType.EAGER)
   private List<UserRole> roles = null;
 
-//  @JsonProperty("account")
-//  private AccountWithTransactions account = null;
+  @OneToMany
+  @JsonManagedReference
+  @JsonProperty("account")
+  private Set<AccountWithTransactions> account = null;
 
   @JsonProperty("dayLimit")
   private Double dayLimit = null;
