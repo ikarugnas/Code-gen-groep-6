@@ -4,11 +4,8 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.model.Transaction;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.*;
 
 /**
@@ -34,6 +33,7 @@ public class AccountWithTransactions   {
 
   public AccountWithTransactions(String iban, Double absoluteLimit,UserStatus active, User owner, AccountType type) {
     this.iban = iban;
+  public AccountWithTransactions(Double absoluteLimit, Status active, String owner, AccountType type) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
@@ -41,6 +41,7 @@ public class AccountWithTransactions   {
   }
 
   public AccountWithTransactions(String iban, Double balance, AccountType type, User owner, Double absoluteLimit, UserStatus active) {
+  public AccountWithTransactions(String iban, Double balance, AccountType type, String owner, List<Transaction> transaction, Double absoluteLimit, Status active) {
     this.iban = iban;
     this.balance = balance;
     this.type = type;
@@ -85,6 +86,7 @@ public class AccountWithTransactions   {
 
   @JsonProperty("active")
   private UserStatus active = UserStatus.Active;
+  private Status active = null;
 
   public AccountWithTransactions iban(String iban) {
     this.iban = iban;
@@ -210,7 +212,7 @@ public class AccountWithTransactions   {
     this.absoluteLimit = absoluteLimit;
   }
 
-  public AccountWithTransactions active(UserStatus active) {
+  public AccountWithTransactions active(Status active) {
     this.active = active;
     return this;
   }
@@ -221,11 +223,11 @@ public class AccountWithTransactions   {
    **/
   @Schema(description = "")
   
-    public UserStatus getActive() {
+    public Status getActive() {
     return active;
   }
 
-  public void setActive(UserStatus active) {
+  public void setActive(Status active) {
     this.active = active;
   }
 

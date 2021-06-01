@@ -4,11 +4,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
+
 import javax.validation.constraints.*;
 
 /**
@@ -38,6 +36,7 @@ public class CreateAccount   {
 
   @JsonProperty("active")
   private UserStatus active = UserStatus.Active;
+  private Status active = null;
 
   public CreateAccount type(AccountType type) {
     this.type = type;
@@ -105,7 +104,7 @@ public class CreateAccount   {
     this.absoluteLimit = absoluteLimit;
   }
 
-  public CreateAccount active(UserStatus active) {
+  public CreateAccount active(Status active) {
     this.active = active;
     return this;
   }
@@ -116,11 +115,11 @@ public class CreateAccount   {
    **/
   @Schema(description = "")
   
-    public UserStatus getActive() {
+    public Status getActive() {
     return active;
   }
 
-  public void setActive(UserStatus active) {
+  public void setActive(Status active) {
     this.active = active;
   }
 

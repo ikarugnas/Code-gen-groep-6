@@ -7,6 +7,7 @@ import io.swagger.model.UserRole;
 import io.swagger.model.UserStatus;
 import io.swagger.model.*;
 import io.swagger.repository.AccountRepository;
+import io.swagger.model.Status;
 import io.swagger.repository.UserRepository;
 import io.swagger.service.AccountService;
 import io.swagger.service.UserService;
@@ -38,15 +39,17 @@ public class Applicationrunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         List<User> users =
                 Arrays.asList(
-                        new User("test1", "test1", "testname1", "test1@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, UserStatus.Active),
-                        new User("test2", "test2", "testname2", "test2@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, UserStatus.Active),
-                        new User("test3", "test3", "testname3", "test3@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, UserStatus.Active)
+                        new User("test1", "test1", "testname1", "test1@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, Status.Active),
+                        new User("test2", "test2", "testname2", "test2@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, Status.Active),
+                        new User("test3", "test3", "testname3", "test3@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, Status.Active)
                         );
 
         users.forEach(userRepository::save);
 
         RegisterDTO customer = new RegisterDTO("customer", "hoi", "customer hoi", "customer@bankapi.com");
         RegisterDTO employee = new RegisterDTO("employee", "hoi", "employee hoi", "employee@bankapi.com", UserRole.ROLE_Employee);
+        RegisterDTO inactiveUser = new RegisterDTO("inactive", "hoi", "inactive hoi", "inactive@bankapi.com");
+        inactiveUser.setUserStatus(Status.Inactive);
 
         userService.createUser(customer);
         userService.createUser(employee);
@@ -70,6 +73,7 @@ public class Applicationrunner implements ApplicationRunner {
 
 
 
+        userService.createUser(inactiveUser);
     }
 
 }
