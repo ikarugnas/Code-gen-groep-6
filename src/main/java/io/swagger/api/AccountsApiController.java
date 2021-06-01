@@ -73,7 +73,31 @@ public class AccountsApiController implements AccountsApi {
 
     //werkt
     public ResponseEntity<List<AccountWithTransactions>> getAllAccounts(@Parameter(in = ParameterIn.QUERY, description = "amount of accounts to skip", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of accounts to get", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this first name or last name", schema = @Schema()) @Valid @RequestParam(value = "name", required = false) String name, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this username", schema = @Schema()) @Valid @RequestParam(value = "username", required = false) String username, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this email", schema = @Schema()) @Valid @RequestParam(value = "email", required = false) String email) {
+
+
         try {
+//            if(offset != null || limit !=null || name != null || username != null || email != null){
+//
+//            }
+
+            if(name != null){
+                User user = userService.getUserByName(name);
+                return new ResponseEntity<List<AccountWithTransactions>>(accountService.getAllAccountsByUser(user), HttpStatus.OK);
+            }
+
+            if(username !=null){
+                User user = userService.getUserByUsername(username);
+                return new ResponseEntity<List<AccountWithTransactions>>(accountService.getAllAccountsByUser(user), HttpStatus.OK);
+
+            }
+
+            if(email != null){
+                User user = userService.getUserByEmail(email);
+                return new ResponseEntity<List<AccountWithTransactions>>(accountService.getAllAccountsByUser(user), HttpStatus.OK);
+            }
+
+
+
             return new ResponseEntity<List<AccountWithTransactions>>(accountService.getAllAccounts(), HttpStatus.OK);
         } catch (Exception e) {
             log.error("Couldn't serialize response for content type application/json", e);

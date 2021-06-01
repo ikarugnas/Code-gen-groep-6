@@ -4,6 +4,7 @@ import io.swagger.model.*;
 import io.swagger.repository.AccountRepository;
 import io.swagger.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,6 +42,10 @@ public class AccountService {
     public List<AccountWithTransactions> getAllAccounts(){
         return accountRepository.findAll();
     }
+
+//    public List<AccountWithTransactions> getAccountsWithOffset(long offset, long limit){
+//        return accountRepository.findTopByIbanBetween(offset, limit);
+//    }
 
     public List<AccountWithTransactions> getAllAccountsByUser(User user){
         return accountRepository.findAllAccountsByOwner(user);
