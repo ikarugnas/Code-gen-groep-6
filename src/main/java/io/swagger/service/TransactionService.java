@@ -1,9 +1,6 @@
 package io.swagger.service;
 
-import io.swagger.model.Deposit;
-import io.swagger.model.RegisterDTO;
-import io.swagger.model.Transaction;
-import io.swagger.model.User;
+import io.swagger.model.*;
 import io.swagger.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +16,14 @@ public class TransactionService {
     public TransactionService() {
     }
 
-    public Transaction createTransaction(Transaction transaction){
+    public Transaction createTransaction(TransactionRequestBody transaction){
         Transaction newTransaction = new Transaction(transaction.getAccountFrom(),
                 transaction.getAmount(),
                 transaction.getAccountTo());
 
-        transactionRepository.save(transaction);
+        transactionRepository.save(newTransaction);
 
-        return transactionRepository.findAll().get(0);
+        return transactionRepository.findAccountFrom(transaction.getAccountFrom());
     }
 
 //    public List<Transaction> getAllTransactions() {

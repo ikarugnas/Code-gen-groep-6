@@ -25,7 +25,7 @@ import java.util.UUID;
 //}
 
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
+public interface TransactionRepository extends JpaRepository<Transaction, String> {
 
-    Transaction createTransaction(Transaction transaction);
+    Transaction findAccountFrom(String account);
 }

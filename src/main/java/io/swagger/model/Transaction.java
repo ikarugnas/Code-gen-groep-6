@@ -10,14 +10,19 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
+import javax.persistence.*;
+
 /**
  * Transaction
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
-
+@Entity
 public class Transaction   {
+
+  @Id
+  @GeneratedValue
   @JsonProperty("userPerforming")
   private String userPerforming = null;
 
