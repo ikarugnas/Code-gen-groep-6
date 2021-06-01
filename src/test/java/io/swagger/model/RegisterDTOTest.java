@@ -14,11 +14,34 @@ class RegisterDTOTest {
         registerDTO = new RegisterDTO();
     }
 
+    //region createRegisterDTOTests
     @Test
     public void createRegisterDTOShouldNotBeNull() {
         assertNotNull(registerDTO);
     }
 
+    @Test
+    public void createRegisterDTORoleShouldNotBeNull(){
+        assertNotNull(registerDTO.getRole());
+    }
+
+    @Test
+    public void createRegisterDTODayLimitShouldNotBeNull(){
+        assertNotNull(registerDTO.getDayLimit());
+    }
+
+    @Test
+    public void createRegisterDTOTransactionLimitShouldNotBeNull(){
+        assertNotNull(registerDTO.getTransactionLimit());
+    }
+
+    @Test
+    public void createRegisterDTOUserStatusShouldNotBeNull(){
+        assertNotNull(registerDTO.getUserStatus());
+    }
+    //endregion
+
+    //region getNullOrEmptyPropertiesTests
     @Test
     public void getNullOrEmptyPropertiesShouldGiveStringWhenPropertiesAreEmpty(){
         assertEquals(registerDTO.getNullOrEmptyProperties(), "Username, password, name and email are empty");
@@ -113,5 +136,35 @@ class RegisterDTOTest {
         RegisterDTO registerDTO = new RegisterDTO("customer", "hoi", "customer hoi", "customer@bankapi.com");
         assertNull(registerDTO.getNullOrEmptyProperties());
     }
+    //endregion
+
+    //region
+    @Test
+    public void hasValidEmailShouldReturnFalseWhenEmailHasNoAtSign(){
+        registerDTO.setEmail("hoi.banking.nl");
+        assertEquals(registerDTO.hasValidEmail(), false);
+    }
+
+    @Test
+    public void hasValidEmailShouldReturnFalseWhenEmailPrefixStartsWithDot(){
+        registerDTO.setEmail(".hoi@banking.nl");
+        assertEquals(registerDTO.hasValidEmail(), false);
+    }
+
+    @Test
+    public void hasValidEmailShouldReturnFalseWhenEmailPrefixEndsWithDot(){
+        registerDTO.setEmail("hoi.@banking.nl");
+        assertEquals(registerDTO.hasValidEmail(), false);
+    }
+
+    @Test
+    public void hasValidEmailShouldReturnFalseWhenEmailDomain(){
+        registerDTO.setEmail("hoi.@banking.nl");
+        assertEquals(registerDTO.hasValidEmail(), false);
+    }
+
+
+
+    //endregion
 
 }
