@@ -28,7 +28,7 @@ public class AllAccountsWithoutTransactions   {
   @JsonProperty("balance")
   private Double balance = null;
 
-  public AllAccountsWithoutTransactions(String iban, Double balance, AccountType type, UUID owner, Double absoluteLimit, UserStatus active) {
+  public AllAccountsWithoutTransactions(String iban, Double balance, AccountType type, UUID owner, Double absoluteLimit, Status active) {
     this.iban = iban;
     this.balance = balance;
     this.type = type;
@@ -37,7 +37,7 @@ public class AllAccountsWithoutTransactions   {
     this.active = active;
   }
 
-  public AllAccountsWithoutTransactions(Double absoluteLimit, UserStatus active, UUID owner, AccountType type) {
+  public AllAccountsWithoutTransactions(Double absoluteLimit, Status active, UUID owner, AccountType type) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
@@ -119,7 +119,7 @@ public class AllAccountsWithoutTransactions   {
 //    }
 //  }
   @JsonProperty("active")
-  private UserStatus active = UserStatus.Active;
+  private Status active = Status.Active;
 
   public AllAccountsWithoutTransactions iban(String iban) {
     this.iban = iban;
@@ -226,7 +226,7 @@ public class AllAccountsWithoutTransactions   {
     this.absoluteLimit = absoluteLimit;
   }
 
-  public AllAccountsWithoutTransactions active(UserStatus active) {
+  public AllAccountsWithoutTransactions active(Status active) {
     this.active = active;
     return this;
   }
@@ -237,11 +237,11 @@ public class AllAccountsWithoutTransactions   {
    **/
   @Schema(description = "")
   
-    public UserStatus getActive() {
+    public Status getActive() {
     return active;
   }
 
-  public void setActive(UserStatus active) {
+  public void setActive(Status active) {
     this.active = active;
   }
 

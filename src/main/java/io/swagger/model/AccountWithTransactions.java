@@ -31,17 +31,15 @@ public class AccountWithTransactions   {
   }
 
 
-  public AccountWithTransactions(String iban, Double absoluteLimit,UserStatus active, User owner, AccountType type) {
+  public AccountWithTransactions(String iban, Double absoluteLimit, Status active, User owner, AccountType type) {
     this.iban = iban;
-  public AccountWithTransactions(Double absoluteLimit, Status active, String owner, AccountType type) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
   }
 
-  public AccountWithTransactions(String iban, Double balance, AccountType type, User owner, Double absoluteLimit, UserStatus active) {
-  public AccountWithTransactions(String iban, Double balance, AccountType type, String owner, List<Transaction> transaction, Double absoluteLimit, Status active) {
+  public AccountWithTransactions(String iban, Double balance, AccountType type, User owner, Double absoluteLimit, Status active) {
     this.iban = iban;
     this.balance = balance;
     this.type = type;
@@ -85,7 +83,6 @@ public class AccountWithTransactions   {
    */
 
   @JsonProperty("active")
-  private UserStatus active = UserStatus.Active;
   private Status active = null;
 
   public AccountWithTransactions iban(String iban) {

@@ -125,7 +125,7 @@ public class AccountsApiController implements AccountsApi {
 
     public ResponseEntity<Void> updateAcount(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.DEFAULT, description = "Update account", required = true, schema = @Schema()) @Valid @RequestBody UpdateAccountDTO body) {
 
-        if(body.status == UserStatus.Active || body.status == UserStatus.Inactive){
+        if(body.status == Status.Active || body.status == Status.Inactive){
 
             AccountWithTransactions account = accountService.getAccountByIban(iban);
             if(account != null){

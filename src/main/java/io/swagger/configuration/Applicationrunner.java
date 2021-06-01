@@ -4,7 +4,6 @@ package io.swagger.configuration;
 import io.swagger.model.RegisterDTO;
 import io.swagger.model.User;
 import io.swagger.model.UserRole;
-import io.swagger.model.UserStatus;
 import io.swagger.model.*;
 import io.swagger.repository.AccountRepository;
 import io.swagger.model.Status;
@@ -62,11 +61,11 @@ public class Applicationrunner implements ApplicationRunner {
         UUID userId = userService.getUserByUsername("bank").getId();
 
         // create bank account which is a requirement
-        AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 1000.00, UserStatus.Active);
+        AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 1000.00, Status.Active);
         accountService.createBankAccount(bankAccount);
 
         // test account
-        CreateAccount account2 = new CreateAccount(0.00, UserStatus.Active, "test1", AccountType.Current);
+        CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", AccountType.Current);
         accountService.createNewAccount(account2);
 
 

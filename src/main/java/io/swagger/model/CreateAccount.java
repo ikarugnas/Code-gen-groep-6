@@ -35,7 +35,6 @@ public class CreateAccount   {
    */
 
   @JsonProperty("active")
-  private UserStatus active = UserStatus.Active;
   private Status active = null;
 
   public CreateAccount type(AccountType type) {
@@ -43,7 +42,7 @@ public class CreateAccount   {
     return this;
   }
 
-  public CreateAccount(Double absoluteLimit, UserStatus active, String owner, AccountType type) {
+  public CreateAccount(Double absoluteLimit, Status active, String owner, AccountType type) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;

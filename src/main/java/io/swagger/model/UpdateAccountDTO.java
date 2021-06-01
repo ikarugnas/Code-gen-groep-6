@@ -5,21 +5,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UpdateAccountDTO {
 
     @JsonProperty("status")
-    public UserStatus status = UserStatus.Active;
+    public Status status = Status.Active;
 
     @JsonProperty("absoluteLimit")
     public double absoluteLimit = 00.00;
 
-    public UpdateAccountDTO(UserStatus status, double absoluteLimit) {
+    public UpdateAccountDTO(Status status, double absoluteLimit) {
         this.status = status;
         this.absoluteLimit = absoluteLimit;
     }
 
-    public UserStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
