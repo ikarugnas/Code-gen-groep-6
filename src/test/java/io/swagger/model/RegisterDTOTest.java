@@ -138,33 +138,138 @@ class RegisterDTOTest {
     }
     //endregion
 
-    //region
+    //region hasValidEmail
     @Test
     public void hasValidEmailShouldReturnFalseWhenEmailHasNoAtSign(){
         registerDTO.setEmail("hoi.banking.nl");
-        assertEquals(registerDTO.hasValidEmail(), false);
+        assertFalse(registerDTO.hasValidEmail());
     }
 
+    //region prefix
     @Test
     public void hasValidEmailShouldReturnFalseWhenEmailPrefixStartsWithDot(){
         registerDTO.setEmail(".hoi@banking.nl");
-        assertEquals(registerDTO.hasValidEmail(), false);
+        assertFalse(registerDTO.hasValidEmail());
     }
 
     @Test
     public void hasValidEmailShouldReturnFalseWhenEmailPrefixEndsWithDot(){
         registerDTO.setEmail("hoi.@banking.nl");
-        assertEquals(registerDTO.hasValidEmail(), false);
+        assertFalse(registerDTO.hasValidEmail());
     }
 
     @Test
-    public void hasValidEmailShouldReturnFalseWhenEmailDomain(){
-        registerDTO.setEmail("hoi.@banking.nl");
-        assertEquals(registerDTO.hasValidEmail(), false);
+    public void hasValidEmailShouldReturnTrueWhenEmailPrefixContainsDot(){
+        registerDTO.setEmail("hoi.hoi@banking.nl");
+        assertTrue(registerDTO.hasValidEmail());
     }
 
+    @Test
+    public void hasValidEmailShouldReturnTrueWhenEmailPrefixContainsUnderscore(){
+        registerDTO.setEmail("hoi_hoi@banking.nl");
+        assertTrue(registerDTO.hasValidEmail());
+    }
 
+    @Test
+    public void hasValidEmailShouldReturnTrueWhenEmailPrefixContainsHyphen(){
+        registerDTO.setEmail("hoi-hoi@banking.nl");
+        assertTrue(registerDTO.hasValidEmail());
+    }
 
+    @Test
+    public void hasValidEmailShouldReturnFalseWhenEmailPrefixContainsSomeThingElseThanDotUnderscoreOrHyphen(){
+        registerDTO.setEmail("hoi#hoi@banking.nl");
+        assertFalse(registerDTO.hasValidEmail());
+    }
+    //endregion
+
+    //region domain
+    @Test
+    public void hasValidEmailShouldReturnFalseWhenEmailDomainEndsWithADotAndLessThanTwoLetters(){
+        registerDTO.setEmail("hoi.test@banking.n");
+        assertFalse(registerDTO.hasValidEmail());
+    }
+
+    @Test
+    public void hasValidEmailShouldReturnFalseWhenEmailDomainHasNoDot(){
+        registerDTO.setEmail("hoi.test@banking");
+        assertFalse(registerDTO.hasValidEmail());
+    }
+
+    @Test
+    public void hasValidEmailShouldReturnTrueWhenEmailDomainIsValid(){
+        registerDTO.setEmail("hoi.test@banking.nl");
+        assertTrue(registerDTO.hasValidEmail());
+    }
+
+    @Test
+    public void hasValidEmailShouldReturnTrueWhenEmailDomainHasAHyphen(){
+        registerDTO.setEmail("hoi.test@bank-ing.nl");
+        assertTrue(registerDTO.hasValidEmail());
+    }
+
+    @Test
+    public void hasValidEmailShouldReturnFalseWhenEmailDomainHasNoLetterBeforeDot(){
+        registerDTO.setEmail("hoi.test@.nl");
+        assertFalse(registerDTO.hasValidEmail());
+    }
+    //endregion
+    //endregion
+
+    //region validatePassword
+    @Test
+    public void validatePasswordShouldGiveErrorString() {
+        registerDTO.setPassword("");
+        assertEquals(registerDTO.validatePassword(), "Password length must be 8 or more, password misses a letter, password misses a capital letter, password misses a number and password misses one of these special characters [!, @, #, $, %, ^, & or *]");
+    }
+
+    @Test
+    public void validatePasswordShouldGiveErrorStringWhenLengthIsLessThan8() {
+        registerDTO.setPassword("aA3$");
+        assertEquals(registerDTO.validatePassword(), "Password length must be 8 or more");
+    }
+
+    @Test
+    public void validatePasswordShouldGiveErrorStringWhenPasswordMissesALetter() {
+        registerDTO.setPassword("AA3$ASDS");
+        assertEquals(registerDTO.validatePassword(), "Password misses a letter");
+    }
+
+    @Test
+    public void validatePasswordShouldGiveErrorStringWhenPasswordMissesACapitalLetter() {
+        registerDTO.setPassword("aa3$asds");
+        assertEquals(registerDTO.validatePassword(), "Password misses a capital letter");
+    }
+
+    @Test
+    public void validatePasswordShouldGiveErrorStringWhenPasswordMissesANumber() {
+        registerDTO.setPassword("Aad$asds");
+        assertEquals(registerDTO.validatePassword(), "Password misses a number");
+    }
+
+    @Test
+    public void validatePasswordShouldGiveErrorStringWhenPasswordMissesASpecChar() {
+        registerDTO.setPassword("Aa2rasds");
+        assertEquals(registerDTO.validatePassword(), "Password misses one of these special characters [!, @, #, $, %, ^, & or *]");
+    }
+
+    @Test
+    public void validatePasswordShouldGiveAndInErrorStringWhenPasswordHas2Errors() {
+        registerDTO.setPassword("Aa$asd");
+        assertEquals(registerDTO.validatePassword(), "Password length must be 8 or more and password misses a number");
+    }
+
+    @Test
+    public void validatePasswordShouldGiveAndAndACommaInErrorStringWhenPasswordHas3Errors() {
+        registerDTO.setPassword("a$asd");
+        assertEquals(registerDTO.validatePassword(), "Password length must be 8 or more, password misses a capital letter and password misses a number");
+    }
+
+    @Test
+    public void validatePasswordShouldGiveAndAnd2CommasInErrorStringWhenPasswordHas4Errors() {
+        registerDTO.setPassword("aasd");
+        assertEquals(registerDTO.validatePassword(), "Password length must be 8 or more, password misses a capital letter, password misses a number and password misses one of these special characters [!, @, #, $, %, ^, & or *]");
+    }
     //endregion
 
 }

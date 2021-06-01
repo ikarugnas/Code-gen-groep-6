@@ -48,7 +48,7 @@ public class UserControllerTest {
         registerDTO = new RegisterDTO("customer", "Ab3de^gh", "customer hoi", "customer@bankapi.com");
     }
 
-    // Login tests
+    //region loginUser
     @Test
     public void whenLoginUserWithEmptyBodyShouldReturnBadRequestAndErrorMessage() throws Exception {
         this.mockMvc.perform(post("/users/login")
@@ -93,8 +93,9 @@ public class UserControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$").value(exception.getMessage()));
     }
+    //endregion
 
-    // Register tests
+    //region registerUser
     @Test
     public void whenRegisterUserWithoutBeingLoggedInShouldReturnForbidden() throws Exception {
         this.mockMvc.perform(post("/users")
@@ -185,5 +186,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.transactionLimit").value(user.getTransactionLimit()))
                 .andExpect(jsonPath("$.userStatus").value(user.getUserStatus().toString()));
     }
+    //endregion
 
 }
