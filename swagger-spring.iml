@@ -156,6 +156,7 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:5.5.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-crypto:5.5.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.springframework.security:spring-security-test:5.5.0" level="project" />
     <orderEntry type="library" name="Maven: io.cucumber:cucumber-java:6.10.4" level="project" />
     <orderEntry type="library" name="Maven: io.cucumber:cucumber-core:6.10.4" level="project" />
     <orderEntry type="library" name="Maven: io.cucumber:cucumber-gherkin:6.10.4" level="project" />
