@@ -1,12 +1,17 @@
 package io.swagger.model;
 
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -16,8 +21,14 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
-
+@Entity
 public class Withdrawal   {
+
+  @Id
+  @GeneratedValue
+  @JsonProperty("withdrawalId")
+  private Long id = null;
+
   @JsonProperty("userPerforming")
   private String userPerforming = null;
 
@@ -66,11 +77,33 @@ public class Withdrawal   {
   private TransactionTypeEnum transactionType = null;
 
   @JsonProperty("dateAndTime")
-  private OffsetDateTime dateAndTime = null;
+  private Timestamp dateAndTime = null;
+
+  public Withdrawal() {
+  }
+
+  public Withdrawal(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
+    this.id = id;
+    this.userPerforming = userPerforming;
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+    this.amount = amount;
+    this.transactionType = Withdrawal.TransactionTypeEnum.fromValue(transactionType);
+    this.dateAndTime = dateAndTime;
+  }
+
 
   public Withdrawal userPerforming(String userPerforming) {
     this.userPerforming = userPerforming;
     return this;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   /**
@@ -166,7 +199,7 @@ public class Withdrawal   {
     this.transactionType = transactionType;
   }
 
-  public Withdrawal dateAndTime(OffsetDateTime dateAndTime) {
+  public Withdrawal dateAndTime(Timestamp dateAndTime) {
     this.dateAndTime = dateAndTime;
     return this;
   }
@@ -179,11 +212,11 @@ public class Withdrawal   {
       @NotNull
 
     @Valid
-    public OffsetDateTime getDateAndTime() {
+    public Timestamp getDateAndTime() {
     return dateAndTime;
   }
 
-  public void setDateAndTime(OffsetDateTime dateAndTime) {
+  public void setDateAndTime(Timestamp dateAndTime) {
     this.dateAndTime = dateAndTime;
   }
 

@@ -1,14 +1,17 @@
 package io.swagger.model;
 
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+
+import javax.persistence.*;
 
 /**
  * Deposit
@@ -16,10 +19,16 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
-
+@Entity
 public class Deposit   {
+
+  @Id
+  @GeneratedValue
+  @JsonProperty("depositId")
+  public Long id = null;
+
   @JsonProperty("userPerforming")
-  private String userPerforming = null;
+  public String userPerforming = null;
 
   @JsonProperty("accountFrom")
   private String accountFrom = null;
@@ -66,11 +75,34 @@ public class Deposit   {
   private TransactionTypeEnum transactionType = null;
 
   @JsonProperty("dateAndTime")
-  private OffsetDateTime dateAndTime = null;
+  private Timestamp dateAndTime = null;
+
+  public Deposit() {
+  }
+
+
+  public Deposit(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
+    this.id = id;
+    this.userPerforming = userPerforming;
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+    this.amount = amount;
+    this.transactionType = Deposit.TransactionTypeEnum.fromValue(transactionType);
+    this.dateAndTime = dateAndTime;
+  }
+
 
   public Deposit userPerforming(String userPerforming) {
     this.userPerforming = userPerforming;
     return this;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   /**
@@ -80,9 +112,11 @@ public class Deposit   {
   @Schema(example = "BG12345", required = true, description = "")
       @NotNull
 
-    public String getUserPerforming() {
-    return userPerforming;
-  }
+//    public String getUserPerforming() {
+//    return userPerforming;
+//  }
+
+  public String getUserPerforming() { return userPerforming; }
 
   public void setUserPerforming(String userPerforming) {
     this.userPerforming = userPerforming;
@@ -166,7 +200,7 @@ public class Deposit   {
     this.transactionType = transactionType;
   }
 
-  public Deposit dateAndTime(OffsetDateTime dateAndTime) {
+  public Deposit dateAndTime(Timestamp dateAndTime) {
     this.dateAndTime = dateAndTime;
     return this;
   }
@@ -179,11 +213,11 @@ public class Deposit   {
       @NotNull
 
     @Valid
-    public OffsetDateTime getDateAndTime() {
+    public Timestamp getDateAndTime() {
     return dateAndTime;
   }
 
-  public void setDateAndTime(OffsetDateTime dateAndTime) {
+  public void setDateAndTime(Timestamp dateAndTime) {
     this.dateAndTime = dateAndTime;
   }
 
@@ -207,7 +241,7 @@ public class Deposit   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(userPerforming, accountFrom, accountTo, amount, transactionType, dateAndTime);
+    return Objects.hash(userPerforming, accountFrom, accountTo, amount, transactionType);
   }
 
   @Override

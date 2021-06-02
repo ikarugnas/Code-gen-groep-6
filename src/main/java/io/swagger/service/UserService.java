@@ -50,7 +50,6 @@ public class UserService {
                 registerDTO.getDayLimit(),
                 registerDTO.getTransactionLimit(),
                 registerDTO.getUserStatus());
-
         userRepository.save(user);
 
         return userRepository.findByUsername(registerDTO.getUsername());
