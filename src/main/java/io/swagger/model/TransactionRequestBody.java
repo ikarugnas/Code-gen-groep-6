@@ -1,10 +1,13 @@
 package io.swagger.model;
 
+
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
+import org.threeten.bp.OffsetDateTime;
+
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -16,6 +19,14 @@ import javax.validation.constraints.*;
 
 
 public class TransactionRequestBody   {
+  @JsonProperty("transactionId")
+  private Long id = null;
+
+  @JsonProperty("userPerforming")
+  private String userPerforming = null;
+
+
+
   @JsonProperty("accountFrom")
   private String accountFrom = null;
 
@@ -25,10 +36,16 @@ public class TransactionRequestBody   {
   @JsonProperty("accountTo")
   private String accountTo = null;
 
-  public TransactionRequestBody accountFrom(String accountFrom) {
-    this.accountFrom = accountFrom;
-    return this;
+  @JsonProperty("transactionType")
+  private String transactionType = null;
+
+  @JsonProperty("dateAndTime")
+  private String dateAndTime = null;
+
+  public String getDateAndTime() {
+    return dateAndTime;
   }
+
 
   /**
    * Get accountFrom
@@ -37,12 +54,28 @@ public class TransactionRequestBody   {
   @Schema(example = "NL55 RABO 1234 5678 90", required = true, description = "")
       @NotNull
 
+  public String getUserPerforming() {
+    return userPerforming;
+  }
+
+  public void setUserPerforming(String userPerforming) {
+    this.userPerforming = userPerforming;
+  }
+
     public String getAccountFrom() {
     return accountFrom;
   }
 
   public void setAccountFrom(String accountFrom) {
     this.accountFrom = accountFrom;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public TransactionRequestBody amount(Double amount) {
@@ -67,6 +100,25 @@ public class TransactionRequestBody   {
 
   public TransactionRequestBody accountTo(String accountTo) {
     this.accountTo = accountTo;
+    return this;
+  }
+
+
+  public String getTransactionType() {
+    return transactionType;
+  }
+
+  public void setTransactionType(String transactionType) {
+    this.transactionType = transactionType;
+  }
+
+
+  public void setDateAndTime(String dateAndTime) {
+    this.dateAndTime = dateAndTime;
+  }
+
+  public TransactionRequestBody accountFrom(String accountFrom) {
+    this.accountFrom = accountFrom;
     return this;
   }
 

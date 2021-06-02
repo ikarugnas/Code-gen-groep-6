@@ -16,15 +16,70 @@ import javax.validation.constraints.*;
 
 
 public class WithdrawalRequestBody   {
+  @JsonProperty("withdrawalId")
+  private Long id = null;
+
+  @JsonProperty("userPerforming")
+  private String userPerforming = null;
+
   @JsonProperty("accountFrom")
   private String accountFrom = null;
 
   @JsonProperty("amount")
   private Double amount = null;
 
+  @JsonProperty("accountTo")
+  private String accountTo = null;
+
+  @JsonProperty("transactionType")
+  private String transactionType = null;
+
+  @JsonProperty("dateAndTime")
+  private String dateAndTime = null;
+
   public WithdrawalRequestBody accountFrom(String accountFrom) {
     this.accountFrom = accountFrom;
     return this;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getUserPerforming() {
+    return userPerforming;
+  }
+
+  public void setUserPerforming(String userPerforming) {
+    this.userPerforming = userPerforming;
+  }
+
+  public String getAccountTo() {
+    return accountTo;
+  }
+
+  public void setAccountTo(String accountTo) {
+    this.accountTo = accountTo;
+  }
+
+  public String getTransactionType() {
+    return transactionType;
+  }
+
+  public void setTransactionType(String transactionType) {
+    this.transactionType = transactionType;
+  }
+
+  public String getDateAndTime() {
+    return dateAndTime;
+  }
+
+  public void setDateAndTime(String dateAndTime) {
+    this.dateAndTime = dateAndTime;
   }
 
   /**
