@@ -30,7 +30,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     Transaction findByAccountFrom(String account);
 
-//    public List<Transaction> findByIban(String iban);
+    List<Transaction> findByIban(String iban);
 }
 
 

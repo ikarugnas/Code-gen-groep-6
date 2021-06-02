@@ -1,6 +1,7 @@
 package io.swagger.service;
 
 import io.swagger.model.*;
+import io.swagger.repository.AccountRepository;
 import io.swagger.repository.DepositRepository;
 import io.swagger.repository.TransactionRepository;
 import io.swagger.repository.WithdrawalRepository;
@@ -34,15 +35,19 @@ public class TransactionService {
 
     public Transaction createTransaction(TransactionRequestBody transaction){
 
+        AccountWithTransactions accountFrom = AccountRepository.findByIban(transaction.getAccountFrom());
+
         Transaction newTransaction = new Transaction(transaction.getId(),
                 transaction.getUserPerforming(),
-                transaction.getAccountFrom(),
+                accountFrom,
                 transaction.getAccountTo(),
                 transaction.getAmount(),
                 transaction.getTransactionType(),
                 OffsetDateTime.parse(transaction.getDateAndTime()));
 
         transactionRepository.save(newTransaction);
+
+
 
         return transactionRepository.findByAccountFrom(transaction.getAccountFrom());
     }
@@ -82,10 +87,10 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
-//    public List<Transaction> getTransactionByIban(String iban) {
-//
-//        return transactionRepository.findByIban(iban);
-//    }
+    public List<Transaction> getTransactionsByIban(String iban) {
+
+        return transactionRepository.findByIban(iban);
+    }
 
 
 

@@ -32,10 +32,10 @@ public class Transaction   {
   private String userPerforming = null;
 
   @JsonProperty("accountFrom")
-  private String accountFrom = null;
+  private AccountWithTransactions accountFrom = null;
 
   @JsonProperty("accountTo")
-  private String accountTo = null;
+  private AccountWithTransactions accountTo = null;
 
   @JsonProperty("amount")
   private Double amount = null;
@@ -81,7 +81,7 @@ public class Transaction   {
   public Transaction() {
   }
 
-  public Transaction(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, OffsetDateTime dateAndTime) {
+  public Transaction(Long id, String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, OffsetDateTime dateAndTime) {
     this.id = id;
     this.userPerforming = userPerforming;
     this.accountFrom = accountFrom;
@@ -114,7 +114,7 @@ public class Transaction   {
     this.userPerforming = userPerforming;
   }
 
-  public Transaction accountFrom(String accountFrom) {
+  public Transaction accountFrom(AccountWithTransactions accountFrom) {
     this.accountFrom = accountFrom;
     return this;
   }
@@ -125,15 +125,15 @@ public class Transaction   {
    **/
   @Schema(example = "NL55 RABO 1234 5678 90", description = "")
   
-    public String getAccountFrom() {
+    public AccountWithTransactions getAccountFrom() {
     return accountFrom;
   }
 
-  public void setAccountFrom(String accountFrom) {
+  public void setAccountFrom(AccountWithTransactions accountFrom) {
     this.accountFrom = accountFrom;
   }
 
-  public Transaction accountTo(String accountTo) {
+  public Transaction accountTo(AccountWithTransactions accountTo) {
     this.accountTo = accountTo;
     return this;
   }
@@ -144,11 +144,11 @@ public class Transaction   {
    **/
   @Schema(example = "NL55 RABO 1234 5678 90", description = "")
   
-    public String getAccountTo() {
+    public AccountWithTransactions getAccountTo() {
     return accountTo;
   }
 
-  public void setAccountTo(String accountTo) {
+  public void setAccountTo(AccountWithTransactions accountTo) {
     this.accountTo = accountTo;
   }
 
