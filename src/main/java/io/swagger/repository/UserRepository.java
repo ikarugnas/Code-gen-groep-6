@@ -1,5 +1,6 @@
 package io.swagger.repository;
 
+import io.swagger.model.AccountWithTransactions;
 import io.swagger.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     User findUserByName(String name);
     User findUserByEmail(String email);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM USER WHERE NAME = ?1 OR USERNAME = ?2 OR EMAIL = ?3 ")
+    User getUserByInput(String name, String username, String email);
+
 }

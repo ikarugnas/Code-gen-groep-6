@@ -43,13 +43,18 @@ public class AccountService {
         return accountRepository.findAll();
     }
 
-//    public List<AccountWithTransactions> getAccountsWithOffset(long offset, long limit){
-//        return accountRepository.findTopByIbanBetween(offset, limit);
-//    }
+    public List<AccountWithTransactions> getAccountsWithOffset(long offset, long limit){
+        return accountRepository.findaccountsss(offset, limit);
+    }
 
     public List<AccountWithTransactions> getAllAccountsByUser(User user){
         return accountRepository.findAllAccountsByOwner(user);
     }
+
+    public List<AccountWithTransactions> getAllAccountsByUserid(long offset, long limit, UUID Id){
+        return accountRepository.findAccountsById(offset, limit, Id);
+    }
+
 
     public String CreateIBAN(){
         String IBAN = "";

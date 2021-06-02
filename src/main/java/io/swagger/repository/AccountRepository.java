@@ -32,5 +32,15 @@ public interface AccountRepository extends JpaRepository<AccountWithTransactions
 //    @Param("LIMIT") long limit,
 //    @Param("OFFSET") long offset);
 
+    @Query(nativeQuery = true,
+    value = "SELECT * FROM ACCOUNT LIMIT ?2 OFFSET ?1")
+    List<AccountWithTransactions> findaccountsss(long offset, long limit);
+
+
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM ACCOUNT WHERE OWNER_ID = ?3 LIMIT ?2 OFFSET ?1")
+    List<AccountWithTransactions> findAccountsById(long offset, long limit, UUID Id);
+
+
 
 }

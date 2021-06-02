@@ -130,4 +130,8 @@ public class UserService {
             index++;
         }
     }
+
+    public User getuserByInput(String name, String username, String email){
+        return userRepository.getUserByInput(name, username, email);
+    }
 }
