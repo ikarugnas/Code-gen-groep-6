@@ -8,14 +8,9 @@ import io.swagger.repository.WithdrawalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-
-import org.threeten.bp.OffsetDateTime;
 
 @Service
 public class TransactionService {
@@ -46,7 +41,7 @@ public class TransactionService {
                 accountRepository.findAccountWithTransactionsByIban(transaction.getAccountTo()),
                 transaction.getAmount(),
                 transaction.getTransactionType(),
-                OffsetDateTime.parse(transaction.getDateAndTime()));
+                new Timestamp(new Date().getTime()));
 
         transactionRepository.save(newTransaction);
 
@@ -63,7 +58,7 @@ public class TransactionService {
                 deposit.getAccountTo(),
                 deposit.getAmount(),
                 deposit.getTransactionType(),
-                OffsetDateTime.parse(deposit.getDateAndTime()));
+                new Timestamp(new Date().getTime()));
 
         depositRepository.save(newDeposit);
 
@@ -78,7 +73,7 @@ public class TransactionService {
                 withdrawal.getAccountTo(),
                 withdrawal.getAmount(),
                 withdrawal.getTransactionType(),
-                OffsetDateTime.parse(withdrawal.getDateAndTime()));
+                new Timestamp(new Date().getTime()));
 
         withdrawalRepository.save(newWithdrawal);
 

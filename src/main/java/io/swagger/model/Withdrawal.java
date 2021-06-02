@@ -1,11 +1,12 @@
 package io.swagger.model;
 
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
@@ -76,12 +77,12 @@ public class Withdrawal   {
   private TransactionTypeEnum transactionType = null;
 
   @JsonProperty("dateAndTime")
-  private OffsetDateTime dateAndTime = null;
+  private Timestamp dateAndTime = null;
 
   public Withdrawal() {
   }
 
-  public Withdrawal(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, OffsetDateTime dateAndTime) {
+  public Withdrawal(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
     this.id = id;
     this.userPerforming = userPerforming;
     this.accountFrom = accountFrom;
@@ -198,7 +199,7 @@ public class Withdrawal   {
     this.transactionType = transactionType;
   }
 
-  public Withdrawal dateAndTime(OffsetDateTime dateAndTime) {
+  public Withdrawal dateAndTime(Timestamp dateAndTime) {
     this.dateAndTime = dateAndTime;
     return this;
   }
@@ -211,11 +212,11 @@ public class Withdrawal   {
       @NotNull
 
     @Valid
-    public OffsetDateTime getDateAndTime() {
+    public Timestamp getDateAndTime() {
     return dateAndTime;
   }
 
-  public void setDateAndTime(OffsetDateTime dateAndTime) {
+  public void setDateAndTime(Timestamp dateAndTime) {
     this.dateAndTime = dateAndTime;
   }
 
