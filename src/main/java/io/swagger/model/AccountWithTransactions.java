@@ -1,13 +1,14 @@
 package io.swagger.model;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -30,7 +31,6 @@ public class AccountWithTransactions   {
 
   }
 
-
   public AccountWithTransactions(String iban, Double absoluteLimit, Status active, User owner, AccountType type) {
     this.iban = iban;
     this.type = type;
@@ -44,7 +44,6 @@ public class AccountWithTransactions   {
     this.balance = balance;
     this.type = type;
     this.owner = owner;
-//    this.transaction = transaction;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
 
@@ -71,9 +70,11 @@ public class AccountWithTransactions   {
   @JsonProperty("owner")
   private User owner;
 
-//  @JsonProperty("transaction")
-//  @Valid
-//  private List<Transaction> transaction = null;
+  @OneToMany
+  @JsonManagedReference
+  @JsonProperty("transaction")
+  @Valid
+  private List<Transaction> transaction = new ArrayList<Transaction>();
 
   @JsonProperty("absoluteLimit")
   private Double absoluteLimit = 0.00;
@@ -162,33 +163,33 @@ public class AccountWithTransactions   {
   public void setOwner(User owner) {
     this.owner = owner;
   }
-//
-//  public AccountWithTransactions transaction(List<Transaction> transaction) {
-//    this.transaction = transaction;
-//    return this;
-//  }
-//
-//  public AccountWithTransactions addTransactionItem(Transaction transactionItem) {
-//    if (this.transaction == null) {
-//      this.transaction = new ArrayList<Transaction>();
-//    }
-//    this.transaction.add(transactionItem);
-//    return this;
-//  }
+
+  public AccountWithTransactions transaction(List<Transaction> transaction) {
+    this.transaction = transaction;
+    return this;
+  }
+
+  public AccountWithTransactions addTransactionItem(Transaction transactionItem) {
+    if (this.transaction == null) {
+      this.transaction = new ArrayList<Transaction>();
+    }
+    this.transaction.add(transactionItem);
+    return this;
+  }
 
   /**
    * List of the last 50 transaction of this account
    * @return transaction
    **/
-//  @Schema(description = "List of the last 50 transaction of this account")
-//      @Valid
-//    public List<Transaction> getTransaction() {
-//    return transaction;
-//  }
+  @Schema(description = "List of the last 50 transaction of this account")
+      @Valid
+    public List<Transaction> getTransaction() {
+    return transaction;
+  }
 
-//  public void setTransaction(List<Transaction> transaction) {
-//    this.transaction = transaction;
-//  }
+  public void setTransaction(List<Transaction> transaction) {
+    this.transaction = transaction;
+  }
 
   public AccountWithTransactions absoluteLimit(Double absoluteLimit) {
     this.absoluteLimit = absoluteLimit;
@@ -242,7 +243,7 @@ public class AccountWithTransactions   {
         Objects.equals(this.balance, accountWithTransactions.balance) &&
         Objects.equals(this.type, accountWithTransactions.type) &&
         Objects.equals(this.owner, accountWithTransactions.owner) &&
-//        Objects.equals(this.transaction, accountWithTransactions.transaction) &&
+        Objects.equals(this.transaction, accountWithTransactions.transaction) &&
         Objects.equals(this.absoluteLimit, accountWithTransactions.absoluteLimit) &&
         Objects.equals(this.active, accountWithTransactions.active);
   }
@@ -261,7 +262,7 @@ public class AccountWithTransactions   {
     sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    owner: ").append(toIndentedString(owner)).append("\n");
-//    sb.append("    transaction: ").append(toIndentedString(transaction)).append("\n");
+    sb.append("    transaction: ").append(toIndentedString(transaction)).append("\n");
     sb.append("    absoluteLimit: ").append(toIndentedString(absoluteLimit)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("}");

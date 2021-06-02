@@ -4,6 +4,7 @@ import io.swagger.model.Deposit;
 import io.swagger.model.Transaction;
 import io.swagger.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.text.DateFormat;
 import java.util.List;
@@ -27,7 +28,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     Transaction findByAccountFrom(String account);
 
-    List<Transaction> findByIban(String iban);
+//    List<Transaction> findByAccount(String iban);
 }
 
 

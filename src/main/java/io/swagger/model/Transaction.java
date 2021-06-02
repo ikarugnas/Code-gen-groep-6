@@ -3,6 +3,7 @@ package io.swagger.model;
 import java.util.Objects;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -31,9 +32,13 @@ public class Transaction   {
   @JsonProperty("userPerforming")
   private String userPerforming = null;
 
+  @ManyToOne
+  @JsonBackReference
   @JsonProperty("accountFrom")
   private AccountWithTransactions accountFrom = null;
 
+  @ManyToOne
+  @JsonBackReference
   @JsonProperty("accountTo")
   private AccountWithTransactions accountTo = null;
 

@@ -116,13 +116,13 @@ public class TransactionsApiController implements TransactionsApi {
         return new ResponseEntity<List<Transaction>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<List<Transaction>> getTransactionsByIban(@Parameter(in = ParameterIn.PATH, description = "Iban from the transactions you want to see", required=true, schema=@Schema()) @PathVariable("iban") String iban) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<List<Transaction>>(transactionService.getTransactionsByIban(iban), HttpStatus.OK);
-        }
-
-        return new ResponseEntity<List<Transaction>>(HttpStatus.NOT_FOUND);
-    }
+//    public ResponseEntity<List<Transaction>> getTransactionsByIban(@Parameter(in = ParameterIn.PATH, description = "Iban from the transactions you want to see", required=true, schema=@Schema()) @PathVariable("iban") String iban) {
+//        String accept = request.getHeader("Accept");
+//        if (accept != null && accept.contains("application/json")) {
+//            return new ResponseEntity<List<Transaction>>(transactionService.getTransactionsByIban(iban), HttpStatus.OK);
+//        }
+//
+//        return new ResponseEntity<List<Transaction>>(HttpStatus.NOT_FOUND);
+//    }
 
 }

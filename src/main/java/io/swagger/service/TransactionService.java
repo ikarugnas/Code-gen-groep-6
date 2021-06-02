@@ -24,6 +24,9 @@ public class TransactionService {
     TransactionRepository transactionRepository;
 
     @Autowired
+    AccountRepository accountRepository;
+
+    @Autowired
     DepositRepository depositRepository;
 
     @Autowired
@@ -35,12 +38,12 @@ public class TransactionService {
 
     public Transaction createTransaction(TransactionRequestBody transaction){
 
-        AccountWithTransactions accountFrom = AccountRepository.findByIban(transaction.getAccountFrom());
+        AccountWithTransactions accountFrom = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom());
 
         Transaction newTransaction = new Transaction(transaction.getId(),
                 transaction.getUserPerforming(),
                 accountFrom,
-                transaction.getAccountTo(),
+                accountRepository.findAccountWithTransactionsByIban(transaction.getAccountTo()),
                 transaction.getAmount(),
                 transaction.getTransactionType(),
                 OffsetDateTime.parse(transaction.getDateAndTime()));
@@ -87,10 +90,10 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
-    public List<Transaction> getTransactionsByIban(String iban) {
-
-        return transactionRepository.findByIban(iban);
-    }
+//    public List<Transaction> getTransactionsByIban(String iban) {
+//
+//        return transactionRepository.findByIban(iban);
+//    }
 
 
 

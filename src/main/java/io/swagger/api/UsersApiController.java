@@ -122,14 +122,18 @@ public class UsersApiController implements UsersApi {
 
         String emptyProperty = body.getNullOrEmptyProperties();
         if (emptyProperty != null) {
+            log.error("Tried logging in with empty propertie(s)");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
         }
 
         try {
+            log.info(body.getUsername() + "logged in succesfull");
             return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(body));
         } catch (ResponseStatusException responseStatusException) {
+            log.error(body.getUsername() + "; " + responseStatusException.getReason(), responseStatusException);
             return ResponseEntity.status(responseStatusException.getStatus()).body(responseStatusException.getReason());
         } catch (Exception exception){
+            log.error(body.getUsername() + " tried logging in with inactive user account", exception);
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
         }
     }
@@ -141,27 +145,32 @@ public class UsersApiController implements UsersApi {
         // Check if any property of the requestbody is empty or null
         String emptyProperty = body.getNullOrEmptyProperties();
         if (emptyProperty != null){
+            log.error("Tried register user with empty properties");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyProperty);
         }
 
         // Check if username already exists
         if (userService.usernameAlreadyExist(body.getUsername())){
+            log.error("Username already exists");
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username already exits");
         }
 
         // Check if email is valid
         if (!body.hasValidEmail()){
+            log.error("Email is invalid");
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Email address is invalid");
         }
 
         // Check if password meets requirements
         String passwordValidation = body.validatePassword();
         if (passwordValidation != null) {
+            log.error("Password is invalid");
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(passwordValidation);
         }
 
         User user = userService.createUser(body);
 
+        log.info(user.getUsername() + " is created");
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(user);
