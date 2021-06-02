@@ -1,5 +1,7 @@
 package io.swagger.service;
 
+import io.swagger.api.BadRequestException;
+import io.swagger.api.NotFoundException;
 import io.swagger.model.LoginDTO;
 import io.swagger.model.RegisterDTO;
 import io.swagger.model.Status;
@@ -82,7 +84,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(UUID id) {
+    public User getUserById(UUID id) throws BadRequestException, NotFoundException {
         return userRepository.findUserById(id);
     }
 
@@ -99,7 +101,6 @@ public class UserService {
     }
     
     public User updateUser(UUID idOfUserToUpdate, User updatedUser) {
-        System.out.println("step1");
         User userToUpdate = userRepository.findUserById(idOfUserToUpdate);
         //Commented line under may be used if Id needs to be changed.
         //userToUpdate.setId(updatedUser.getId());
@@ -114,20 +115,24 @@ public class UserService {
         userToUpdate.setTransactionLimit(updatedUser.getTransactionLimit());
         userToUpdate.setUserStatus(updatedUser.getUserStatus());
         userRepository.save(userToUpdate);
-        System.out.println("step2");
         return userToUpdate;
     }
 
     //First implementation to delete a user from the system without firing a query.
-    public void deleteUser(UUID uuid) {
-        int index = 0;
-        for (User u : userRepository.findAll()) {
+//    public void deleteUser(UUID uuid) {
+//        int index = 0;
+//        for (User u : userRepository.findAll()) {
+//
+//            if (u.getId() == uuid) {
+//                userRepository.delete(u);
+//                return;
+//            }
+//            index++;
+//        }
+//    }
 
-            if (u.getId() == uuid) {
-                userRepository.delete(u);
-                return;
-            }
-            index++;
-        }
+    //No separate endpoint to activate user. To reactivate the account use the updateUser method.
+    public void deactivateUser(UUID uuid) throws BadRequestException, NotFoundException {
+        userRepository.findUserById(uuid).setUserStatus(Status.Inactive);
     }
 }

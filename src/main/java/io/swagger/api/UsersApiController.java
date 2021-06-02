@@ -55,35 +55,34 @@ public class UsersApiController implements UsersApi {
         this.request = request;
     }
 
+    //Sets the user to inactive
     @PreAuthorize("hasRole('Employee')")
-    public ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "UUID of user to delete.", required=true, schema=@Schema()) @PathVariable("id") UUID id) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+    public ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "UUID of user to delete.", required=true, schema=@Schema()) @PathVariable("uuid") UUID uuid) {
             try {
-                userService.deleteUser(id);
+                //userService.deleteUser(uuid);
+                userService.deactivateUser(uuid);
                 return new ResponseEntity<Void>(HttpStatus.OK);
-            } catch (Exception userNotFoundException) {
-                log.error("No user with that UUID could be found.", userNotFoundException);
+            } catch (BadRequestException badRequestException) {
+//                log.error("No user with that UUID could be found.", userNotFoundException);
+                log.error("Bad credentials. Could not find user.", badRequestException);
                 return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+            } catch (NotFoundException notFoundException) {
+                log.error("An unexpected error has occurred. Please contact support.");
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
-        }
-        log.error("User Not Found");
-        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity<User> getUserById(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("id") UUID id) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
             try {
                 return new ResponseEntity<User>(userService.getUserById(id), HttpStatus.OK);
                 //return new ResponseEntity<List<User>>(objectMapper.readValue("[ {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n}, {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (Exception userIdInvalidException) {
+            } catch (BadRequestException userIdInvalidException) {
                 log.error("Id was invalid", userIdInvalidException);
                 return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+            } catch (NotFoundException notFoundException) {
+                log.error("User Not Found");
+                return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
             }
-        }
-        log.error("User Not Found");
-        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity<User> getUserByUsername(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("username") String username) {
