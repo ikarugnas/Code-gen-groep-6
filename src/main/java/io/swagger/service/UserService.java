@@ -2,10 +2,7 @@ package io.swagger.service;
 
 import io.swagger.api.BadRequestException;
 import io.swagger.api.NotFoundException;
-import io.swagger.model.LoginDTO;
-import io.swagger.model.RegisterDTO;
-import io.swagger.model.Status;
-import io.swagger.model.User;
+import io.swagger.model.*;
 import io.swagger.repository.UserRepository;
 import io.swagger.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +80,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> getUsers(long offset, long limit, String username, String name, String email, UserRole role, Status status) {
+        return userRepository.findAllUsers(offset, limit, username, name, email, role, status);
+    }
+
     public User getUserById(UUID id) throws BadRequestException, NotFoundException {
         return userRepository.findUserById(id);
     }
@@ -97,6 +98,14 @@ public class UserService {
 
     public User getUserByEmail(String email){
         return userRepository.findUserByEmail(email);
+    }
+
+    public User getUserByRole(UserRole role) {
+        return userRepository.findUserByRoles(role);
+    }
+
+    public User getUserByStatus(Status status) {
+        return userRepository.findUserByUserStatus(status);
     }
     
     public User updateUser(UUID idOfUserToUpdate, User updatedUser) {
