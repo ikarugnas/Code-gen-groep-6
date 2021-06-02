@@ -1,6 +1,7 @@
 package io.swagger.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -313,6 +314,74 @@ public class RegisterDTO   {
       return emptyString.toString();
     }
 
+    return null;
+  }
+
+  public boolean hasValidEmail() {
+    // Checks if email has an @
+    if (!this.email.matches("(.+)(\\@)(.+)")) { return false; }
+
+    String[] splitEmail = this.email.split("@");
+    String prefix = splitEmail[0];
+    String domain = splitEmail[1];
+
+    // Checks if prefix is valid
+    if (!(prefix.matches("[a-zA-Z0-9]+") || prefix.matches("([a-zA-Z0-9]+)([\\-\\.\\_])([a-zA-Z0-9]+)"))) { return false; }
+
+    // Checks if domain is valid
+    if (!(domain.matches("([a-zA-Z0-9]+)([\\.])([a-z]{2,})") || domain.matches("([a-zA-Z0-9]+)(\\-)([a-zA-Z0-9]+)([\\.])([a-z]{2,})"))) { return false; }
+
+    return true;
+  }
+
+  public String validatePassword() {
+
+    List<String> errors = new ArrayList<String>();
+
+    // Check if password length is 8 or more
+    if (this.password.length() < 8) {
+      errors.add("password length must be 8 or more");
+    }
+
+    // Check if password has a letter
+    if (!(this.password.matches("(.*)([a-z])(.*)"))) {
+      errors.add("password misses a letter");
+    }
+
+    // Check if password has a capital letter
+    if (!(this.password.matches("(.*)([A-Z])(.*)"))) {
+      errors.add("password misses a capital letter");
+    }
+
+    // Check if password has a number
+    if (!(this.password.matches("(.*)([0-9])(.*)"))) {
+      errors.add("password misses a number");
+    }
+
+    // Check if password has one of these special characters (!, @, #, $, %, ^, & or *)
+    if (!(this.password.matches("(.*)([\\!\\@\\#\\$\\%\\^\\&\\*])(.*)"))) {
+      errors.add("password misses one of these special characters [!, @, #, $, %, ^, & or *]");
+    }
+
+    if (errors.size() > 0) {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append(StringUtils.capitalize(errors.get(0)));
+      errors.remove(0);
+
+      while (errors.size() > 1){
+        sb.append(", ").append(errors.get(0));
+        errors.remove(0);
+      }
+
+      if (errors.size() > 0){
+        sb.append(" and ").append(errors.get(0));
+      }
+
+      return sb.toString();
+    }
+
+    // returns null if password is valid
     return null;
   }
 }

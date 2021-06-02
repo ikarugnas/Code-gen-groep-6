@@ -1,14 +1,18 @@
 package io.swagger.model;
 
+import java.sql.Timestamp;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+
+import javax.persistence.*;
 
 /**
  * Transaction
@@ -16,16 +20,26 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
-
+@Entity
 public class Transaction   {
+
+  @Id
+  @GeneratedValue
+  @JsonProperty("transactionId")
+  private Long id = null;
+
   @JsonProperty("userPerforming")
   private String userPerforming = null;
 
+  @ManyToOne
+  @JsonBackReference
   @JsonProperty("accountFrom")
-  private String accountFrom = null;
+  private AccountWithTransactions accountFrom = null;
 
+  @ManyToOne
+  @JsonBackReference
   @JsonProperty("accountTo")
-  private String accountTo = null;
+  private AccountWithTransactions accountTo = null;
 
   @JsonProperty("amount")
   private Double amount = null;
@@ -66,11 +80,27 @@ public class Transaction   {
   private TransactionTypeEnum transactionType = null;
 
   @JsonProperty("dateAndTime")
-  private OffsetDateTime dateAndTime = null;
+  private Timestamp dateAndTime = null;
 
-  public Transaction userPerforming(String userPerforming) {
+  public Transaction() {
+  }
+
+  public Transaction(Long id, String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
+    this.id = id;
     this.userPerforming = userPerforming;
-    return this;
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+    this.amount = amount;
+    this.transactionType = TransactionTypeEnum.fromValue(transactionType);
+    this.dateAndTime = dateAndTime;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   /**
@@ -88,7 +118,7 @@ public class Transaction   {
     this.userPerforming = userPerforming;
   }
 
-  public Transaction accountFrom(String accountFrom) {
+  public Transaction accountFrom(AccountWithTransactions accountFrom) {
     this.accountFrom = accountFrom;
     return this;
   }
@@ -99,15 +129,15 @@ public class Transaction   {
    **/
   @Schema(example = "NL55 RABO 1234 5678 90", description = "")
   
-    public String getAccountFrom() {
+    public AccountWithTransactions getAccountFrom() {
     return accountFrom;
   }
 
-  public void setAccountFrom(String accountFrom) {
+  public void setAccountFrom(AccountWithTransactions accountFrom) {
     this.accountFrom = accountFrom;
   }
 
-  public Transaction accountTo(String accountTo) {
+  public Transaction accountTo(AccountWithTransactions accountTo) {
     this.accountTo = accountTo;
     return this;
   }
@@ -118,11 +148,11 @@ public class Transaction   {
    **/
   @Schema(example = "NL55 RABO 1234 5678 90", description = "")
   
-    public String getAccountTo() {
+    public AccountWithTransactions getAccountTo() {
     return accountTo;
   }
 
-  public void setAccountTo(String accountTo) {
+  public void setAccountTo(AccountWithTransactions accountTo) {
     this.accountTo = accountTo;
   }
 
@@ -166,7 +196,7 @@ public class Transaction   {
     this.transactionType = transactionType;
   }
 
-  public Transaction dateAndTime(OffsetDateTime dateAndTime) {
+  public Transaction dateAndTime(Timestamp dateAndTime) {
     this.dateAndTime = dateAndTime;
     return this;
   }
@@ -179,11 +209,11 @@ public class Transaction   {
       @NotNull
 
     @Valid
-    public OffsetDateTime getDateAndTime() {
+    public Timestamp getDateAndTime() {
     return dateAndTime;
   }
 
-  public void setDateAndTime(OffsetDateTime dateAndTime) {
+  public void setDateAndTime(Timestamp dateAndTime) {
     this.dateAndTime = dateAndTime;
   }
 
