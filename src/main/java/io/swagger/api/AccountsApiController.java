@@ -4,6 +4,7 @@ import io.swagger.model.*;
 import io.swagger.model.AccountWithTransactions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.AccountService;
+import io.swagger.service.MyUserDetailsService;
 import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -34,6 +35,8 @@ public class AccountsApiController implements AccountsApi {
     AccountService accountService;
     @Autowired
     UserService userService;
+    @Autowired
+    MyUserDetailsService myUserDetailsService;
 
     private static final Logger log = LoggerFactory.getLogger(AccountsApiController.class);
     private final ObjectMapper objectMapper;
@@ -47,6 +50,24 @@ public class AccountsApiController implements AccountsApi {
 
     //werkt
     public ResponseEntity createAccount(@Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody CreateAccount body) {
+        Status defaultStatus = Status.Active;
+        double defaultLimit = 0.00;
+        if(body.getActive() == null){
+            body.setActive(Status.Active);
+        }
+        if(body.getAbsoluteLimit() == null){
+            body.setAbsoluteLimit(defaultLimit);
+        }
+
+        if(myUserDetailsService.getLoggedInUser().getAuthorities().contains(UserRole.ROLE_Customer)){
+            body.setOwner(myUserDetailsService.getLoggedInUser().getUsername());
+
+        }
+        else if(body.getOwner() == null)
+        {
+            log.error("Owner was not given.");
+            return new ResponseEntity<AccountWithTransactions>(HttpStatus.BAD_REQUEST);
+        }
         if(userService.getUserByUsername(body.getOwner()) != null){
             AccountWithTransactions createAccount = accountService.createNewAccount(body);
 
@@ -75,7 +96,7 @@ public class AccountsApiController implements AccountsApi {
 
     //werkt
     @PreAuthorize("hasRole('Employee')")
-    public ResponseEntity<List<AccountWithTransactions>> getAllAccounts(@Parameter(in = ParameterIn.QUERY, description = "amount of accounts to skip", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of accounts to get", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this first name or last name", schema = @Schema()) @Valid @RequestParam(value = "name", required = false) String name, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this username", schema = @Schema()) @Valid @RequestParam(value = "username", required = false) String username, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this email", schema = @Schema()) @Valid @RequestParam(value = "email", required = false) String email) {
+    public ResponseEntity<List<AllAccountsWithoutTransactions>> getAllAccounts(@Parameter(in = ParameterIn.QUERY, description = "amount of accounts to skip", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of accounts to get", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this first name or last name", schema = @Schema()) @Valid @RequestParam(value = "name", required = false) String name, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this username", schema = @Schema()) @Valid @RequestParam(value = "username", required = false) String username, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from person with this email", schema = @Schema()) @Valid @RequestParam(value = "email", required = false) String email) {
         long defaultOffset = 0;
         long defaultLimit = 10;
         try {
@@ -111,14 +132,16 @@ public class AccountsApiController implements AccountsApi {
                     }
                 }
                 User getUserByInput = userService.getuserByInput(name, username, email);
-                return new ResponseEntity<List<AccountWithTransactions>>(accountService.getAllAccountsByUserid(offset, limit, getUserByInput.getId()), HttpStatus.OK);
+                List<AllAccountsWithoutTransactions> allAccountsWithoutTransactionsList = accountService.changingFromWithToWithoutTransaction(accountService.getAllAccountsByUserid(offset, limit, getUserByInput.getId()));
+                return new ResponseEntity<List<AllAccountsWithoutTransactions>>(allAccountsWithoutTransactionsList, HttpStatus.OK);
             }
             else{
-                return new ResponseEntity<List<AccountWithTransactions>>(accountService.getAllAccounts(), HttpStatus.OK);
+                List<AllAccountsWithoutTransactions> allAccountsWithoutTransactionsList = accountService.changingFromWithToWithoutTransaction(accountService.getAllAccounts());
+                return new ResponseEntity<List<AllAccountsWithoutTransactions>>(allAccountsWithoutTransactionsList, HttpStatus.OK);
             }
         } catch (Exception e) {
             log.error("Couldn't serialize response for content type application/json", e);
-            return new ResponseEntity<List<AccountWithTransactions>>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<List<AllAccountsWithoutTransactions>>(HttpStatus.BAD_REQUEST);
         }
     }
 

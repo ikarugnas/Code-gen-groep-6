@@ -35,7 +35,7 @@ public class CreateAccount   {
    */
 
   @JsonProperty("active")
-  private Status active = null;
+  private Status active = Status.Active;
 
   public CreateAccount type(AccountType type) {
     this.type = type;
@@ -73,8 +73,7 @@ public class CreateAccount   {
    * Get owner
    * @return owner
    **/
-  @Schema(required = true, description = "")
-      @NotNull
+  @Schema(required = false, description = "")
 
     public String getOwner() {
     return owner;

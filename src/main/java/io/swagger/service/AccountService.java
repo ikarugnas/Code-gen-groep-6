@@ -43,9 +43,6 @@ public class AccountService {
         return accountRepository.findAll();
     }
 
-    public List<AccountWithTransactions> getAccountsWithOffset(long offset, long limit){
-        return accountRepository.findaccountsss(offset, limit);
-    }
 
     public List<AccountWithTransactions> getAllAccountsByUser(User user){
         return accountRepository.findAllAccountsByOwner(user);
@@ -96,4 +93,17 @@ public class AccountService {
         return accountToBeUpdated;
 
     }
+    
+    public List<AllAccountsWithoutTransactions>changingFromWithToWithoutTransaction(List<AccountWithTransactions> accountWithTransactionsList){
+        List<AllAccountsWithoutTransactions> allAccountsWithoutTransactionsList = new ArrayList<>();
+
+        for (AccountWithTransactions a : accountWithTransactionsList) {
+            AllAccountsWithoutTransactions b = new AllAccountsWithoutTransactions(a.getIban(), a.getBalance(), a.getType(), a.getOwner().getId(), a.getAbsoluteLimit(), a.getActive());
+            allAccountsWithoutTransactionsList.add(b);
+        }
+
+        return allAccountsWithoutTransactionsList;
+    }
+    
+    
 }
