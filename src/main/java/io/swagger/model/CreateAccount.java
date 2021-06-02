@@ -1,12 +1,12 @@
 package io.swagger.model;
 
 import java.util.Objects;
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
+
 import javax.validation.constraints.*;
 
 /**
@@ -22,24 +22,31 @@ public class CreateAccount   {
    */
 
   @JsonProperty("type")
-  private AccountType type = null;
+  private AccountType type = AccountType.Current;
 
   @JsonProperty("owner")
-  private String owner = null;
+  private String owner;
 
   @JsonProperty("absoluteLimit")
-  private Double absoluteLimit = null;
+  private Double absoluteLimit = 0.00;
 
   /**
    * Gets or Sets active
    */
 
   @JsonProperty("active")
-  private UserStatus active = null;
+  private Status active = null;
 
   public CreateAccount type(AccountType type) {
     this.type = type;
     return this;
+  }
+
+  public CreateAccount(Double absoluteLimit, Status active, String owner, AccountType type) {
+    this.type = type;
+    this.owner = owner;
+    this.absoluteLimit = absoluteLimit;
+    this.active = active;
   }
 
   /**
@@ -96,7 +103,7 @@ public class CreateAccount   {
     this.absoluteLimit = absoluteLimit;
   }
 
-  public CreateAccount active(UserStatus active) {
+  public CreateAccount active(Status active) {
     this.active = active;
     return this;
   }
@@ -107,11 +114,11 @@ public class CreateAccount   {
    **/
   @Schema(description = "")
   
-    public UserStatus getActive() {
+    public Status getActive() {
     return active;
   }
 
-  public void setActive(UserStatus active) {
+  public void setActive(Status active) {
     this.active = active;
   }
 

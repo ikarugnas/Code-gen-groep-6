@@ -33,6 +33,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 @Validated
@@ -50,7 +51,7 @@ public interface UsersApi {
         @ApiResponse(responseCode = "404", description = "An unexpected error has occurred. Please contact support.") })
     @RequestMapping(value = "/users/{id}",
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "User to delete.", required=true, schema=@Schema()) @PathVariable("id") Long id);
+    ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "User to delete.", required=true, schema=@Schema()) @PathVariable("id") UUID id);
 
 
     @Operation(summary = "get user by id", description = "Searches in the system for a user value with Id as the Key.", security = {
@@ -66,7 +67,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<User>> getUserById(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("id") Long id);
+    ResponseEntity<User> getUserById(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("id") UUID id);
 
 
     @Operation(summary = "get user by username", description = "Searches in the system for a user value with username as the Key.", security = {
@@ -143,7 +144,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") Long id, @Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User body);
+    ResponseEntity<User>updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") UUID id, @Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User updatedUserData);
 
 }
 

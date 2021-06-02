@@ -1,8 +1,6 @@
 package io.swagger.api;
 
-import io.swagger.model.LoginDTO;
-import io.swagger.model.RegisterDTO;
-import io.swagger.model.User;
+import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.MyUserDetailsService;
 import io.swagger.service.UserService;
@@ -15,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 @RestController
@@ -55,38 +55,50 @@ public class UsersApiController implements UsersApi {
         this.request = request;
     }
 
-    public ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "User to delete.", required=true, schema=@Schema()) @PathVariable("id") Long id) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    public ResponseEntity<List<User>> getUserById(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("id") Long id) {
+    @PreAuthorize("hasRole('Employee')")
+    public ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "UUID of user to delete.", required=true, schema=@Schema()) @PathVariable("id") UUID id) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<List<User>>(objectMapper.readValue("[ {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n}, {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<User>>(HttpStatus.INTERNAL_SERVER_ERROR);
+                userService.deleteUser(id);
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            } catch (Exception userNotFoundException) {
+                log.error("No user with that UUID could be found.", userNotFoundException);
+                return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
             }
         }
+        log.error("User Not Found");
+        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    }
 
-        return new ResponseEntity<List<User>>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<User> getUserById(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("id") UUID id) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                return new ResponseEntity<User>(userService.getUserById(id), HttpStatus.OK);
+                //return new ResponseEntity<List<User>>(objectMapper.readValue("[ {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n}, {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+            } catch (Exception userIdInvalidException) {
+                log.error("Id was invalid", userIdInvalidException);
+                return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        log.error("User Not Found");
+        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity<User> getUserByUsername(@Parameter(in = ParameterIn.PATH, description = "The id of the user to get.", required=true, schema=@Schema()) @PathVariable("username") String username) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return ResponseEntity.status(200).body(userService.getUserByUsername(username));
+                return new ResponseEntity<User>(userService.getUserByUsername(username), HttpStatus.OK);
                 //return new ResponseEntity<List<User>>(objectMapper.readValue("[ {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n}, {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (Exception e) {
-                log.error("Couldn't find username in the system", e);
-                return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (Exception usernameInvalidException) {
+                log.error("Couldn't find username in the system", usernameInvalidException);
+                return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
             }
         }
-
-        return new ResponseEntity<User>(HttpStatus.NOT_IMPLEMENTED);
+        log.error("User Not Found");
+        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity<List<User>> getUsers(@Parameter(in = ParameterIn.QUERY, description = "amount of accounts to skip" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of accounts to get" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Long limit, @Parameter(in = ParameterIn.QUERY, description = "the username that it should search on" ,schema=@Schema()) @Valid @RequestParam(value = "username", required = false) String username, @Parameter(in = ParameterIn.QUERY, description = "the name that it should search on" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name, @Parameter(in = ParameterIn.QUERY, description = "the email that it should search on" ,schema=@Schema()) @Valid @RequestParam(value = "email", required = false) String email, @Parameter(in = ParameterIn.QUERY, description = "the role that it should search on" ,schema=@Schema()) @Valid @RequestParam(value = "role", required = false) String role, @Parameter(in = ParameterIn.QUERY, description = "the user status that it should search on" ,schema=@Schema()) @Valid @RequestParam(value = "userStatus", required = false) String userStatus) {
@@ -94,14 +106,15 @@ public class UsersApiController implements UsersApi {
         System.out.println("hi there");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return ResponseEntity.status(200).body(userService.getAllUsers());
+                return new ResponseEntity<List<User>>(userService.getAllUsers(), HttpStatus.OK);
                 //return new ResponseEntity<List<User>>(objectMapper.readValue("[ {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n}, {\n  \"password\" : \"hiIamapassword4$\",\n  \"role\" : \"Customer\",\n  \"dayLimit\" : 1.4658129805029452,\n  \"userStatus\" : \"Active\",\n  \"name\" : \"Bert Geersen\",\n  \"id\" : 1,\n  \"transactionLimit\" : 5.962133916683182,\n  \"email\" : \"BertGeersen1@gmail.com\",\n  \"account\" : {\n    \"owner\" : \"owner\",\n    \"balance\" : 0.8008281904610115,\n    \"absoluteLimit\" : 0,\n    \"iban\" : \"NL55 RABO 1234 5678 90\",\n    \"active\" : \"Active\",\n    \"type\" : \"Current\",\n    \"transaction\" : [ {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    }, {\n      \"transactionType\" : \"Transaction\",\n      \"accountTo\" : \"NL55 RABO 1234 5678 90\",\n      \"amount\" : 6.027456183070403,\n      \"userPerforming\" : \"BG12345\",\n      \"dateAndTime\" : \"2016-08-29T09:12:33.001Z\",\n      \"accountFrom\" : \"NL55 RABO 1234 5678 90\"\n    } ]\n  },\n  \"username\" : \"BG12345\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<User>>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<List<User>>(HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<List<User>>(HttpStatus.NOT_IMPLEMENTED);
+        log.error("No users found.");
+        return new ResponseEntity<List<User>>(HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity loginUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody LoginDTO body) {
@@ -116,6 +129,8 @@ public class UsersApiController implements UsersApi {
             return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(body));
         } catch (ResponseStatusException responseStatusException) {
             return ResponseEntity.status(responseStatusException.getStatus()).body(responseStatusException.getReason());
+        } catch (Exception exception){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
         }
     }
 
@@ -152,9 +167,20 @@ public class UsersApiController implements UsersApi {
                 .body(user);
     }
 
-    public ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") Long id,@Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User body) {
+    @PreAuthorize("hasRole('Employee')")
+    public ResponseEntity<User> updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") UUID id, @Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User updatedUserData) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                System.out.println("test1");
+                return new ResponseEntity<User>(userService.updateUser(id, updatedUserData), HttpStatus.OK);
+            } catch (Exception e) {
+                log.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        log.error("Could not find user to update.");
+        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
     }
 
     private boolean validEmail(String email) {

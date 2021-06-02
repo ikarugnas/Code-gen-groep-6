@@ -4,9 +4,6 @@ import io.swagger.model.Deposit;
 import io.swagger.model.Transaction;
 import io.swagger.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.text.DateFormat;
 import java.util.List;
