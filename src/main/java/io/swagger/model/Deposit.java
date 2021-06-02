@@ -10,14 +10,22 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
+import javax.persistence.*;
+
 /**
  * Deposit
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
 
-
+@Entity
 public class Deposit   {
+
+  @Id
+  @GeneratedValue
+  @JsonProperty("depositId")
+  public Long id = null;
+
   @JsonProperty("userPerforming")
   public String userPerforming = null;
 
@@ -71,17 +79,29 @@ public class Deposit   {
   public Deposit() {
   }
 
-  public Deposit(String userPerforming, String accountTo, Double amount, TransactionTypeEnum transactionTypeEnum, OffsetDateTime dateAndTime) {
+
+  public Deposit(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, OffsetDateTime dateAndTime) {
+    this.id = id;
     this.userPerforming = userPerforming;
+    this.accountFrom = accountFrom;
     this.accountTo = accountTo;
     this.amount = amount;
-    this.transactionType = transactionTypeEnum;
+    this.transactionType = Deposit.TransactionTypeEnum.fromValue(transactionType);
     this.dateAndTime = dateAndTime;
   }
+
 
   public Deposit userPerforming(String userPerforming) {
     this.userPerforming = userPerforming;
     return this;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   /**

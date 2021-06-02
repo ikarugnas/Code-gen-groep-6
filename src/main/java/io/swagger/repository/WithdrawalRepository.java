@@ -1,6 +1,6 @@
 package io.swagger.repository;
 
-import io.swagger.model.Deposit;
+import io.swagger.model.Withdrawal;
 import io.swagger.model.Transaction;
 import io.swagger.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +12,7 @@ import java.text.DateFormat;
 import java.util.UUID;
 
 @Repository
-public interface DepositRepository extends JpaRepository<Deposit, Long> {
+public interface WithdrawalRepository extends JpaRepository<Withdrawal, Long> {
 
-    Deposit findByAccountFrom(String account);
+    Withdrawal findByAccountFrom(String account);
 }

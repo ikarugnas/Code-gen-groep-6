@@ -1,6 +1,8 @@
 package io.swagger.model;
 
 import java.util.Objects;
+
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -23,6 +25,9 @@ public class Transaction   {
 
   @Id
   @GeneratedValue
+  @JsonProperty("transactionId")
+  private Long id = null;
+
   @JsonProperty("userPerforming")
   private String userPerforming = null;
 
@@ -76,15 +81,22 @@ public class Transaction   {
   public Transaction() {
   }
 
-  public Transaction(String accountFrom, Double amount, String accountTo) {
+  public Transaction(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, OffsetDateTime dateAndTime) {
+    this.id = id;
+    this.userPerforming = userPerforming;
     this.accountFrom = accountFrom;
-    this.amount = amount;
     this.accountTo = accountTo;
+    this.amount = amount;
+    this.transactionType = TransactionTypeEnum.fromValue(transactionType);
+    this.dateAndTime = dateAndTime;
   }
 
-  public Transaction userPerforming(String userPerforming) {
-    this.userPerforming = userPerforming;
-    return this;
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   /**

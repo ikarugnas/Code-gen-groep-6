@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.text.DateFormat;
+import java.util.List;
 import java.util.UUID;
 
 //@Repository
@@ -25,7 +26,12 @@ import java.util.UUID;
 //}
 
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction, String> {
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    Transaction findAccountFrom(String account);
+    Transaction findByAccountFrom(String account);
+
+//    public List<Transaction> findByIban(String iban);
 }
+
+
+

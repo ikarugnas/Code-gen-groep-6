@@ -8,6 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
+import org.threeten.bp.OffsetDateTime;
+
 /**
  * DepositRequestBody
  */
@@ -16,11 +18,67 @@ import javax.validation.constraints.*;
 
 
 public class DepositRequestBody   {
-  @JsonProperty("accountTo")
-  private String accountTo = null;
+  @JsonProperty("transactionId")
+  private Long id = null;
+
+  @JsonProperty("userPerforming")
+  private String userPerforming = null;
+
+  @JsonProperty("accountFrom")
+  private String accountFrom = null;
 
   @JsonProperty("amount")
   private Double amount = null;
+
+  @JsonProperty("accountTo")
+  private String accountTo = null;
+
+  @JsonProperty("transactionType")
+  private String transactionType = null;
+
+  @JsonProperty("dateAndTime")
+  private String dateAndTime = null;
+
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getUserPerforming() {
+    return userPerforming;
+  }
+
+  public void setUserPerforming(String userPerforming) {
+    this.userPerforming = userPerforming;
+  }
+
+  public String getAccountFrom() {
+    return accountFrom;
+  }
+
+  public void setAccountFrom(String accountFrom) {
+    this.accountFrom = accountFrom;
+  }
+
+  public String getTransactionType() {
+    return transactionType;
+  }
+
+  public void setTransactionType(String transactionType) {
+    this.transactionType = transactionType;
+  }
+
+  public String getDateAndTime() {
+    return dateAndTime;
+  }
+
+  public void setDateAndTime(String dateAndTime) {
+    this.dateAndTime = dateAndTime;
+  }
 
   public DepositRequestBody accountTo(String accountTo) {
     this.accountTo = accountTo;
