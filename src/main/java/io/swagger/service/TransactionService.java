@@ -111,15 +111,15 @@ public class TransactionService {
         } else if(dateFrom == null && dateTo != null && transactionType == null){
             return convertPageToResponse(transactionRepository.findAllByDateTo(convertToTimestamp(dateTo), pageable));
         } else if(dateFrom == null && dateTo == null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByTransaction(convertToTimestamp(dateTo), pageable));
+            return convertPageToResponse(transactionRepository.findAllByTransaction(transactionType, pageable));
         } else if(dateFrom != null && dateTo != null && transactionType == null){
-            return convertPageToResponse(transactionRepository.findAllByDateTo(convertToTimestamp(dateTo), pageable));
+            return convertPageToResponse(transactionRepository.findAllByDateFromAndDateTo(convertToTimestamp(dateFrom), convertToTimestamp(dateTo), pageable));
         } else if(dateFrom == null && dateTo != null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByDateTo(convertToTimestamp(dateTo), pageable));
+            return convertPageToResponse(transactionRepository.findAllByDateToAndTransaction(convertToTimestamp(dateTo), pageable));
         } else if(dateFrom != null && dateTo == null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByDateTo(convertToTimestamp(dateTo), pageable));
+            return convertPageToResponse(transactionRepository.findAllByDateFromAndTransaction(convertToTimestamp(dateTo), pageable));
         } else if(dateFrom != null && dateTo != null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByDateTo(convertToTimestamp(dateTo), pageable));
+            return convertPageToResponse(transactionRepository.findAllByDateFrom_DateToAndDateTo(convertToTimestamp(dateTo), pageable));
         }
         //return transactionRepository.findAllWithOffsetAndLimit(offset, limit, ts);
         return new ArrayList<>();

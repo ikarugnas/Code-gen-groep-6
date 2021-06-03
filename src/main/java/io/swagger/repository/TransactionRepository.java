@@ -33,26 +33,26 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     Transaction findByAccountFrom(String account);
 
 
-//    @Query(value = "SELECT t FROM TRANSACTION WHERE DATE_AND_TIME < ?1")
-//    Page<Transaction> findAllByDateTo(Timestamp dateTo, Pageable pageable);
+    @Query(value = "SELECT t FROM Transaction t WHERE t.dateAndTime < ?1")
+    Page<Transaction> findAllByDateTo(Timestamp dateTo, Pageable pageable);
 
     @Query(value = "SELECT t FROM Transaction t  WHERE t.dateAndTime > ?1")
-    Page<Transaction> findAllByDateFrom(Timestamp dateTo, Pageable pageable);
+    Page<Transaction> findAllByDateFrom(Timestamp dateFrom, Pageable pageable);
 
-//    @Query(nativeQuery = true, value = "SELECT * FROM TRANSACTION WHERE DATE_AND_TIME < ?3 AND DATE_AND_TIME > ?4 LIMIT ?2 OFFSET ?1")
-//    List<Transaction> findAllWithOffset_Limit_DateToAndDateFrom(Long Offset, Long Limit, Timestamp dateTo, Timestamp dateFrom);
-//
-//    @Query(nativeQuery = true, value = "SELECT * FROM TRANSACTION WHERE TRANSACTION_TYPE = ?3 LIMIT ?2 OFFSET ?1")
-//    List<Transaction> findAllWithOffset_LimitAndTransactionType(Long Offset, Long Limit, String transactionType);
-//
-//    @Query(nativeQuery = true, value = "SELECT * FROM TRANSACTION WHERE DATE_AND_TIME < ?3 LIMIT ?2 OFFSET ?1")
-//    List<Transaction> findAllWithOffset_Limit_DateToAndTransactionType(Long Offset, Long Limit, Timestamp dateTo, String transactionType);
-//
-//    @Query(nativeQuery = true, value = "SELECT * FROM TRANSACTION WHERE DATE_AND_TIME > ?3 LIMIT ?2 OFFSET ?1")
-//    List<Transaction> findAllWithOffset_Limit_DateFromAndTransactionType(Long Offset, Long Limit, Timestamp dateFrom, String transactionType);
-//
-//    @Query(nativeQuery = true, value = "SELECT * FROM TRANSACTION WHERE DATE_AND_TIME < ?3 AND DATE_AND_TIME > ?4 LIMIT ?2 OFFSET ?1")
-//    List<Transaction> findAllWithOffset_Limit_DateTo_DateFromAndTransactionType(Long Offset, Long Limit, Timestamp dateTo, Timestamp dateFrom, String transactionType);
+    @Query(value = "SELECT t FROM Transaction t  WHERE t.transactionType > ?1")
+    Page<Transaction> findAllByTransaction(Timestamp dateTo, Timestamp dateTo Pageable pageable);
+
+    @Query(value = "SELECT * FROM TRANSACTION WHERE TRANSACTION_TYPE = ?3 LIMIT ?2 OFFSET ?1")
+    Page<Transaction> findAllByDateFromAndDateTo(Long Offset, Long Limit, String transactionType);
+
+    @Query(value = "SELECT * FROM TRANSACTION WHERE DATE_AND_TIME < ?3 LIMIT ?2 OFFSET ?1")
+    Page<Transaction> findAllWithOffset_Limit_DateToAndTransactionType(Long Offset, Long Limit, Timestamp dateTo, String transactionType);
+
+    @Query(value = "SELECT * FROM TRANSACTION WHERE DATE_AND_TIME > ?3 LIMIT ?2 OFFSET ?1")
+    Page<Transaction> findAllWithOffset_Limit_DateFromAndTransactionType(Long Offset, Long Limit, Timestamp dateFrom, String transactionType);
+
+    @Query(value = "SELECT * FROM TRANSACTION WHERE DATE_AND_TIME < ?3 AND DATE_AND_TIME > ?4 LIMIT ?2 OFFSET ?1")
+    Page<Transaction> findAllWithOffset_Limit_DateTo_DateFromAndTransactionType(Long Offset, Long Limit, Timestamp dateTo, Timestamp dateFrom, String transactionType);
 
 //    List<Transaction> findByAccount(String iban);
 }
