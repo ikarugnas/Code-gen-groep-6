@@ -1,6 +1,5 @@
 package io.swagger.api;
 
-import io.swagger.model.Deposit;
 import io.swagger.model.DepositRequestBody;
 import io.swagger.service.AccountService;
 import io.swagger.service.MyUserDetailsService;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.threeten.bp.LocalDate;
 import io.swagger.model.Transaction;
 import io.swagger.model.TransactionRequestBody;
-import io.swagger.model.Withdrawal;
 import io.swagger.model.WithdrawalRequestBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-06-03T11:13:57.329Z[GMT]")
 @RestController
 public class TransactionsApiController implements TransactionsApi {
 
@@ -69,7 +67,7 @@ public class TransactionsApiController implements TransactionsApi {
         this.request = request;
     }
 
-    public ResponseEntity<Deposit> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
+    public ResponseEntity<Transaction> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
         String accept = request.getHeader("Accept");
 
         Deposit createDeposit = transactionService.createDeposit(body);
@@ -105,7 +103,7 @@ public class TransactionsApiController implements TransactionsApi {
 
     }
 
-    public ResponseEntity<Withdrawal> createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
+    public ResponseEntity<Transaction> createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
         String accept = request.getHeader("Accept");
 
         Withdrawal createWithdrawal = transactionService.createWithdrawal(body);
