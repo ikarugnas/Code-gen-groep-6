@@ -130,7 +130,7 @@ public class UserService {
         }
     }
 
-    public User getuserByInput(String name, String username, String email){
-        return userRepository.getUserByInput(name, username, email);
+    public User getuserByInput(String searchString){
+        return userRepository.getUserByInput(searchString);
     }
 }

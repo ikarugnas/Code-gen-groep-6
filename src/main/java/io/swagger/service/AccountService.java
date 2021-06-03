@@ -5,6 +5,7 @@ import io.swagger.repository.AccountRepository;
 import io.swagger.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,8 +40,20 @@ public class AccountService {
         return accountRepository.findAccountWithTransactionsByIban(iban);
     }
 
-    public List<AccountWithTransactions> getAllAccounts(){
-        return accountRepository.findAll();
+    public List<AccountWithTransactions> getAllAccounts(Long offset, Long limit){
+        long defaultOffset = 0;
+        long defaultLimit = 10;
+
+        if (offset == null) {
+            offset = defaultOffset;
+        }
+        if (limit == null) {
+            limit = defaultLimit;
+        }
+
+        Pageable pageable = PageRequest.of(offset.intValue(), limit.intValue());
+
+        return accountRepository.findAllAccounts(pageable);
     }
 
 
@@ -48,8 +61,20 @@ public class AccountService {
         return accountRepository.findAllAccountsByOwner(user);
     }
 
-    public List<AccountWithTransactions> getAllAccountsByUserid(long offset, long limit, UUID Id){
-        return accountRepository.findAccountsById(offset, limit, Id);
+    public List<AccountWithTransactions> getAllAccountsByUserid(Long offset, Long limit, UUID Id){
+        long defaultOffset = 0;
+        long defaultLimit = 10;
+
+            if (offset == null) {
+                offset = defaultOffset;
+            }
+            if (limit == null) {
+                limit = defaultLimit;
+            }
+
+        Pageable pageable = PageRequest.of(offset.intValue(), limit.intValue());
+
+        return accountRepository.findAccountsById(Id, pageable);
     }
 
 

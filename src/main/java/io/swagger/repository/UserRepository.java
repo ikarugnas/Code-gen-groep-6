@@ -24,8 +24,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     User findUserByName(String name);
     User findUserByEmail(String email);
 
-    @Query(nativeQuery = true,
-            value = "SELECT * FROM USER WHERE NAME = ?1 OR USERNAME = ?2 OR EMAIL = ?3 ")
-    User getUserByInput(String name, String username, String email);
+    @Query(value = "SELECT u FROM User u WHERE u.name = ?1 OR u.username = ?1 OR u.email = ?1")
+    User getUserByInput(String searchString);
 
 }
