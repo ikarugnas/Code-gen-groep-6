@@ -1,14 +1,11 @@
 package io.swagger.api;
 
-import io.swagger.model.DepositRequestBody;
+import io.swagger.model.*;
 import io.swagger.service.AccountService;
 import io.swagger.service.MyUserDetailsService;
 import io.swagger.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.threeten.bp.LocalDate;
-import io.swagger.model.Transaction;
-import io.swagger.model.TransactionRequestBody;
-import io.swagger.model.WithdrawalRequestBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -67,7 +64,7 @@ public class TransactionsApiController implements TransactionsApi {
         this.request = request;
     }
 
-    public ResponseEntity<Transaction> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
+    public ResponseEntity createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
         String accept = request.getHeader("Accept");
 
         Deposit createDeposit = transactionService.createDeposit(body);
@@ -103,7 +100,7 @@ public class TransactionsApiController implements TransactionsApi {
 
     }
 
-    public ResponseEntity<Transaction> createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
+    public ResponseEntity createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
         String accept = request.getHeader("Accept");
 
         Withdrawal createWithdrawal = transactionService.createWithdrawal(body);

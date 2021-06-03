@@ -39,18 +39,18 @@ public class TransactionService {
 
     public Transaction createTransaction(TransactionRequestBody transaction, String username){
 
-        AccountWithTransactions accountFrom = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom());
-        double transactionAmount;
+        Timestamp dateAndTime = new Timestamp(new Date().getTime());
+        double transactionAmount = transaction.getAmount();
 
 
 
         Transaction newTransaction = new Transaction(
                 username,
-                accountFrom,
+                accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom()),
                 accountRepository.findAccountWithTransactionsByIban(transaction.getAccountTo()),
-                transaction.getAmount(),
+                transactionAmount,
                 "Transaction",
-                new Timestamp(new Date().getTime()));
+                dateAndTime);
 
 
 
@@ -72,7 +72,7 @@ public class TransactionService {
             transactionRepository.save(newTransaction);
 //        }
 
-        return transactionRepository.findByAccountFrom(transaction.getAccountFrom());
+        return transactionRepository.findByDateAndTime(dateAndTime);
     }
 
     public Deposit createDeposit(DepositRequestBody deposit){
