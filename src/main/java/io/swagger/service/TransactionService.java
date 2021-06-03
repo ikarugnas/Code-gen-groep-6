@@ -2,6 +2,7 @@ package io.swagger.service;
 
 import io.swagger.model.*;
 import io.swagger.repository.AccountRepository;
+import io.swagger.repository.UserRepository;
 import io.swagger.repository.DepositRepository;
 import io.swagger.repository.TransactionRepository;
 import io.swagger.repository.WithdrawalRepository;
@@ -14,6 +15,9 @@ import java.util.List;
 
 @Service
 public class TransactionService {
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     TransactionRepository transactionRepository;
@@ -34,18 +38,31 @@ public class TransactionService {
     public Transaction createTransaction(TransactionRequestBody transaction){
 
         AccountWithTransactions accountFrom = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom());
+        double transactionAmount;
 
         Transaction newTransaction = new Transaction(transaction.getId(),
-                transaction.getUserPerforming(),
+                userRepository.findUserByName(transaction.getUserPerforming()),
                 accountFrom,
                 accountRepository.findAccountWithTransactionsByIban(transaction.getAccountTo()),
-                transaction.getAmount(),
-                transaction.getTransactionType(),
+                transactionAmount = transaction.getAmount(),
+                transaction.setTransactionType("Transaction"),
                 new Timestamp(new Date().getTime()));
 
-        transactionRepository.save(newTransaction);
+        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom()).getBalance();
+        Enum activeStatus = accountFrom.getActive();
 
-
+        if (activeStatus == Status.Inactive){
+            // throw inactive account error
+        }
+        else if (currentBalance < transactionAmount) {
+            /// cannot create transaction
+        }
+        else if (transactionAmount > accountFrom.getAbsoluteLimit()) {
+            // transaction higher than limit error
+        }
+        else {
+            transactionRepository.save(newTransaction);
+        }
 
         return transactionRepository.findByAccountFrom(transaction.getAccountFrom());
     }

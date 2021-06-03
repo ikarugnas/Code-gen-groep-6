@@ -108,8 +108,9 @@ public class TransactionRequestBody   {
     return transactionType;
   }
 
-  public void setTransactionType(String transactionType) {
+  public String setTransactionType(String transactionType) {
     this.transactionType = transactionType;
+    return transactionType;
   }
 
 
