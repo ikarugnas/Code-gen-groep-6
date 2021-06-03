@@ -2,6 +2,8 @@ package io.swagger.api;
 
 import io.swagger.model.Deposit;
 import io.swagger.model.DepositRequestBody;
+import io.swagger.service.AccountService;
+import io.swagger.service.MyUserDetailsService;
 import io.swagger.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.threeten.bp.LocalDate;
@@ -49,6 +51,12 @@ public class TransactionsApiController implements TransactionsApi {
     @Autowired
     TransactionService transactionService;
 
+    @Autowired
+    MyUserDetailsService myUserDetailsService;
+
+    @Autowired
+    AccountService accountService;
+
     private static final Logger log = LoggerFactory.getLogger(TransactionsApiController.class);
 
     private final ObjectMapper objectMapper;
@@ -74,11 +82,27 @@ public class TransactionsApiController implements TransactionsApi {
     public ResponseEntity<Transaction> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody TransactionRequestBody body) {
         String accept = request.getHeader("Accept");
 
-        Transaction createTransaction = transactionService.createTransaction(body);
+        if (accountService.accountExist(body.getAccountFrom())){
+            if (accountService.accountExist(body.getAccountTo())){
+                Transaction createTransaction = transactionService.createTransaction(body, myUserDetailsService.getLoggedInUser().getUsername());
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createTransaction);
+                return ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body(createTransaction);
+            }
+            else {
+                log.error("Iban doesnt exist");
+                return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        else {
+            log.error("Iban from doesnt exist");
+            return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
+        }
+//        myUserDetailsService.getLoggedInUser().getUsername();
+
+
     }
 
     public ResponseEntity<Withdrawal> createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body) {

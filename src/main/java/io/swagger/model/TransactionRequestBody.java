@@ -19,11 +19,11 @@ import javax.validation.constraints.*;
 
 
 public class TransactionRequestBody   {
-  @JsonProperty("transactionId")
-  private Long id = null;
-
-  @JsonProperty("userPerforming")
-  private String userPerforming = null;
+//  @JsonProperty("transactionId")
+//  private Long id = null;
+//
+//  @JsonProperty("userPerforming")
+//  private String userPerforming = null;
 
 
 
@@ -36,15 +36,15 @@ public class TransactionRequestBody   {
   @JsonProperty("accountTo")
   private String accountTo = null;
 
-  @JsonProperty("transactionType")
-  private String transactionType = null;
+//  @JsonProperty("transactionType")
+//  private String transactionType = null;
+//
+//  @JsonProperty("dateAndTime")
+//  private String dateAndTime = null;
 
-  @JsonProperty("dateAndTime")
-  private String dateAndTime = null;
-
-  public String getDateAndTime() {
-    return dateAndTime;
-  }
+//  public String getDateAndTime() {
+//    return dateAndTime;
+//  }
 
 
   /**
@@ -54,13 +54,13 @@ public class TransactionRequestBody   {
   @Schema(example = "NL55 RABO 1234 5678 90", required = true, description = "")
       @NotNull
 
-  public String getUserPerforming() {
-    return userPerforming;
-  }
-
-  public void setUserPerforming(String userPerforming) {
-    this.userPerforming = userPerforming;
-  }
+//  public String getUserPerforming() {
+//    return userPerforming;
+//  }
+//
+//  public void setUserPerforming(String userPerforming) {
+//    this.userPerforming = userPerforming;
+//  }
 
     public String getAccountFrom() {
     return accountFrom;
@@ -70,13 +70,13 @@ public class TransactionRequestBody   {
     this.accountFrom = accountFrom;
   }
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
+//  public Long getId() {
+//    return id;
+//  }
+//
+//  public void setId(Long id) {
+//    this.id = id;
+//  }
 
   public TransactionRequestBody amount(Double amount) {
     this.amount = amount;
@@ -104,19 +104,19 @@ public class TransactionRequestBody   {
   }
 
 
-  public String getTransactionType() {
-    return transactionType;
-  }
+//  public String getTransactionType() {
+//    return transactionType;
+//  }
+//
+//  public String setTransactionType(String transactionType) {
+//    this.transactionType = transactionType;
+//    return transactionType;
+//  }
 
-  public String setTransactionType(String transactionType) {
-    this.transactionType = transactionType;
-    return transactionType;
-  }
 
-
-  public void setDateAndTime(String dateAndTime) {
-    this.dateAndTime = dateAndTime;
-  }
+//  public void setDateAndTime(String dateAndTime) {
+//    this.dateAndTime = dateAndTime;
+//  }
 
   public TransactionRequestBody accountFrom(String accountFrom) {
     this.accountFrom = accountFrom;

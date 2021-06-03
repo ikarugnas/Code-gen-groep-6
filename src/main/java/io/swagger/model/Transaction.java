@@ -28,10 +28,8 @@ public class Transaction   {
   @JsonProperty("transactionId")
   private Long id = null;
 
-  @ManyToOne
-  @JsonBackReference
   @JsonProperty("userPerforming")
-  private User userPerforming = null;
+  private String userPerforming = null;
 
   @ManyToOne
   @JsonBackReference
@@ -87,14 +85,20 @@ public class Transaction   {
   public Transaction() {
   }
 
-  public Transaction(Long id, User userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
-    this.id = id;
+  public Transaction(String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
     this.userPerforming = userPerforming;
     this.accountFrom = accountFrom;
     this.accountTo = accountTo;
     this.amount = amount;
     this.transactionType = TransactionTypeEnum.fromValue(transactionType);
     this.dateAndTime = dateAndTime;
+  }
+
+  public Transaction(AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount){
+
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+    this.amount = amount;
   }
 
   public Long getId() {
@@ -112,11 +116,11 @@ public class Transaction   {
   @Schema(example = "BG12345", required = true, description = "")
       @NotNull
 
-    public User getUserPerforming() {
+    public String getUserPerforming() {
     return userPerforming;
   }
 
-  public void setUserPerforming(User userPerforming) {
+  public void setUserPerforming(String userPerforming) {
     this.userPerforming = userPerforming;
   }
 

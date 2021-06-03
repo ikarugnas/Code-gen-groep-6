@@ -16,6 +16,8 @@ import java.util.List;
 @Service
 public class TransactionService {
 
+
+
     @Autowired
     UserRepository userRepository;
 
@@ -35,34 +37,40 @@ public class TransactionService {
     public TransactionService() {
     }
 
-    public Transaction createTransaction(TransactionRequestBody transaction){
+    public Transaction createTransaction(TransactionRequestBody transaction, String username){
 
         AccountWithTransactions accountFrom = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom());
         double transactionAmount;
 
-        Transaction newTransaction = new Transaction(transaction.getId(),
-                userRepository.findUserByName(transaction.getUserPerforming()),
+
+
+        Transaction newTransaction = new Transaction(
+                username,
                 accountFrom,
                 accountRepository.findAccountWithTransactionsByIban(transaction.getAccountTo()),
-                transactionAmount = transaction.getAmount(),
-                transaction.setTransactionType("Transaction"),
+                transaction.getAmount(),
+                "Transaction",
                 new Timestamp(new Date().getTime()));
 
-        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom()).getBalance();
-        Enum activeStatus = accountFrom.getActive();
 
-        if (activeStatus == Status.Inactive){
-            // throw inactive account error
-        }
-        else if (currentBalance < transactionAmount) {
-            /// cannot create transaction
-        }
-        else if (transactionAmount > accountFrom.getAbsoluteLimit()) {
-            // transaction higher than limit error
-        }
-        else {
+
+
+
+//        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom()).getBalance();
+//        Enum activeStatus = accountFrom.getActive();
+
+//        if (activeStatus == Status.Inactive){
+//            // throw inactive account error
+//        }
+//        else if (currentBalance < transactionAmount) {
+//            /// cannot create transaction
+//        }
+//        else if (transactionAmount > accountFrom.getAbsoluteLimit()) {
+//            // transaction higher than limit error
+//        }
+//        else {
             transactionRepository.save(newTransaction);
-        }
+//        }
 
         return transactionRepository.findByAccountFrom(transaction.getAccountFrom());
     }
