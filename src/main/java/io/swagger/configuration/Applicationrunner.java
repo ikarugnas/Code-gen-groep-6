@@ -80,7 +80,7 @@ public class Applicationrunner implements ApplicationRunner {
 
         List<Transaction> transactions = Arrays.asList(
                 new Transaction("Employee", accountWithTransactions, bankAccount, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(date1.getTime())),
-                new Transaction("Employee", bankAccount, accountWithTransactions, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(date1.getTime()))
+                new Transaction("Employee", bankAccount, accountWithTransactions, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(date2.getTime()))
         );
 
         transactions.forEach(transactionRepository::save);
