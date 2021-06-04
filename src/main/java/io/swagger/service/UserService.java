@@ -7,6 +7,7 @@ import io.swagger.repository.UserRepository;
 import io.swagger.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -80,8 +81,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<User> getUsers(long offset, long limit, String username, String name, String email, UserRole role, Status status) {
-        return userRepository.findAllUsers(offset, limit, username, name, email, role, status);
+    public List<User> findAllUsersWithFilter(Pageable pageable, String username, String name, String email, Status status) {
+        return userRepository.findAllUsersWithFiltering(pageable, username, name, email, status);
     }
 
     public User getUserById(UUID id) throws BadRequestException, NotFoundException {
