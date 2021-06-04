@@ -9,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -120,9 +118,8 @@ public class TransactionService {
         } else if(dateFrom != null && dateTo == null && transactionType != null){
             return convertPageToResponse(transactionRepository.findAllByDateFromAndTransactionType(convertToTimestamp(dateFrom), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
         } else if(dateFrom != null && dateTo != null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByFromAndTransactionType(convertToTimestamp(dateFrom), convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+            return convertPageToResponse(transactionRepository.findAllByDateAndTransactionType(convertToTimestamp(dateFrom), convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
         }
-        //return transactionRepository.findAllWithOffsetAndLimit(offset, limit, ts);
         return new ArrayList<>();
     }
 
@@ -144,21 +141,20 @@ public class TransactionService {
         if (dateFrom == null && dateTo == null && transactionType == null){
             return convertPageToResponse(transactionRepository.findByIban(account, pageable));
         } else if(dateFrom != null && dateTo == null && transactionType == null){
-            return convertPageToResponse(transactionRepository.findAllByDateFrom(convertToTimestamp(dateFrom), pageable));
+            return convertPageToResponse(transactionRepository.findAllByIbanAndDateFrom(account, convertToTimestamp(dateFrom), pageable));
         } else if(dateFrom == null && dateTo != null && transactionType == null){
-            return convertPageToResponse(transactionRepository.findAllByDateTo(convertToTimestamp(dateTo), pageable));
+            return convertPageToResponse(transactionRepository.findAllByIbanAndDateTo(account, convertToTimestamp(dateTo), pageable));
         } else if(dateFrom == null && dateTo == null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByTransaction(Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+            return convertPageToResponse(transactionRepository.findAllByIbanAndTransaction(account, Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
         } else if(dateFrom != null && dateTo != null && transactionType == null){
-            return convertPageToResponse(transactionRepository.findAllByDateFromAndDateTo(convertToTimestamp(dateFrom), convertToTimestamp(dateTo), pageable));
+            return convertPageToResponse(transactionRepository.findAllByIban_DateFromAndDateTo(account ,convertToTimestamp(dateFrom), convertToTimestamp(dateTo), pageable));
         } else if(dateFrom == null && dateTo != null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByDateToAndTransactionType(convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+            return convertPageToResponse(transactionRepository.findAllByIban_DateToAndTransactionType(account, convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
         } else if(dateFrom != null && dateTo == null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByDateFromAndTransactionType(convertToTimestamp(dateFrom), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+            return convertPageToResponse(transactionRepository.findAllByIban_DateFromAndTransactionType(account, convertToTimestamp(dateFrom), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
         } else if(dateFrom != null && dateTo != null && transactionType != null){
-            return convertPageToResponse(transactionRepository.findAllByFromAndTransactionType(convertToTimestamp(dateFrom), convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+            return convertPageToResponse(transactionRepository.findAllByIban_DateAndTransactionType(account, convertToTimestamp(dateFrom), convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
         }
-        //return transactionRepository.findAllWithOffsetAndLimit(offset, limit, ts);
         return new ArrayList<>();
     }
 
@@ -195,20 +191,4 @@ public class TransactionService {
 
         return transactionReponses;
     }
-
-
-//    public Deposit createDeposit(DepositRequestBody deposit) {
-//        Deposit newDeposit = new Deposit(deposit.getAccountTo()),
-//                deposit.getAmount(),
-//                deposit.
-//,    }
-
-//    public List<Transaction> getAllTransactions() {
-//        return transactionRepository.findAll();
-//    }
-//
-//    public User getTransactionByUserPerforming(String username) {
-//        return transactionRepository.findUserByUsernameQuery(username);
-//    }
-
 }
