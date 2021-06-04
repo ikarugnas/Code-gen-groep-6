@@ -6,5 +6,4 @@ Feature: loginUsers test
 
   Scenario: Login with wrong password gives status 422 and error
     When I log in with wrong password
-    Then I get status 200
-    And I get body ""
+    Then I get status 422
