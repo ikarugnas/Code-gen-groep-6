@@ -57,16 +57,13 @@ public class Applicationrunner implements ApplicationRunner {
         RegisterDTO bank = new RegisterDTO("bank", "bank123", "Inholland Bank ", "inhollandBank@bankapi.com");
         userService.createUser(bank);
 
-        // get bank user uuid
-        UUID userId = userService.getUserByUsername("bank").getId();
-
         // create bank account which is a requirement
         AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 0.00, Status.Active);
         accountService.createBankAccount(bankAccount);
 
         // test account
-        CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", AccountType.Current);
-        accountService.createNewAccount(account2);
+        AccountWithTransactions account2 = new AccountWithTransactions("NL01INHO0000000002", 0.00, AccountType.Current, userService.getUserByUsername("test1"), 0.00, Status.Active);
+        accountService.createBankAccount(account2);
 
 
 

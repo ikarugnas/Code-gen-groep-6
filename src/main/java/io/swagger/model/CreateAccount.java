@@ -22,7 +22,7 @@ public class CreateAccount   {
    */
 
   @JsonProperty("type")
-  private AccountType type = AccountType.Current;
+  private String type = "Current";
 
   @JsonProperty("owner")
   private String owner;
@@ -37,12 +37,12 @@ public class CreateAccount   {
   @JsonProperty("active")
   private Status active = Status.Active;
 
-  public CreateAccount type(AccountType type) {
+  public CreateAccount type(String type) {
     this.type = type;
     return this;
   }
 
-  public CreateAccount(Double absoluteLimit, Status active, String owner, AccountType type) {
+  public CreateAccount(Double absoluteLimit, Status active, String owner, String type) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
@@ -56,11 +56,11 @@ public class CreateAccount   {
   @Schema(required = true, description = "")
       @NotNull
 
-    public AccountType getType() {
+    public String getType() {
     return type;
   }
 
-  public void setType(AccountType type) {
+  public void setType(String type) {
     this.type = type;
   }
 

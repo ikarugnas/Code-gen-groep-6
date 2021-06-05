@@ -21,6 +21,9 @@ public class AccountService {
     @Autowired
     UserRepository userRepository;
 
+    UserService userService;
+    MyUserDetailsService myUserDetailsService;
+
     public AccountService(){
     }
 
@@ -29,7 +32,8 @@ public class AccountService {
     }
 
     public AccountWithTransactions createNewAccount(CreateAccount incAccount){
-        AccountWithTransactions createNewAccount = new AccountWithTransactions(CreateIBAN(), incAccount.getAbsoluteLimit(), incAccount.getActive(), userRepository.findByUsername(incAccount.getOwner()) , incAccount.getType());
+        AccountType type = AccountType.valueOf(incAccount.getType());
+        AccountWithTransactions createNewAccount = new AccountWithTransactions(CreateIBAN(), incAccount.getAbsoluteLimit(), incAccount.getActive(), userRepository.findByUsername(incAccount.getOwner()) , type);
 
         accountRepository.save(createNewAccount);
 
@@ -120,6 +124,7 @@ public class AccountService {
     }
     
     public List<AllAccountsWithoutTransactions>changingFromWithToWithoutTransaction(List<AccountWithTransactions> accountWithTransactionsList){
+//        deleteInhollandAccountFromList(accountWithTransactionsList);
         List<AllAccountsWithoutTransactions> allAccountsWithoutTransactionsList = new ArrayList<>();
 
         for (AccountWithTransactions a : accountWithTransactionsList) {
@@ -129,6 +134,23 @@ public class AccountService {
 
         return allAccountsWithoutTransactionsList;
     }
-    
+
+    public List<AccountWithTransactions> deleteInhollandAccountFromList(List<AccountWithTransactions> accountWithTransactions){
+        AccountWithTransactions bankAccount = getAccountByIban("NL01INHO0000000001");
+        User bank = userService.getUserById(bankAccount.getOwner().getId());
+        if(myUserDetailsService.getLoggedInUser().getUsername() == bank.getUsername()){
+            System.out.println("is bank");
+        }
+
+        for (AccountWithTransactions a : accountWithTransactions) {
+            if(a.getIban() == "NL01INHO0000000001"){
+                accountWithTransactions.remove(a);
+            }
+
+        }
+
+        return accountWithTransactions;
+    }
+
     
 }

@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -58,14 +59,20 @@ public class AccountsApiController implements AccountsApi {
         if (body.getAbsoluteLimit() == null) {
             body.setAbsoluteLimit(defaultLimit);
         }
+//        accountService.isValueOfType(body.getType())
+        if(AccountType.fromValue(body.getType()) == null){
+            log.error("Type Was Not Given Correctly, Must Be 'Current' Or 'Savings'");
+            return new ResponseEntity<AccountWithTransactions>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
 
         if (myUserDetailsService.getLoggedInUser().getAuthorities().contains(UserRole.ROLE_Customer)) {
-//            body.setOwner(myUserDetailsService.getLoggedInUser().getUsername());
-
-
+            if(body.getOwner() != null && myUserDetailsService.getLoggedInUser().getUsername().contains(body.getOwner()) == false){
+                log.error("Your Not Allowed To Create Accounts For Other Users. If You Wish To Create An Account For Yourself Please Enter Your Own Username");
+                return new ResponseEntity<AccountWithTransactions>(HttpStatus.FORBIDDEN);
+            }
         } else if (body.getOwner() == null) {
-            log.error("Owner was not given.");
-            return new ResponseEntity<AccountWithTransactions>(HttpStatus.BAD_REQUEST);
+            log.error("Owner Username was not given.");
+            return new ResponseEntity<AccountWithTransactions>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
         if (userService.getUserByUsername(body.getOwner()) != null) {
             AccountWithTransactions createAccount = accountService.createNewAccount(body);
@@ -75,7 +82,7 @@ public class AccountsApiController implements AccountsApi {
                     .status(HttpStatus.CREATED)
                     .body(createAccount);
         } else {
-            log.error("Could Not Find User For The Given Owner, Wrong Input?");
+            log.error("Could Not Find User For The Given Owner Username, Wrong Input?");
             return new ResponseEntity<AccountWithTransactions>(HttpStatus.NOT_FOUND);
         }
     }
@@ -92,9 +99,13 @@ public class AccountsApiController implements AccountsApi {
                     }
                 }
             } else {
-                return new ResponseEntity<AccountWithTransactions>(accountService.getAccountByIban(iban), HttpStatus.OK);
+                {
+                    return new ResponseEntity<AccountWithTransactions>(accountService.getAccountByIban(iban), HttpStatus.OK);
+                }
+
             }
-        } else {
+        }
+        else {
             log.error("Could Not Find Accounts For The Given IBAN, Wrong Input?");
             return new ResponseEntity<AccountWithTransactions>(HttpStatus.NOT_FOUND);
         }
@@ -105,10 +116,11 @@ public class AccountsApiController implements AccountsApi {
 
     //werkt
     @PreAuthorize("hasRole('Employee')")
-    public ResponseEntity<List<AllAccountsWithoutTransactions>> getAllAccounts(@Parameter(in = ParameterIn.QUERY, description = "amount of accounts to skip", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of accounts to get", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from user (Can be name, Email or username)", schema = @Schema()) @Valid @RequestParam(value = "user", required = false) String owner) {
+    public ResponseEntity<List<AllAccountsWithoutTransactions>> getAllAccounts(@Parameter(in = ParameterIn.QUERY, description = "amount of accounts to skip", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of accounts to get", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get accounts from user (Can be name, Email or username)", schema = @Schema()) @Valid @RequestParam(value = "user", required = false) String user) {
         String searchString = "";
-        if (owner != null) {
-            searchString = owner;
+
+        if (user != null) {
+            searchString = user.toLowerCase();
 
             User getUserByInput = userService.getuserByInput(searchString);
             List<AllAccountsWithoutTransactions> allAccountsWithoutTransactionsList = accountService.changingFromWithToWithoutTransaction(accountService.getAllAccountsByUserid(offset, limit, getUserByInput.getId()));

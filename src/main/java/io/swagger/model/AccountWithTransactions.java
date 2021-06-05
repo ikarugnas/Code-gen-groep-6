@@ -84,7 +84,7 @@ public class AccountWithTransactions   {
    */
 
   @JsonProperty("active")
-  private Status active = null;
+  private Status active = Status.Active;
 
   public AccountWithTransactions iban(String iban) {
     this.iban = iban;
@@ -121,6 +121,9 @@ public class AccountWithTransactions   {
   }
 
   public void setBalance(Double balance) {
+    if(balance < absoluteLimit){
+      throw new IllegalArgumentException("Balance Cannot Be Lower Than AbsoluteLimit");
+    }
     this.balance = balance;
   }
 
