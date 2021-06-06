@@ -10,6 +10,7 @@ import io.swagger.model.AccountWithTransactions;
 import io.swagger.model.LoginDTO;
 import io.swagger.model.User;
 import io.swagger.service.AccountService;
+import io.swagger.service.UserService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ public class AccountSteps {
     private ResponseEntity<String> responseEntity;
     private ObjectMapper mapper = new ObjectMapper();
     private AccountService accountService;
+    private UserService userService;
 
     @When("Ik alle accounts ophaal")
     public void ikAlleAccountsOphaal() throws URISyntaxException {
@@ -43,30 +45,38 @@ public class AccountSteps {
         Assert.assertEquals(expected, response);
     }
 
-    @When("Ik een Account ophaal met iban {string}")
-    public AccountWithTransactions ikEenAccountOphaalMetIban(String iban) throws URISyntaxException {
-        URI uri = new URI(baseURL + iban);
-        HttpEntity httpEntity = new HttpEntity<>(null, headers);
-        responseEntity = template.exchange(uri, HttpMethod.GET, httpEntity, String.class);
-        return template.exchange(uri, HttpMethod.GET, httpEntity, AccountWithTransactions.class).getBody();
+    @Then("Krijg een lijst terug van accounts")
+    public void krijgEenLijstTerugVanAccounts() throws JSONException {
+        String response = responseEntity.getBody();
+        JSONArray jsonArray = new JSONArray(response);
+        Assert.assertEquals(2, jsonArray.length());
 
     }
 
-    @Then("Is het username van het eigenaar {string}")
-    public void isHetUsernameVanHetEigenaar(String username) throws JSONException {
-//        responseEntity.getBody();
-//        JSONObject jsonObject = new JSONObject(username);
-//        AccountWithTransactions expected = accountService.getAccountByIban("NL01INHO0000000002");
-//        JSONArray expectedUsear = jsonObject.getJSONArray("owner");
-//        System.out.println(expectedUsear.getString(0));;
-////        User expectedUser = expected.getOwner();
-////        Assert.assertArrayEquals(username, jsonObject.getString(""));
+    @When("Ik een Account ophaal met iban {string}")
+    public void ikEenAccountOphaalMetIban(String iban) throws URISyntaxException {
+        URI uri = new URI(baseURL + iban);
+        responseEntity = template.getForEntity(uri, String.class);
+    }
+
+    @Then("Is het account absoluteLimit {double}")
+    public void isHetAccountAbsoluteLimit(double absoluteLimit) throws JSONException {
+        String response = responseEntity.getBody();
+        JSONObject jsonObject = new JSONObject(response);
+        Assert.assertEquals(absoluteLimit, jsonObject.getDouble("absoluteLimit"), 0);
     }
 
     @When("Ik een Account ophaal met Username {string}")
     public void ikEenAccountOphaalMetUsername(String username) throws URISyntaxException {
         URI uri = new URI(baseURL + "username/" + username);
         responseEntity = template.getForEntity(uri, String.class);
+    }
+
+    @Then("Is het iban van het account {string}")
+    public void isHetIbanVanHetAccount(String iban) throws JSONException {
+        String response = responseEntity.getBody();
+        JSONArray jsonArray = new JSONArray(response);
+        Assert.assertEquals(iban, jsonArray.getJSONObject(0).getString("iban"));
     }
 }
 
