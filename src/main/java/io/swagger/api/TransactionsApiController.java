@@ -79,7 +79,7 @@ public class TransactionsApiController implements TransactionsApi {
 
     }
 
-    //@PreAuthorize("hasRole('Employee')")
+    @PreAuthorize("hasRole('Employee')")
     public ResponseEntity getTransactions(@Parameter(in = ParameterIn.QUERY, description = "amount of transaction to skip" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset,@Parameter(in = ParameterIn.QUERY, description = "limit of transactions to get" ,schema=@Schema( defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Long limit,@Parameter(in = ParameterIn.QUERY, description = "Get all transactions from this date; Format (dd/MM/yyyy (HH))" ,schema=@Schema()) @Valid @RequestParam(value = "dateFrom", required = false) String dateFrom,@Parameter(in = ParameterIn.QUERY, description = "Get all transactions to this date; Format (dd/MM/yyyy (HH))" ,schema=@Schema()) @Valid @RequestParam(value = "dateTo", required = false) String dateTo, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions from this type" ,schema=@Schema()) @Valid @RequestParam(value = "transactionType", required = false) String transactionType) {
         List<TransactionReponse> transactions = new ArrayList<>();
 

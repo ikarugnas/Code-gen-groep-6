@@ -161,7 +161,7 @@ public class UsersApiController implements UsersApi {
         }
 
         try {
-            log.info(body.getUsername() + "logged in succesfull");
+            log.info(body.getUsername() + " logged in succesfull");
             return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(body));
         } catch (ResponseStatusException responseStatusException) {
             log.error(body.getUsername() + "; " + responseStatusException.getReason(), responseStatusException);
@@ -186,7 +186,7 @@ public class UsersApiController implements UsersApi {
         // Check if username already exists
         if (userService.usernameAlreadyExist(body.getUsername())){
             log.error("Username already exists");
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username already exits");
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username already exists");
         }
 
         // Check if email is valid
