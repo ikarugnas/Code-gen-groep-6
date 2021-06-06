@@ -3,9 +3,7 @@ package io.swagger.service;
 import io.swagger.model.*;
 import io.swagger.repository.AccountRepository;
 import io.swagger.repository.UserRepository;
-import io.swagger.repository.DepositRepository;
 import io.swagger.repository.TransactionRepository;
-import io.swagger.repository.WithdrawalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +16,6 @@ public class TransactionService {
 
 
 
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
     TransactionRepository transactionRepository;
@@ -27,11 +23,6 @@ public class TransactionService {
     @Autowired
     AccountRepository accountRepository;
 
-    @Autowired
-    DepositRepository depositRepository;
-
-    @Autowired
-    WithdrawalRepository withdrawalRepository;
 
 
     public TransactionService() {
