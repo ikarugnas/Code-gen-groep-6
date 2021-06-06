@@ -57,6 +57,11 @@ public class UserService {
 
     public String loginUser(LoginDTO loginDTO) throws Exception {
         try {
+            //Check if user with username exists
+            if (!usernameAlreadyExist(loginDTO.getUsername())){
+                throw new Exception("Username or Password is incorrect");
+            }
+
             //Check userStatus
             User user = userRepository.findByUsername(loginDTO.getUsername());
             if (user.getUserStatus().equals(Status.Inactive)){
