@@ -3,10 +3,7 @@ package io.swagger.model;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -83,6 +80,16 @@ public class Transaction   {
   private Timestamp dateAndTime = null;
 
   public Transaction() {
+
+  }
+
+  public Transaction(String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, TransactionTypeEnum transactionType, Timestamp dateAndTime) {
+    this.userPerforming = userPerforming;
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+    this.amount = amount;
+    this.transactionType = transactionType;
+    this.dateAndTime = dateAndTime;
   }
 
   public Transaction(String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, Timestamp dateAndTime) {

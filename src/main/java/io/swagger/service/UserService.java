@@ -1,13 +1,14 @@
 package io.swagger.service;
 
-import io.swagger.model.LoginDTO;
-import io.swagger.model.RegisterDTO;
-import io.swagger.model.Status;
-import io.swagger.model.User;
+import io.swagger.api.BadRequestException;
+import io.swagger.api.NotFoundException;
+import io.swagger.model.*;
 import io.swagger.repository.UserRepository;
 import io.swagger.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -57,6 +58,11 @@ public class UserService {
 
     public String loginUser(LoginDTO loginDTO) throws Exception {
         try {
+            //Check if user with username exists
+            if (!usernameAlreadyExist(loginDTO.getUsername())){
+                throw new Exception("Username or Password is incorrect");
+            }
+
             //Check userStatus
             User user = userRepository.findByUsername(loginDTO.getUsername());
             if (user.getUserStatus().equals(Status.Inactive)){
@@ -81,7 +87,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(UUID id) {
+    public Page<User> findAllUsersWithFilter(Pageable pageable, String username, String name, String email, Status status) {
+        return userRepository.findAllUsersWithFiltering(pageable, username, name, email, status);
+    }
+
+    public User getUserById(UUID id) throws BadRequestException, NotFoundException {
         return userRepository.findUserById(id);
     }
 
@@ -96,37 +106,45 @@ public class UserService {
     public User getUserByEmail(String email){
         return userRepository.findUserByEmail(email);
     }
+
+    public User getUserByRole(UserRole role) {
+        return userRepository.findUserByRoles(role);
+    }
+
+    public User getUserByStatus(Status status) {
+        return userRepository.findUserByUserStatus(status);
+    }
     
-    public User updateUser(UUID idOfUserToUpdate, User updatedUser) {
-        System.out.println("step1");
+    public User updateUser(UUID idOfUserToUpdate, RegisterDTO updatedUser) {
         User userToUpdate = userRepository.findUserById(idOfUserToUpdate);
-        //Commented line under may be used if Id needs to be changed.
-        //userToUpdate.setId(updatedUser.getId());
         userToUpdate.setUsername(updatedUser.getUsername());
         userToUpdate.setPassword(updatedUser.getPassword());
         userToUpdate.setName(updatedUser.getName());
         userToUpdate.setEmail(updatedUser.getEmail());
-        userToUpdate.setRoles(updatedUser.getRoles());
-        //Commented line under may be used once accounts are functional.
-        //userToUpdate.setAccount(updatedUser.getAccount());
         userToUpdate.setDayLimit(updatedUser.getDayLimit());
         userToUpdate.setTransactionLimit(updatedUser.getTransactionLimit());
         userToUpdate.setUserStatus(updatedUser.getUserStatus());
         userRepository.save(userToUpdate);
-        System.out.println("step2");
         return userToUpdate;
     }
 
     //First implementation to delete a user from the system without firing a query.
-    public void deleteUser(UUID uuid) {
-        int index = 0;
-        for (User u : userRepository.findAll()) {
+//    public void deleteUser(UUID uuid) {
+//        int index = 0;
+//        for (User u : userRepository.findAll()) {
+//
+//            if (u.getId() == uuid) {
+//                userRepository.delete(u);
+//                return;
+//            }
+//            index++;
+//        }
+//    }
 
-            if (u.getId() == uuid) {
-                userRepository.delete(u);
-                return;
-            }
-            index++;
-        }
+    //No separate endpoint to activate user. To reactivate the account use the updateUser method.
+    public void deactivateUser(UUID uuid) throws BadRequestException, NotFoundException {
+        User user = userRepository.findUserById(uuid);
+        user.setUserStatus(Status.Inactive);
+        userRepository.save(user);
     }
 }

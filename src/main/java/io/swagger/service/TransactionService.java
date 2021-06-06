@@ -5,9 +5,17 @@ import io.swagger.repository.AccountRepository;
 import io.swagger.repository.UserRepository;
 import io.swagger.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -140,30 +148,107 @@ public class TransactionService {
         return transactionRepository.findByDate_And_Time(dateAndTime);
     }
 
-    public List<Transaction> getAllTransactions() {
+    public List<TransactionReponse> getAllTransactions(Long limit, Long offset, String dateFrom, String dateTo, String transactionType) throws Exception {
+        if (limit == null) {
+            limit = (long) 50;
+        } if (offset == null) {
+            offset = (long) 0;
+        }
 
-        return transactionRepository.findAll();
+        Pageable pageable = PageRequest.of(offset.intValue(), limit.intValue());
+
+        if (transactionType != null) {
+            if (Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)) == null) {
+                throw new Exception("TransactionType is invalid");
+            }
+        }
+
+        if (dateFrom == null && dateTo == null && transactionType == null){
+            return convertPageToResponse(transactionRepository.findAll(pageable));
+        } else if(dateFrom != null && dateTo == null && transactionType == null){
+            return convertPageToResponse(transactionRepository.findAllByDateFrom(convertToTimestamp(dateFrom), pageable));
+        } else if(dateFrom == null && dateTo != null && transactionType == null){
+            return convertPageToResponse(transactionRepository.findAllByDateTo(convertToTimestamp(dateTo), pageable));
+        } else if(dateFrom == null && dateTo == null && transactionType != null){
+            return convertPageToResponse(transactionRepository.findAllByTransaction(Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+        } else if(dateFrom != null && dateTo != null && transactionType == null){
+            return convertPageToResponse(transactionRepository.findAllByDateFromAndDateTo(convertToTimestamp(dateFrom), convertToTimestamp(dateTo), pageable));
+        } else if(dateFrom == null && dateTo != null && transactionType != null){
+            return convertPageToResponse(transactionRepository.findAllByDateToAndTransactionType(convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+        } else if(dateFrom != null && dateTo == null && transactionType != null){
+            return convertPageToResponse(transactionRepository.findAllByDateFromAndTransactionType(convertToTimestamp(dateFrom), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+        } else if(dateFrom != null && dateTo != null && transactionType != null){
+            return convertPageToResponse(transactionRepository.findAllByDateAndTransactionType(convertToTimestamp(dateFrom), convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+        }
+        return new ArrayList<>();
     }
 
-//    public List<Transaction> getTransactionsByIban(String iban) {
-//
-//        return transactionRepository.findByIban(iban);
-//    }
+    public List<TransactionReponse> getAllTransactionsByIban(AccountWithTransactions account, Long limit, Long offset, String dateFrom, String dateTo, String transactionType) throws Exception {
+        if (limit == null) {
+            limit = (long) 50;
+        } if (offset == null) {
+            offset = (long) 0;
+        }
 
+        Pageable pageable = PageRequest.of(offset.intValue(), limit.intValue());
 
+        if (transactionType != null) {
+            if (Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)) == null) {
+                throw new Exception("TransactionType is invalid");
+            }
+        }
 
-//    public Deposit createDeposit(DepositRequestBody deposit) {
-//        Deposit newDeposit = new Deposit(deposit.getAccountTo()),
-//                deposit.getAmount(),
-//                deposit.
-//,    }
+        if (dateFrom == null && dateTo == null && transactionType == null){
+            return convertPageToResponse(transactionRepository.findByIban(account, pageable));
+        } else if(dateFrom != null && dateTo == null && transactionType == null){
+            return convertPageToResponse(transactionRepository.findAllByIbanAndDateFrom(account, convertToTimestamp(dateFrom), pageable));
+        } else if(dateFrom == null && dateTo != null && transactionType == null){
+            return convertPageToResponse(transactionRepository.findAllByIbanAndDateTo(account, convertToTimestamp(dateTo), pageable));
+        } else if(dateFrom == null && dateTo == null && transactionType != null){
+            return convertPageToResponse(transactionRepository.findAllByIbanAndTransaction(account, Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+        } else if(dateFrom != null && dateTo != null && transactionType == null){
+            return convertPageToResponse(transactionRepository.findAllByIban_DateFromAndDateTo(account ,convertToTimestamp(dateFrom), convertToTimestamp(dateTo), pageable));
+        } else if(dateFrom == null && dateTo != null && transactionType != null){
+            return convertPageToResponse(transactionRepository.findAllByIban_DateToAndTransactionType(account, convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+        } else if(dateFrom != null && dateTo == null && transactionType != null){
+            return convertPageToResponse(transactionRepository.findAllByIban_DateFromAndTransactionType(account, convertToTimestamp(dateFrom), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+        } else if(dateFrom != null && dateTo != null && transactionType != null){
+            return convertPageToResponse(transactionRepository.findAllByIban_DateAndTransactionType(account, convertToTimestamp(dateFrom), convertToTimestamp(dateTo), Transaction.TransactionTypeEnum.fromValue(StringUtils.capitalize(transactionType)), pageable));
+        }
+        return new ArrayList<>();
+    }
 
-//    public List<Transaction> getAllTransactions() {
-//        return transactionRepository.findAll();
-//    }
-//
-//    public User getTransactionByUserPerforming(String username) {
-//        return transactionRepository.findUserByUsernameQuery(username);
-//    }
+    public Timestamp convertToTimestamp(String date) throws Exception {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormatWithHours = new SimpleDateFormat("dd/MM/yyyy HH");
 
+        try{
+            if (date.contains(" ")) {
+                return new Timestamp(dateFormatWithHours.parse(date).getTime());
+            } else {
+                return new Timestamp(dateFormat.parse(date).getTime());
+            }
+        } catch (ParseException parseException) {
+            throw new Exception("Date has an invalid format");
+        }
+    }
+
+    public List<TransactionReponse> convertPageToResponse(Page<Transaction> transactions){
+        List<TransactionReponse> transactionReponses = new ArrayList<>();
+
+        for (Transaction transaction : transactions) {
+            TransactionReponse transactionReponse = new TransactionReponse(
+                    transaction.getUserPerforming(),
+                    transaction.getAccountFrom().getIban(),
+                    transaction.getAccountTo().getIban(),
+                    transaction.getAmount(),
+                    transaction.getTransactionType().toString(),
+                    transaction.getDateAndTime()
+            );
+
+            transactionReponses.add(transactionReponse);
+        }
+
+        return transactionReponses;
+    }
 }

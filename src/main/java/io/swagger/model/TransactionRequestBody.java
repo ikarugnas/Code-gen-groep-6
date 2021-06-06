@@ -127,7 +127,7 @@ public class TransactionRequestBody   {
    * Get accountTo
    * @return accountTo
    **/
-  @Schema(example = "NL55 RABO 1234 5678 90", required = true, description = "")
+  @Schema(example = "NL55RABO1234567890", required = true, description = "")
       @NotNull
 
     public String getAccountTo() {

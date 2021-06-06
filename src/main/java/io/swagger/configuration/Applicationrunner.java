@@ -7,6 +7,7 @@ import io.swagger.model.UserRole;
 import io.swagger.model.*;
 import io.swagger.repository.AccountRepository;
 import io.swagger.model.Status;
+import io.swagger.repository.TransactionRepository;
 import io.swagger.repository.UserRepository;
 import io.swagger.service.AccountService;
 import io.swagger.service.UserService;
@@ -15,9 +16,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Component
 @ConditionalOnProperty(prefix = "bankingAPI.autorun", name = "enabled", havingValue = "true", matchIfMissing = true)
@@ -28,11 +30,13 @@ public class Applicationrunner implements ApplicationRunner {
     AccountService accountService;
     AccountRepository accountRepository;
     UserService userService;
+    TransactionRepository transactionRepository;
 
-    public Applicationrunner(UserRepository userRepository, UserService userService, AccountService accountService) {
+    public Applicationrunner(UserRepository userRepository, UserService userService, AccountService accountService, TransactionRepository transactionRepository) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.accountService = accountService;
+        this.transactionRepository = transactionRepository;
     }
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -58,7 +62,7 @@ public class Applicationrunner implements ApplicationRunner {
         userService.createUser(bank);
 
         // get bank user uuid
-        UUID userId = userService.getUserByUsername("bank").getId();
+        //UUID userId = userService.getUserByUsername("bank").getId();
 
         // create bank account which is a requirement
         AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 1000.00, Status.Active);
@@ -74,11 +78,20 @@ public class Applicationrunner implements ApplicationRunner {
 
         // test account
         CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", AccountType.Current);
-        accountService.createNewAccount(account2);
+        AccountWithTransactions accountWithTransactions = accountService.createNewAccount(account2);
+
+        // Create test transactions
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH");
+        Date date1 = dateFormat.parse("21/11/2020 20");
+        Date date2 = dateFormat.parse("10/11/2020 09");
 
 
+        List<Transaction> transactions = Arrays.asList(
+                new Transaction("Employee", accountWithTransactions, bankAccount, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(date1.getTime())),
+                new Transaction("Employee", bankAccount, accountWithTransactions, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(date2.getTime()))
+        );
 
-
+        transactions.forEach(transactionRepository::save);
 
         userService.createUser(inactiveUser);
     }

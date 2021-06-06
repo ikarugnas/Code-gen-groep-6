@@ -7,6 +7,12 @@ package io.swagger.api;
 
 import io.swagger.model.*;
 import org.threeten.bp.LocalDate;
+import io.swagger.model.Deposit;
+import io.swagger.model.DepositRequestBody;
+import io.swagger.model.Transaction;
+import io.swagger.model.TransactionRequestBody;
+import io.swagger.model.Withdrawal;
+import io.swagger.model.WithdrawalRequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -20,18 +26,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-06-03T11:13:57.329Z[GMT]")
 @Validated
@@ -101,7 +101,7 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Transaction>> getTransactions(@Parameter(in = ParameterIn.QUERY, description = "amount of transaction to skip" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of transactions to get" ,schema=@Schema( defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions from this date" ,schema=@Schema()) @Valid @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions to this date" ,schema=@Schema()) @Valid @RequestParam(value = "dateTo", required = false) LocalDate dateTo);
+    ResponseEntity<List<Transaction>> getTransactions(@Parameter(in = ParameterIn.QUERY, description = "amount of transaction to skip" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of transactions to get" ,schema=@Schema( defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions from this date; Format (dd/MM/yyyy (HH))" ,schema=@Schema()) @Valid @RequestParam(value = "dateFrom", required = false) String dateFrom, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions to this date; Format (dd/MM/yyyy HH)" ,schema=@Schema()) @Valid @RequestParam(value = "dateTo", required = false) String dateTo, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions from this type" ,schema=@Schema()) @Valid @RequestParam(value = "transactionType", required = false) String transactionType);
 
 
     @Operation(summary = "gets list of transactions by iban", description = "Shows all the transactions from one iban", security = {
@@ -117,7 +117,7 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions/{iban}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Transaction>> getTransactionsByIban(@Parameter(in = ParameterIn.PATH, description = "Iban from the transactions you want to see", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.QUERY, description = "amount of transaction to skip" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of transactions to get" ,schema=@Schema( defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions from this date" ,schema=@Schema()) @Valid @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions to this date" ,schema=@Schema()) @Valid @RequestParam(value = "dateTo", required = false) LocalDate dateTo);
+    ResponseEntity<List<Transaction>> getTransactionsByIban(@Parameter(in = ParameterIn.PATH, description = "Iban from the transactions you want to see", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.QUERY, description = "amount of transaction to skip" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Long offset, @Parameter(in = ParameterIn.QUERY, description = "limit of transactions to get" ,schema=@Schema( defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Long limit, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions from this date" ,schema=@Schema()) @Valid @RequestParam(value = "dateFrom", required = false) String dateFrom, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions to this date" ,schema=@Schema()) @Valid @RequestParam(value = "dateTo", required = false) String dateTo, @Parameter(in = ParameterIn.QUERY, description = "Get all transactions from this type" ,schema=@Schema()) @Valid @RequestParam(value = "transactionType", required = false) String transactionType);
 
 }
 
