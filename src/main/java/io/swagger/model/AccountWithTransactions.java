@@ -31,22 +31,23 @@ public class AccountWithTransactions   {
 
   }
 
-  public AccountWithTransactions(String iban, Double absoluteLimit, Status active, User owner, AccountType type) {
+  public AccountWithTransactions(String iban, Double absoluteLimit, Status active, User owner, AccountType type, CurrencyType currency) {
     this.iban = iban;
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
+    this.currency = currency;
   }
 
-  public AccountWithTransactions(String iban, Double balance, AccountType type, User owner, Double absoluteLimit, Status active) {
+  public AccountWithTransactions(String iban, Double balance, AccountType type, User owner, Double absoluteLimit, Status active, CurrencyType currency) {
     this.iban = iban;
     this.balance = balance;
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
-
+    this.currency = currency;
   }
 
 
@@ -56,6 +57,17 @@ public class AccountWithTransactions   {
 
   @JsonProperty("balance")
   private Double balance = 0.00;
+
+  @JsonProperty("currency")
+  private CurrencyType currency = CurrencyType.EUR;
+
+  public CurrencyType getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(CurrencyType currency) {
+    this.currency = currency;
+  }
 
   /**
    * Gets or Sets type
@@ -84,7 +96,7 @@ public class AccountWithTransactions   {
    */
 
   @JsonProperty("active")
-  private Status active = null;
+  private Status active = Status.Active;
 
   public AccountWithTransactions iban(String iban) {
     this.iban = iban;
@@ -121,6 +133,9 @@ public class AccountWithTransactions   {
   }
 
   public void setBalance(Double balance) {
+    if(balance < absoluteLimit){
+      throw new IllegalArgumentException("Balance Cannot Be Lower Than AbsoluteLimit");
+    }
     this.balance = balance;
   }
 

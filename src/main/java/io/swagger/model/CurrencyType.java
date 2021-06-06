@@ -1,12 +1,11 @@
 package io.swagger.model;
 
-public enum AccountType {
-    Savings("Savings"),
-    Current("Current");
+public enum CurrencyType {
+    EUR("EUR");
 
     private String value;
 
-    AccountType(String value) {
+    CurrencyType(String value) {
         this.value = value;
     }
 
@@ -15,8 +14,8 @@ public enum AccountType {
         return String.valueOf(value);
     }
 
-    public static AccountType fromValue(String text) {
-        for (AccountType b : AccountType.values()) {
+    public static CurrencyType fromValue(String text) {
+        for (CurrencyType b : CurrencyType.values()) {
             if (String.valueOf(b.value).equals(text)) {
                 return b;
             }
