@@ -86,8 +86,6 @@ public class Applicationrunner implements ApplicationRunner {
 
         transactions.forEach(transactionRepository::save);
 
-
-
         userService.createUser(inactiveUser);
     }
 

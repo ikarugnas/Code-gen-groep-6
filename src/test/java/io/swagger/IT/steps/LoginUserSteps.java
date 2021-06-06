@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -25,32 +26,27 @@ public class LoginUserSteps {
     private ResponseEntity<String> responseEntity;
     ObjectMapper mapper = new ObjectMapper();
 
-    @When("I log in with correct credentials")
-    public void ILogInWithCorrectCredentials() throws URISyntaxException, JsonProcessingException {
-        LoginDTO loginDTO = new LoginDTO("employee", "hoi");
+    @When("I log in with username {string} and password {string}")
+    public void ILogInWithCorrectCredentials(String username, String password) throws URISyntaxException, JsonProcessingException {
+        LoginDTO loginDTO = new LoginDTO(username, password);
         headers.setContentType(MediaType.APPLICATION_JSON);
         URI uri = new URI(baseURL + "login");
         HttpEntity<String> entity = new HttpEntity<String>(mapper.writeValueAsString(loginDTO), headers);
-        responseEntity = template.postForEntity(uri, entity, String.class);
+        try {
+            responseEntity = template.postForEntity(uri, entity, String.class);
+        } catch (HttpClientErrorException exception) {
+            responseEntity = new ResponseEntity<String>(exception.getResponseBodyAsString(), exception.getStatusCode());
+        }
     }
 
-    @When("I log in with wrong password")
-    public void ILogInWithWrongPassword() throws URISyntaxException, JsonProcessingException {
-        LoginDTO loginDTO = new LoginDTO("employee", "hoi2");
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        URI uri = new URI(baseURL + "login");
-        HttpEntity<String> entity = new HttpEntity<String>(mapper.writeValueAsString(loginDTO), headers);
-        responseEntity = template.postForEntity(uri, entity, String.class);
-    }
-
-    @Then("I get status {int}")
+    @Then("I get status {int} from post \\/users\\/login")
     public void IGetStatus(int status){
         int response = responseEntity.getStatusCodeValue();
         Assert.assertEquals(status, response);
 
     }
 
-    @And("I get body {string}")
+    @Then("I get body {string} from post \\/users\\/login")
     public void IGetBody(String error){
         Assert.assertEquals(error, responseEntity.getBody());
     }
