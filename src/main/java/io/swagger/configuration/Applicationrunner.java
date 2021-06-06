@@ -58,7 +58,7 @@ public class Applicationrunner implements ApplicationRunner {
         userService.createUser(bank);
 
         // get bank user uuid
-        UUID userId = userService.getUserByUsername("bank").getId();
+        //UUID userId = userService.getUserByUsername("bank").getId();
 
         // create bank account which is a requirement
         AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 1000.00, Status.Active);

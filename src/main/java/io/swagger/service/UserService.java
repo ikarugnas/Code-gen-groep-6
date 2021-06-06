@@ -7,6 +7,7 @@ import io.swagger.repository.UserRepository;
 import io.swagger.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,7 +82,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<User> findAllUsersWithFilter(Pageable pageable, String username, String name, String email, Status status) {
+    public Page<User> findAllUsersWithFilter(Pageable pageable, String username, String name, String email, Status status) {
         return userRepository.findAllUsersWithFiltering(pageable, username, name, email, status);
     }
 
@@ -109,17 +110,12 @@ public class UserService {
         return userRepository.findUserByUserStatus(status);
     }
     
-    public User updateUser(UUID idOfUserToUpdate, User updatedUser) {
+    public User updateUser(UUID idOfUserToUpdate, RegisterDTO updatedUser) {
         User userToUpdate = userRepository.findUserById(idOfUserToUpdate);
-        //Commented line under may be used if Id needs to be changed.
-        //userToUpdate.setId(updatedUser.getId());
         userToUpdate.setUsername(updatedUser.getUsername());
         userToUpdate.setPassword(updatedUser.getPassword());
         userToUpdate.setName(updatedUser.getName());
         userToUpdate.setEmail(updatedUser.getEmail());
-        userToUpdate.setRoles(updatedUser.getRoles());
-        //Commented line under may be used once accounts are functional.
-        //userToUpdate.setAccount(updatedUser.getAccount());
         userToUpdate.setDayLimit(updatedUser.getDayLimit());
         userToUpdate.setTransactionLimit(updatedUser.getTransactionLimit());
         userToUpdate.setUserStatus(updatedUser.getUserStatus());
@@ -142,6 +138,8 @@ public class UserService {
 
     //No separate endpoint to activate user. To reactivate the account use the updateUser method.
     public void deactivateUser(UUID uuid) throws BadRequestException, NotFoundException {
-        userRepository.findUserById(uuid).setUserStatus(Status.Inactive);
+        User user = userRepository.findUserById(uuid);
+        user.setUserStatus(Status.Inactive);
+        userRepository.save(user);
     }
 }

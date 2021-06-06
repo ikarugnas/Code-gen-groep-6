@@ -37,10 +37,10 @@ import java.util.UUID;
 @Validated
 public interface UsersApi {
 
-    @Operation(summary = "Delete a user from the system by using their id.", description = "Remove a user from the system.", security = {
+    @Operation(summary = "Deactivate a user from the system by using their id.", description = "Disable the user.", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "users", "employee" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "User has been removed successfully."),
+        @ApiResponse(responseCode = "200", description = "User has been disabled successfully."),
         
         @ApiResponse(responseCode = "400", description = "Bad credentials. Could not find user."),
         
@@ -49,7 +49,7 @@ public interface UsersApi {
         @ApiResponse(responseCode = "404", description = "An unexpected error has occurred. Please contact support.") })
     @RequestMapping(value = "/users/{id}",
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "User to delete.", required=true, schema=@Schema()) @PathVariable("id") UUID id);
+    ResponseEntity<Void> deactivateUser(@Parameter(in = ParameterIn.PATH, description = "Disable the user.", required=true, schema=@Schema()) @PathVariable("id") UUID id);
 
 
     @Operation(summary = "get user by id", description = "Searches in the system for a user value with Id as the Key.", security = {
@@ -142,7 +142,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<User>updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") UUID id, @Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody User updatedUserData);
+    ResponseEntity<User>updateUser(@Parameter(in = ParameterIn.PATH, description = "The id of the user to update.", required=true, schema=@Schema()) @PathVariable("id") UUID id, @Parameter(in = ParameterIn.DEFAULT, description = "The updated user data.", required=true, schema=@Schema()) @Valid @RequestBody RegisterDTO updatedUserData);
 
 }
 
