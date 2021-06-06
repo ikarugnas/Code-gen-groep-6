@@ -67,22 +67,22 @@ public class Applicationrunner implements ApplicationRunner {
 
 
         // create 2nd account for post transaction
-        AccountWithTransactions testAccount = new AccountWithTransactions("NL01INHO0000000004", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active);
+        AccountWithTransactions testAccount = new AccountWithTransactions("NL01INHO0000000004", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active, CurrencyType.EUR);
         accountService.createBankAccount(testAccount);
 
         // create 2nd account for post transaction
-        AccountWithTransactions testAccount2 = new AccountWithTransactions("NL01INHO0000000003", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active);
+        AccountWithTransactions testAccount2 = new AccountWithTransactions("NL01INHO0000000003", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active, CurrencyType.EUR);
         accountService.createBankAccount(testAccount2);
 
         // test account
-        CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", AccountType.Current);
+        CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", "Current", CurrencyType.EUR);
 
         // test account from burak branch
         AccountWithTransactions account3 = new AccountWithTransactions("NL01INHO0000000002", 0.00, AccountType.Current, userService.getUserByUsername("test1"), 0.00, Status.Active, CurrencyType.EUR);
         accountService.createBankAccount(account3);
 
         // from main
-        CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", "Current", CurrencyType.EUR);
+        CreateAccount account5 = new CreateAccount(0.00, Status.Active, "test1", "Current", CurrencyType.EUR);
 
         AccountWithTransactions accountWithTransactions = accountService.createNewAccount(account2);
 
