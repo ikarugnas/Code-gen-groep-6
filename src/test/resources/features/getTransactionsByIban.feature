@@ -2,7 +2,7 @@ Feature: get transactions by iban
 
   Scenario: get transactions gives status 200 and array
     When I get transactions by iban
-    Then I get status 200 from get /transactions/Iban
+    Then I get status 200 from get /transactions/iban
     And I get array from get /transactions/iban
 
   Scenario: get transaction gives status 200 and 1 object when limit is 1

@@ -56,21 +56,8 @@ public class getTransactionsByIbanSteps {
         headers.add("Authorization", "Bearer " + responseEntity.getBody());
     }
 
-    public void loginCustomer() throws JsonProcessingException, URISyntaxException {
-        LoginDTO loginDTO = new LoginDTO("Customer", "hoi");
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        URI uri = new URI("http://localhost:8080/users/login");
-        HttpEntity<String> entity = new HttpEntity<String>(mapper.writeValueAsString(loginDTO), headers);
-        try {
-            responseEntity = template.postForEntity(uri, entity, String.class);
-        } catch (HttpClientErrorException exception) {
-            responseEntity = new ResponseEntity<String>(exception.getResponseBodyAsString(), exception.getStatusCode());
-        }
-        headers.add("Authorization", "Bearer " + responseEntity.getBody());
-    }
-
-    @When("I get transactions")
-    public void IGetTransactions() throws URISyntaxException, JsonProcessingException {
+    @When("I get transactions by iban")
+    public void IGetTransactionsByIban() throws URISyntaxException, JsonProcessingException {
         login();
 
         URI uri = new URI(baseURL);
@@ -78,8 +65,8 @@ public class getTransactionsByIbanSteps {
         responseEntity = template.exchange(uri, HttpMethod.GET, entity, String.class);
     }
 
-    @When("I get transactions with {string} is {int}")
-    public void IGetTransactionsWithIntParameterIs(String parameter, int value) throws URISyntaxException, JsonProcessingException {
+    @When("I get transactions by iban with {string} is {int}")
+    public void IGetTransactionsByIbanWithIntParameterIs(String parameter, int value) throws URISyntaxException, JsonProcessingException {
         login();
 
         HttpEntity<String> entity = new HttpEntity<String>(headers);
@@ -90,8 +77,8 @@ public class getTransactionsByIbanSteps {
 
     }
 
-    @When("I get transactions with {string} is {string}")
-    public void IGetTransactionsWithStringParameterIs(String parameter, String value) throws URISyntaxException, JsonProcessingException {
+    @When("I get transactions by iban with {string} is {string}")
+    public void IGetTransactionsByIbanWithStringParameterIs(String parameter, String value) throws URISyntaxException, JsonProcessingException {
         login();
 
         HttpEntity<String> entity = new HttpEntity<String>(headers);
@@ -102,24 +89,24 @@ public class getTransactionsByIbanSteps {
 
     }
 
-    @Then("I get status {int} from get \\/transactions")
+    @Then("I get status {int} from get \\/transactions\\/iban")
     public void IGetStatus(int status){
         Assert.assertEquals(status, responseEntity.getStatusCodeValue());
     }
 
-    @Then("I get array from get \\/transactions")
+    @Then("I get array from get \\/transactions\\/iban")
     public void IGetArray() throws JSONException {
         JSONArray jsonArray = new JSONArray(responseEntity.getBody());
         Assert.assertTrue(jsonArray.length() > 1);
     }
 
-    @Then("I get array with length of {int} from \\/transactions")
+    @Then("I get array with length of {int} from \\/transactions\\/iban")
     public void IGetArrayWithLengthOf(int length) throws JSONException {
         JSONArray jsonArray = new JSONArray(responseEntity.getBody());
         Assert.assertEquals(length, jsonArray.length());
     }
 
-    @Then("I get every object with transactionType of transaction from /transaction")
+    @Then("I get every object with transactionType of transaction from \\/transaction\\/iban")
     public void IGetEveryObjectWithTransactionTypeOfTransaction() throws JSONException {
         JSONArray jsonArray = new JSONArray(responseEntity.getBody());
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -127,7 +114,7 @@ public class getTransactionsByIbanSteps {
         }
     }
 
-    @Then("I get every object with dateAndTime must be younger than {string} from /transaction")
+    @Then("I get every object with dateAndTime must be younger than {string} from \\/transaction\\/iban")
     public void IGetEveryObjectWithDateFromMustBeYoungerThan(String dateFrom) throws Exception {
         Timestamp timestampExpected = convertToTimestamp(dateFrom);
         Timestamp timestampActual;
@@ -139,7 +126,7 @@ public class getTransactionsByIbanSteps {
         }
     }
 
-    @Then("I get every object with dateAndTime must be older than {string} from /transaction")
+    @Then("I get every object with dateAndTime must be older than {string} from \\/transaction\\/iban")
     public void IGetEveryObjectWithDateToMustBeOlderThan(String dateTo) throws Exception {
         Timestamp timestampExpected = convertToTimestamp(dateTo);
         Timestamp timestampActual;
