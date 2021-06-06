@@ -22,7 +22,7 @@ public class CreateAccount   {
    */
 
   @JsonProperty("type")
-  private AccountType type = AccountType.Current;
+  private String type = "Current";
 
   @JsonProperty("owner")
   private String owner;
@@ -35,18 +35,30 @@ public class CreateAccount   {
    */
 
   @JsonProperty("active")
-  private Status active = null;
+  private Status active = Status.Active;
 
-  public CreateAccount type(AccountType type) {
+  @JsonProperty("currency")
+  private CurrencyType currency = CurrencyType.EUR;
+
+  public CurrencyType getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(CurrencyType currency) {
+    this.currency = CurrencyType.EUR;
+  }
+
+  public CreateAccount type(String type) {
     this.type = type;
     return this;
   }
 
-  public CreateAccount(Double absoluteLimit, Status active, String owner, AccountType type) {
+  public CreateAccount(Double absoluteLimit, Status active, String owner, String type, CurrencyType currency) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
+    this.currency = CurrencyType.EUR;
   }
 
   /**
@@ -56,11 +68,11 @@ public class CreateAccount   {
   @Schema(required = true, description = "")
       @NotNull
 
-    public AccountType getType() {
+    public String getType() {
     return type;
   }
 
-  public void setType(AccountType type) {
+  public void setType(String type) {
     this.type = type;
   }
 
@@ -73,8 +85,7 @@ public class CreateAccount   {
    * Get owner
    * @return owner
    **/
-  @Schema(required = true, description = "")
-      @NotNull
+  @Schema(required = false, description = "")
 
     public String getOwner() {
     return owner;
@@ -135,7 +146,8 @@ public class CreateAccount   {
     return Objects.equals(this.type, createAccount.type) &&
         Objects.equals(this.owner, createAccount.owner) &&
         Objects.equals(this.absoluteLimit, createAccount.absoluteLimit) &&
-        Objects.equals(this.active, createAccount.active);
+        Objects.equals(this.active, createAccount.active)&&
+        Objects.equals(this.currency, createAccount.currency);
   }
 
   @Override
@@ -152,6 +164,7 @@ public class CreateAccount   {
     sb.append("    owner: ").append(toIndentedString(owner)).append("\n");
     sb.append("    absoluteLimit: ").append(toIndentedString(absoluteLimit)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
+    sb.append("    currency: ").append(toIndentedString(currency)).append("\n");
     sb.append("}");
     return sb.toString();
   }

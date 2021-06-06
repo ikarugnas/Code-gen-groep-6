@@ -1,5 +1,6 @@
 package io.swagger.repository;
 
+import io.swagger.model.AccountWithTransactions;
 import io.swagger.model.Status;
 import io.swagger.model.User;
 import io.swagger.model.UserRole;
@@ -35,4 +36,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                                          @Param("name") String name,
                                          @Param("email") String email,
                                          @Param("status") Status status);
+
+
+    @Query(value = "SELECT u FROM User u WHERE u.name = ?1 OR u.username = ?1 OR u.email = ?1")
+    User getUserByInput(String searchString);
 }
+

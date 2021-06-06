@@ -58,18 +58,16 @@ public class Applicationrunner implements ApplicationRunner {
         userService.createUser(employee);
 
         // create bank user to create a bank account
-        RegisterDTO bank = new RegisterDTO("bank", "bank123", "Inholland Bank ", "inhollandBank@bankapi.com");
+        RegisterDTO bank = new RegisterDTO("bank", "bank123", "Inholland Bank ", "inhollandBank@bankapi.com", UserRole.ROLE_Employee);
         userService.createUser(bank);
 
-        // get bank user uuid
-        //UUID userId = userService.getUserByUsername("bank").getId();
-
         // create bank account which is a requirement
-        AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 1000.00, Status.Active);
+        AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 0.00, Status.Active, CurrencyType.EUR);
         accountService.createBankAccount(bankAccount);
 
+
         // create 2nd account for post transaction
-        AccountWithTransactions testAccount = new AccountWithTransactions("NL01INHO0000000002", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active);
+        AccountWithTransactions testAccount = new AccountWithTransactions("NL01INHO0000000004", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active);
         accountService.createBankAccount(testAccount);
 
         // create 2nd account for post transaction
@@ -78,6 +76,14 @@ public class Applicationrunner implements ApplicationRunner {
 
         // test account
         CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", AccountType.Current);
+
+        // test account from burak branch
+        AccountWithTransactions account3 = new AccountWithTransactions("NL01INHO0000000002", 0.00, AccountType.Current, userService.getUserByUsername("test1"), 0.00, Status.Active, CurrencyType.EUR);
+        accountService.createBankAccount(account3);
+
+        // from main
+        CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", "Current", CurrencyType.EUR);
+
         AccountWithTransactions accountWithTransactions = accountService.createNewAccount(account2);
 
         // Create test transactions
