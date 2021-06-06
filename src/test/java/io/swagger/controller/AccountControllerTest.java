@@ -60,11 +60,8 @@ public class AccountControllerTest {
     public void initialize(){
         bank = new User("bank", "bank123", "Inholland Bank ", "inhollandBank@bankapi.com", UserRole.ROLE_Employee, 1000.00, 500.00, Status.Active);
         testUser = new User("testuser", "test123", "test5 ", "testUser5@gmail.com", UserRole.ROLE_Customer, 1000.00, 500.00, Status.Active);
-        createAccount = new CreateAccount(0.0, Status.Active, bank.getUsername(),"Current");
-        account = new AccountWithTransactions("NL01INHO0000000002", 0.00, AccountType.Current, testUser, 0.00, Status.Active);
-
-
-
+        createAccount = new CreateAccount(0.0, Status.Active, bank.getUsername(),"Current", CurrencyType.EUR);
+        account = new AccountWithTransactions("NL01INHO0000000002", 0.00, AccountType.Current, testUser, 0.00, Status.Active, CurrencyType.EUR);
     }
 
     //region CreateAccount
@@ -299,7 +296,7 @@ public class AccountControllerTest {
                                 "  \"absoluteLimit\": 0,\n" +
                                 "  \"status\": \"Inactive\"\n" +
                                 "}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test

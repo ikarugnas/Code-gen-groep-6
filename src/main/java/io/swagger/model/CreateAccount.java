@@ -37,16 +37,28 @@ public class CreateAccount   {
   @JsonProperty("active")
   private Status active = Status.Active;
 
+  @JsonProperty("currency")
+  private CurrencyType currency = CurrencyType.EUR;
+
+  public CurrencyType getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(CurrencyType currency) {
+    this.currency = CurrencyType.EUR;
+  }
+
   public CreateAccount type(String type) {
     this.type = type;
     return this;
   }
 
-  public CreateAccount(Double absoluteLimit, Status active, String owner, String type) {
+  public CreateAccount(Double absoluteLimit, Status active, String owner, String type, CurrencyType currency) {
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
+    this.currency = CurrencyType.EUR;
   }
 
   /**
@@ -134,7 +146,8 @@ public class CreateAccount   {
     return Objects.equals(this.type, createAccount.type) &&
         Objects.equals(this.owner, createAccount.owner) &&
         Objects.equals(this.absoluteLimit, createAccount.absoluteLimit) &&
-        Objects.equals(this.active, createAccount.active);
+        Objects.equals(this.active, createAccount.active)&&
+        Objects.equals(this.currency, createAccount.currency);
   }
 
   @Override
@@ -151,6 +164,7 @@ public class CreateAccount   {
     sb.append("    owner: ").append(toIndentedString(owner)).append("\n");
     sb.append("    absoluteLimit: ").append(toIndentedString(absoluteLimit)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
+    sb.append("    currency: ").append(toIndentedString(currency)).append("\n");
     sb.append("}");
     return sb.toString();
   }

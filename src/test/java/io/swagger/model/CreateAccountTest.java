@@ -12,7 +12,7 @@ public class CreateAccountTest {
     @BeforeEach
     public void initialize(){
         bank = new User("bank", "bank123", "Inholland Bank ", "inhollandBank@bankapi.com", UserRole.ROLE_Employee, 1000.00, 500.00, Status.Active);
-        account = new CreateAccount(0.0, Status.Active, bank.getUsername(),"Current");
+        account = new CreateAccount(0.0, Status.Active, bank.getUsername(),"Current", CurrencyType.EUR);
     }
 
     @Test
@@ -33,6 +33,6 @@ public class CreateAccountTest {
     }
     @Test
     public void accountTypeShouldBeCurrent(){
-        assertEquals(AccountType.Current, account.getType());
+        assertEquals(AccountType.Current.toString(), account.getType().toString());
     }
 }

@@ -28,13 +28,25 @@ public class AllAccountsWithoutTransactions   {
   @JsonProperty("balance")
   private Double balance = null;
 
-  public AllAccountsWithoutTransactions(String iban, Double balance, AccountType type, UUID owner, Double absoluteLimit, Status active) {
+  @JsonProperty("currency")
+  private CurrencyType currency = CurrencyType.EUR;
+
+  public CurrencyType getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(CurrencyType currency) {
+    this.currency = currency;
+  }
+
+  public AllAccountsWithoutTransactions(String iban, Double balance, AccountType type, UUID owner, Double absoluteLimit, Status active, CurrencyType currency) {
     this.iban = iban;
     this.balance = balance;
     this.type = type;
     this.owner = owner;
     this.absoluteLimit = absoluteLimit;
     this.active = active;
+    this.currency = currency;
   }
 
   public AllAccountsWithoutTransactions(Double absoluteLimit, Status active, UUID owner, AccountType type) {
@@ -48,37 +60,6 @@ public class AllAccountsWithoutTransactions   {
 
   }
 
-  /**
-   * Gets or Sets type
-   */
-//  public enum TypeEnum {
-//    CURRENT("Current"),
-//
-//    SAVINGS("Savings");
-//
-//    private String value;
-//
-//    TypeEnum(String value) {
-//      this.value = value;
-//    }
-//
-//    @Override
-//    @JsonValue
-//    public String toString() {
-//      return String.valueOf(value);
-//    }
-//
-//    @JsonCreator
-//    public static TypeEnum fromValue(String text) {
-//      for (TypeEnum b : TypeEnum.values()) {
-//        if (String.valueOf(b.value).equals(text)) {
-//          return b;
-//        }
-//      }
-//      return null;
-//    }
-//  }
-
   @JsonProperty("type")
   private AccountType type = AccountType.Current;
 
@@ -88,36 +69,6 @@ public class AllAccountsWithoutTransactions   {
   @JsonProperty("absoluteLimit")
   private Double absoluteLimit = null;
 
-  /**
-   * Gets or Sets active
-   */
-//  public enum ActiveEnum {
-//    ACTIVE("Active"),
-//
-//    INACTIVE("Inactive");
-//
-//    private String value;
-//
-//    ActiveEnum(String value) {
-//      this.value = value;
-//    }
-//
-//    @Override
-//    @JsonValue
-//    public String toString() {
-//      return String.valueOf(value);
-//    }
-//
-//    @JsonCreator
-//    public static ActiveEnum fromValue(String text) {
-//      for (ActiveEnum b : ActiveEnum.values()) {
-//        if (String.valueOf(b.value).equals(text)) {
-//          return b;
-//        }
-//      }
-//      return null;
-//    }
-//  }
   @JsonProperty("active")
   private Status active = Status.Active;
 

@@ -15,7 +15,7 @@ public class AllAccountsWithoutTransactionsTest {
     @BeforeEach
     public void initialize(){
         bank = new User("bank", "bank123", "Inholland Bank ", "inhollandBank@bankapi.com", UserRole.ROLE_Employee, 1000.00, 500.00, Status.Active);
-        account = new AllAccountsWithoutTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, bank.getId(), 0.00, Status.Active);
+        account = new AllAccountsWithoutTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, bank.getId(), 0.00, Status.Active, CurrencyType.EUR);
     }
 
     @Test
