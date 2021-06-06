@@ -2,9 +2,8 @@ package io.swagger.service;
 
 import io.swagger.model.*;
 import io.swagger.repository.AccountRepository;
-import io.swagger.repository.DepositRepository;
+import io.swagger.repository.UserRepository;
 import io.swagger.repository.TransactionRepository;
-import io.swagger.repository.WithdrawalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,69 +22,130 @@ import java.util.List;
 @Service
 public class TransactionService {
 
+
+
+
     @Autowired
     TransactionRepository transactionRepository;
 
     @Autowired
     AccountRepository accountRepository;
 
-    @Autowired
-    DepositRepository depositRepository;
-
-    @Autowired
-    WithdrawalRepository withdrawalRepository;
 
 
     public TransactionService() {
     }
 
-    public Transaction createTransaction(TransactionRequestBody transaction){
+    public Transaction createTransaction(TransactionRequestBody transaction, String username){
 
+        Timestamp dateAndTime = new Timestamp(new Date().getTime());
+        double transactionAmount = transaction.getAmount();
         AccountWithTransactions accountFrom = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom());
+        AccountWithTransactions accountTo = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountTo());
 
-        Transaction newTransaction = new Transaction(transaction.getId(),
-                transaction.getUserPerforming(),
+
+        Transaction newTransaction = new Transaction(
+                username,
                 accountFrom,
-                accountRepository.findAccountWithTransactionsByIban(transaction.getAccountTo()),
-                transaction.getAmount(),
-                transaction.getTransactionType(),
-                new Timestamp(new Date().getTime()));
-
-        transactionRepository.save(newTransaction);
+                accountTo,
+                transactionAmount,
+                "Transaction",
+                dateAndTime);
 
 
+        accountFrom.setBalance(accountFrom.getBalance() - transactionAmount);
+        accountTo.setBalance(accountTo.getBalance() + transactionAmount);
 
-        return transactionRepository.findByAccountFrom(transaction.getAccountFrom());
+
+        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom()).getBalance();
+        Enum activeStatus = accountFrom.getActive();
+
+        if (activeStatus == Status.Inactive){
+            throw new IllegalArgumentException("Account is inactive");
+        }
+
+        else if (currentBalance < transactionAmount) {
+            throw new IllegalArgumentException("Current balance is too low");
+        }
+
+        else if (transactionAmount > accountFrom.getAbsoluteLimit()) {
+            throw new IllegalArgumentException("Transaction limit has been reached");
+        }
+
+        else {
+            transactionRepository.save(newTransaction);
+        }
+
+        return transactionRepository.findByDate_And_Time(dateAndTime);
     }
 
-    public Deposit createDeposit(DepositRequestBody deposit){
+    public Transaction createDeposit(DepositRequestBody deposit, String username){
 
-        Deposit newDeposit = new Deposit(deposit.getId(),
-                deposit.getUserPerforming(),
-                deposit.getAccountFrom(),
-                deposit.getAccountTo(),
-                deposit.getAmount(),
-                deposit.getTransactionType(),
-                new Timestamp(new Date().getTime()));
+        Timestamp dateAndTime = new Timestamp(new Date().getTime());
+        double depositAmount = deposit.getAmount();
+        AccountWithTransactions accountTo = accountRepository.findAccountWithTransactionsByIban(deposit.getAccountTo());
+        AccountWithTransactions accountFrom = accountTo;
 
-        depositRepository.save(newDeposit);
+        Transaction newDeposit = new Transaction(
+                username,
+                accountFrom,
+                accountTo,
+                depositAmount,
+                "Withdrawal",
+                dateAndTime);
 
-        return depositRepository.findByAccountFrom(deposit.getAccountFrom());
+        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(deposit.getAccountTo()).getBalance();
+        Enum activeStatus = accountFrom.getActive();
+
+        accountTo.setBalance(accountTo.getBalance() + depositAmount);
+
+        if (activeStatus == Status.Inactive){
+            throw new IllegalArgumentException("Account is inactive");
+        }
+
+        else {
+            transactionRepository.save(newDeposit);
+        }
+
+
+        return transactionRepository.findByDate_And_Time(dateAndTime);
     }
 
-    public Withdrawal createWithdrawal(WithdrawalRequestBody withdrawal){
+    public Transaction createWithdrawal(WithdrawalRequestBody withdrawal, String username){
 
-        Withdrawal newWithdrawal = new Withdrawal(withdrawal.getId(),
-                withdrawal.getUserPerforming(),
-                withdrawal.getAccountFrom(),
-                withdrawal.getAccountTo(),
-                withdrawal.getAmount(),
-                withdrawal.getTransactionType(),
-                new Timestamp(new Date().getTime()));
+        Timestamp dateAndTime = new Timestamp(new Date().getTime());
+        double withdrawalAmount = withdrawal.getAmount();
+        AccountWithTransactions accountFrom = accountRepository.findAccountWithTransactionsByIban(withdrawal.getAccountFrom());
+        AccountWithTransactions accountTo = accountFrom;
 
-        withdrawalRepository.save(newWithdrawal);
+        Transaction newWithdrawal = new Transaction(
+                username,
+                accountFrom,
+                accountTo,
+                withdrawalAmount,
+                "Withdrawal",
+                dateAndTime);
 
-        return withdrawalRepository.findByAccountFrom(withdrawal.getAccountFrom());
+        accountFrom.setBalance(accountFrom.getBalance() - withdrawalAmount);
+
+
+        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(withdrawal.getAccountFrom()).getBalance();
+        Enum activeStatus = accountFrom.getActive();
+
+        if (activeStatus == Status.Inactive){
+            throw new IllegalArgumentException("Account is inactive");
+        }
+
+        else if (currentBalance < withdrawalAmount) {
+            throw new IllegalArgumentException("Current balance is too low");
+        }
+
+        else {
+            transactionRepository.save(newWithdrawal);
+        }
+
+
+        return transactionRepository.findByDate_And_Time(dateAndTime);
     }
 
     public List<TransactionReponse> getAllTransactions(Long limit, Long offset, String dateFrom, String dateTo, String transactionType) throws Exception {

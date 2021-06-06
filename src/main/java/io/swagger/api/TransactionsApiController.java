@@ -5,6 +5,7 @@ import io.swagger.service.AccountService;
 import io.swagger.service.MyUserDetailsService;
 import io.swagger.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.threeten.bp.LocalDate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +24,7 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-06-03T11:13:57.329Z[GMT]")
 @RestController
 public class TransactionsApiController implements TransactionsApi {
 
@@ -48,34 +49,62 @@ public class TransactionsApiController implements TransactionsApi {
         this.request = request;
     }
 
-    public ResponseEntity<Deposit> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
+    public ResponseEntity<Transaction> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
         String accept = request.getHeader("Accept");
 
-        Deposit createDeposit = transactionService.createDeposit(body);
+        if (accountService.accountExist(body.getAccountTo())) {
+            Transaction createDeposit = transactionService.createDeposit(body, myUserDetailsService.getLoggedInUser().getUsername());
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createDeposit);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(createDeposit);
+        } else {
+            log.error("Iban doesnt exist");
+            return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     public ResponseEntity<Transaction> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody TransactionRequestBody body) {
         String accept = request.getHeader("Accept");
 
-        Transaction createTransaction = transactionService.createTransaction(body);
+        if (accountService.accountExist(body.getAccountFrom())){
+            if (accountService.accountExist(body.getAccountTo())){
+                Transaction createTransaction = transactionService.createTransaction(body, myUserDetailsService.getLoggedInUser().getUsername());
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createTransaction);
+                return ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body(createTransaction);
+            }
+            else {
+                log.error("Iban doesnt exist");
+                return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        else {
+            log.error("Iban from doesnt exist");
+            return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
+        }
+//        myUserDetailsService.getLoggedInUser().getUsername();
+
+
     }
 
-    public ResponseEntity<Withdrawal> createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
+
+    public ResponseEntity<Transaction> createWithdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
         String accept = request.getHeader("Accept");
 
-        Withdrawal createWithdrawal = transactionService.createWithdrawal(body);
+        if (accountService.accountExist(body.getAccountFrom())) {
+            Transaction createWithdrawal = transactionService.createWithdrawal(body, myUserDetailsService.getLoggedInUser().getUsername());
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createWithdrawal);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(createWithdrawal);
+        } else {
+            log.error("Iban doesnt exist");
+            return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
+        }
+
 
     }
 

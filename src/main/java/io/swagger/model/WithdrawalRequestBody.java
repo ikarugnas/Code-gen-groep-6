@@ -12,15 +12,15 @@ import javax.validation.constraints.*;
  * WithdrawalRequestBody
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-06-03T11:13:57.329Z[GMT]")
 
 
 public class WithdrawalRequestBody   {
-  @JsonProperty("withdrawalId")
-  private Long id = null;
+//  @JsonProperty("withdrawalId")
+//  private Long id = null;
 
-  @JsonProperty("userPerforming")
-  private String userPerforming = null;
+//  @JsonProperty("userPerforming")
+//  private String userPerforming = null;
 
   @JsonProperty("accountFrom")
   private String accountFrom = null;
@@ -28,59 +28,59 @@ public class WithdrawalRequestBody   {
   @JsonProperty("amount")
   private Double amount = null;
 
-  @JsonProperty("accountTo")
-  private String accountTo = null;
-
-  @JsonProperty("transactionType")
-  private String transactionType = null;
-
-  @JsonProperty("dateAndTime")
-  private String dateAndTime = null;
+//  @JsonProperty("accountTo")
+//  private String accountTo = null;
+//
+//  @JsonProperty("transactionType")
+//  private String transactionType = null;
+//
+//  @JsonProperty("dateAndTime")
+//  private String dateAndTime = null;
 
   public WithdrawalRequestBody accountFrom(String accountFrom) {
     this.accountFrom = accountFrom;
     return this;
   }
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getUserPerforming() {
-    return userPerforming;
-  }
-
-  public void setUserPerforming(String userPerforming) {
-    this.userPerforming = userPerforming;
-  }
-
-  public String getAccountTo() {
-    return accountTo;
-  }
-
-  public void setAccountTo(String accountTo) {
-    this.accountTo = accountTo;
-  }
-
-  public String getTransactionType() {
-    return transactionType;
-  }
-
-  public void setTransactionType(String transactionType) {
-    this.transactionType = transactionType;
-  }
-
-  public String getDateAndTime() {
-    return dateAndTime;
-  }
-
-  public void setDateAndTime(String dateAndTime) {
-    this.dateAndTime = dateAndTime;
-  }
+//  public Long getId() {
+//    return id;
+//  }
+//
+//  public void setId(Long id) {
+//    this.id = id;
+//  }
+//
+//  public String getUserPerforming() {
+//    return userPerforming;
+//  }
+//
+//  public void setUserPerforming(String userPerforming) {
+//    this.userPerforming = userPerforming;
+//  }
+//
+//  public String getAccountTo() {
+//    return accountTo;
+//  }
+//
+//  public void setAccountTo(String accountTo) {
+//    this.accountTo = accountTo;
+//  }
+//
+//  public String getTransactionType() {
+//    return transactionType;
+//  }
+//
+//  public void setTransactionType(String transactionType) {
+//    this.transactionType = transactionType;
+//  }
+//
+//  public String getDateAndTime() {
+//    return dateAndTime;
+//  }
+//
+//  public void setDateAndTime(String dateAndTime) {
+//    this.dateAndTime = dateAndTime;
+//  }
 
   /**
    * Get accountFrom

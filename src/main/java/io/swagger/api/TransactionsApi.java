@@ -5,6 +5,8 @@
  */
 package io.swagger.api;
 
+import io.swagger.model.*;
+import org.threeten.bp.LocalDate;
 import io.swagger.model.Deposit;
 import io.swagger.model.DepositRequestBody;
 import io.swagger.model.Transaction;
@@ -31,14 +33,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import java.util.List;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-06-03T11:13:57.329Z[GMT]")
 @Validated
 public interface TransactionsApi {
 
     @Operation(summary = "creates a deposit", description = "Creates a new deposit on the system.", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "transactions", "customer", "employee" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "Deposit succeeded.", content = @Content(schema = @Schema(implementation = Deposit.class))),
+        @ApiResponse(responseCode = "201", description = "Deposit succeeded.", content = @Content(schema = @Schema(implementation = Transaction.class))),
         
         @ApiResponse(responseCode = "400", description = "invalid input, object invalid"),
         
@@ -49,7 +51,7 @@ public interface TransactionsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Deposit> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body);
+    ResponseEntity<Transaction> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body);
 
 
     @Operation(summary = "creates a transaction", description = "Creates a new transaction", security = {
@@ -72,7 +74,7 @@ public interface TransactionsApi {
     @Operation(summary = "creates a withdrawal", description = "Creates a new withdrawal on the system.", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "transactions", "customer", "employee" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "Whitdrawal succeeded.", content = @Content(schema = @Schema(implementation = Withdrawal.class))),
+        @ApiResponse(responseCode = "201", description = "Whitdrawal succeeded.", content = @Content(schema = @Schema(implementation = Transaction.class))),
         
         @ApiResponse(responseCode = "400", description = "invalid input, object invalid"),
         
@@ -83,7 +85,7 @@ public interface TransactionsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Withdrawal> createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body);
+    ResponseEntity<Transaction> createWithdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body);
 
 
     @Operation(summary = "gets list of transactions", description = "Shows all the transactions", security = {

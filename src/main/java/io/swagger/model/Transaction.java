@@ -15,7 +15,7 @@ import javax.persistence.*;
  * Transaction
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-19T08:27:21.236Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-06-03T11:13:57.329Z[GMT]")
 
 @Entity
 public class Transaction   {
@@ -92,14 +92,20 @@ public class Transaction   {
     this.dateAndTime = dateAndTime;
   }
 
-  public Transaction(Long id, String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
-    this.id = id;
+  public Transaction(String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
     this.userPerforming = userPerforming;
     this.accountFrom = accountFrom;
     this.accountTo = accountTo;
     this.amount = amount;
     this.transactionType = TransactionTypeEnum.fromValue(transactionType);
     this.dateAndTime = dateAndTime;
+  }
+
+  public Transaction(AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount){
+
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+    this.amount = amount;
   }
 
   public Long getId() {
@@ -180,6 +186,7 @@ public class Transaction   {
   }
 
   public void setAmount(Double amount) {
+    if (amount < 0) throw new IllegalArgumentException("Transaction cannot be below zero");
     this.amount = amount;
   }
 

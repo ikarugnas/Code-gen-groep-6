@@ -15,6 +15,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     Transaction findByAccountFrom(String account);
 
+    @Query(value = "SELECT t FROM Transaction t WHERE t.dateAndTime = ?1")
+    Transaction findByDate_And_Time(Timestamp dateAndTime);
+
+//    List<Transaction> findByAccount(String iban);
     @Query(value = "SELECT t FROM Transaction t WHERE t.dateAndTime <= ?1")
     Page<Transaction> findAllByDateTo(Timestamp dateTo, Pageable pageable);
 
