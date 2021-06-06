@@ -5,11 +5,8 @@
  */
 package io.swagger.api;
 
-import io.swagger.model.DepositRequestBody;
+import io.swagger.model.*;
 import org.threeten.bp.LocalDate;
-import io.swagger.model.Transaction;
-import io.swagger.model.TransactionRequestBody;
-import io.swagger.model.WithdrawalRequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -88,7 +85,7 @@ public interface TransactionsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Transaction> createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body);
+    ResponseEntity<Transaction> createWithdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body);
 
 
     @Operation(summary = "gets list of transactions", description = "Shows all the transactions", security = {

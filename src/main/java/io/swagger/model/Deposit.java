@@ -3,6 +3,8 @@ package io.swagger.model;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -24,17 +26,21 @@ public class Deposit   {
 
   @Id
   @GeneratedValue
-  @JsonProperty("depositId")
+  @JsonProperty("transactionId")
   public Long id = null;
 
   @JsonProperty("userPerforming")
   public String userPerforming = null;
 
+  @ManyToOne
+  @JsonBackReference
   @JsonProperty("accountFrom")
-  private String accountFrom = null;
+  private AccountWithTransactions accountFrom = null;
 
+  @ManyToOne
+  @JsonBackReference
   @JsonProperty("accountTo")
-  private String accountTo = null;
+  private AccountWithTransactions accountTo = null;
 
   @JsonProperty("amount")
   private Double amount = null;
@@ -81,8 +87,7 @@ public class Deposit   {
   }
 
 
-  public Deposit(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
-    this.id = id;
+  public Deposit(String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
     this.userPerforming = userPerforming;
     this.accountFrom = accountFrom;
     this.accountTo = accountTo;
@@ -122,7 +127,7 @@ public class Deposit   {
     this.userPerforming = userPerforming;
   }
 
-  public Deposit accountFrom(String accountFrom) {
+  public Deposit accountFrom(AccountWithTransactions accountFrom) {
     this.accountFrom = accountFrom;
     return this;
   }
@@ -133,15 +138,15 @@ public class Deposit   {
    **/
   @Schema(description = "")
   
-    public String getAccountFrom() {
+    public AccountWithTransactions getAccountFrom() {
     return accountFrom;
   }
 
-  public void setAccountFrom(String accountFrom) {
+  public void setAccountFrom(AccountWithTransactions accountFrom) {
     this.accountFrom = accountFrom;
   }
 
-  public Deposit accountTo(String accountTo) {
+  public Deposit accountTo(AccountWithTransactions accountTo) {
     this.accountTo = accountTo;
     return this;
   }
@@ -152,11 +157,11 @@ public class Deposit   {
    **/
   @Schema(example = "NL55 RABO 1234 5678 90", description = "")
   
-    public String getAccountTo() {
+    public AccountWithTransactions getAccountTo() {
     return accountTo;
   }
 
-  public void setAccountTo(String accountTo) {
+  public void setAccountTo(AccountWithTransactions accountTo) {
     this.accountTo = accountTo;
   }
 

@@ -3,6 +3,8 @@ package io.swagger.model;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -12,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -26,17 +29,21 @@ public class Withdrawal   {
 
   @Id
   @GeneratedValue
-  @JsonProperty("withdrawalId")
+  @JsonProperty("transactionId")
   private Long id = null;
 
   @JsonProperty("userPerforming")
   private String userPerforming = null;
 
+  @ManyToOne
+  @JsonBackReference
   @JsonProperty("accountFrom")
-  private String accountFrom = null;
+  private AccountWithTransactions accountFrom = null;
 
+  @ManyToOne
+  @JsonBackReference
   @JsonProperty("accountTo")
-  private String accountTo = null;
+  private AccountWithTransactions accountTo = null;
 
   @JsonProperty("amount")
   private Double amount = null;
@@ -82,8 +89,7 @@ public class Withdrawal   {
   public Withdrawal() {
   }
 
-  public Withdrawal(Long id, String userPerforming, String accountFrom, String accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
-    this.id = id;
+  public Withdrawal(String userPerforming, AccountWithTransactions accountFrom, AccountWithTransactions accountTo, Double amount, String transactionType, Timestamp dateAndTime) {
     this.userPerforming = userPerforming;
     this.accountFrom = accountFrom;
     this.accountTo = accountTo;
@@ -121,7 +127,7 @@ public class Withdrawal   {
     this.userPerforming = userPerforming;
   }
 
-  public Withdrawal accountFrom(String accountFrom) {
+  public Withdrawal accountFrom(AccountWithTransactions accountFrom) {
     this.accountFrom = accountFrom;
     return this;
   }
@@ -132,15 +138,15 @@ public class Withdrawal   {
    **/
   @Schema(example = "NL55 RABO 1234 5678 90", description = "")
   
-    public String getAccountFrom() {
+    public AccountWithTransactions getAccountFrom() {
     return accountFrom;
   }
 
-  public void setAccountFrom(String accountFrom) {
+  public void setAccountFrom(AccountWithTransactions accountFrom) {
     this.accountFrom = accountFrom;
   }
 
-  public Withdrawal accountTo(String accountTo) {
+  public Withdrawal accountTo(AccountWithTransactions accountTo) {
     this.accountTo = accountTo;
     return this;
   }
@@ -151,11 +157,11 @@ public class Withdrawal   {
    **/
   @Schema(description = "")
   
-    public String getAccountTo() {
+    public AccountWithTransactions getAccountTo() {
     return accountTo;
   }
 
-  public void setAccountTo(String accountTo) {
+  public void setAccountTo(AccountWithTransactions accountTo) {
     this.accountTo = accountTo;
   }
 

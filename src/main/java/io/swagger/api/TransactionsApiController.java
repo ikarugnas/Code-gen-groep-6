@@ -64,14 +64,19 @@ public class TransactionsApiController implements TransactionsApi {
         this.request = request;
     }
 
-    public ResponseEntity createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
+    public ResponseEntity<Transaction> createDeposit(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody DepositRequestBody body) {
         String accept = request.getHeader("Accept");
 
-        Deposit createDeposit = transactionService.createDeposit(body);
+        if (accountService.accountExist(body.getAccountTo())) {
+            Transaction createDeposit = transactionService.createDeposit(body, myUserDetailsService.getLoggedInUser().getUsername());
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createDeposit);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(createDeposit);
+        } else {
+            log.error("Iban doesnt exist");
+            return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     public ResponseEntity<Transaction> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody TransactionRequestBody body) {
@@ -100,14 +105,21 @@ public class TransactionsApiController implements TransactionsApi {
 
     }
 
-    public ResponseEntity createWhitdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
+
+    public ResponseEntity<Transaction> createWithdrawal(@Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @Valid @RequestBody WithdrawalRequestBody body) {
         String accept = request.getHeader("Accept");
 
-        Withdrawal createWithdrawal = transactionService.createWithdrawal(body);
+        if (accountService.accountExist(body.getAccountFrom())) {
+            Transaction createWithdrawal = transactionService.createWithdrawal(body, myUserDetailsService.getLoggedInUser().getUsername());
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createWithdrawal);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(createWithdrawal);
+        } else {
+            log.error("Iban doesnt exist");
+            return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
+        }
+
 
     }
 

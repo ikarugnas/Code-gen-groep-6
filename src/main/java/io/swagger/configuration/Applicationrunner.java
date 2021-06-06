@@ -64,6 +64,14 @@ public class Applicationrunner implements ApplicationRunner {
         AccountWithTransactions bankAccount = new AccountWithTransactions("NL01INHO0000000001", 10000.00, AccountType.Current, userService.getUserByUsername("bank"), 1000.00, Status.Active);
         accountService.createBankAccount(bankAccount);
 
+        // create 2nd account for post transaction
+        AccountWithTransactions testAccount = new AccountWithTransactions("NL01INHO0000000002", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active);
+        accountService.createBankAccount(testAccount);
+
+        // create 2nd account for post transaction
+        AccountWithTransactions testAccount2 = new AccountWithTransactions("NL01INHO0000000003", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active);
+        accountService.createBankAccount(testAccount2);
+
         // test account
         CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", AccountType.Current);
         accountService.createNewAccount(account2);

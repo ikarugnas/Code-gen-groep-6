@@ -179,6 +179,7 @@ public class Transaction   {
   }
 
   public void setAmount(Double amount) {
+    if (amount < 0) throw new IllegalArgumentException("Transaction cannot be below zero");
     this.amount = amount;
   }
 
