@@ -95,6 +95,10 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
+    public User getUserByIdForAccounts(UUID id){
+        return userRepository.findUserById(id);
+    }
+
     public User getUserByUsername(String usernameToSearchFor) {
         return userRepository.findUserByUsernameQuery(usernameToSearchFor);
     }

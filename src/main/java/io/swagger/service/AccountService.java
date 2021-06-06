@@ -130,7 +130,7 @@ public class AccountService {
     // if bank account is within the list of returns remove bank account
     public List<AccountWithTransactions> deleteInhollandAccountFromList(List<AccountWithTransactions> accountWithTransactions) {
         AccountWithTransactions bankAccount = getAccountByIban("NL01INHO0000000001");
-        User bank = userService.getUserById(bankAccount.getOwner().getId());
+        User bank = userService.getUserByIdForAccounts(bankAccount.getOwner().getId());
         if (myUserDetailsService.getLoggedInUser().getUsername() == bank.getUsername()) {
             System.out.println("is bank");
         } else {
