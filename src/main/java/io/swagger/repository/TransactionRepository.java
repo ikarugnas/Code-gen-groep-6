@@ -18,6 +18,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query(value = "SELECT t FROM Transaction t WHERE t.dateAndTime = ?1")
     Transaction findByDate_And_Time(Timestamp dateAndTime);
 
+    // Query for day limit, all transactions within a day
+    @Query(value = "SELECT SUM(amount) FROM Transaction t WHERE t.ACCOUNT_FROM_IBAN = ?1 AND t.DATE_AND_TIME >= ?2", nativeQuery = true)
+    Double findSumOfTransactionsByDate_And_Time(String iban, Timestamp date);
+
 //    List<Transaction> findByAccount(String iban);
     @Query(value = "SELECT t FROM Transaction t WHERE t.dateAndTime <= ?1")
     Page<Transaction> findAllByDateTo(Timestamp dateTo, Pageable pageable);

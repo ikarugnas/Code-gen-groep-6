@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -24,13 +26,17 @@ public class TransactionService {
 
 
 
-
     @Autowired
     TransactionRepository transactionRepository;
 
     @Autowired
     AccountRepository accountRepository;
 
+    @Autowired
+    LimitService limitService;
+
+    @Autowired
+    UserRepository userRepository;
 
 
     public TransactionService() {
@@ -52,29 +58,32 @@ public class TransactionService {
                 "Transaction",
                 dateAndTime);
 
+        // Get user from this transaction
+        User user = userRepository.findByUsername(username);
 
+        // Absolute limit check before transaction
+        limitService.checkIfBalanceIsLowerThanAbsoluteLimit(accountFrom);
+
+        // Remove amount from accountFrom and add amount to accountTo
         accountFrom.setBalance(accountFrom.getBalance() - transactionAmount);
         accountTo.setBalance(accountTo.getBalance() + transactionAmount);
 
 
-        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(transaction.getAccountFrom()).getBalance();
+        // Check if account is active
         Enum activeStatus = accountFrom.getActive();
 
         if (activeStatus == Status.Inactive){
             throw new IllegalArgumentException("Account is inactive");
         }
 
-        else if (currentBalance < transactionAmount) {
-            throw new IllegalArgumentException("Current balance is too low");
-        }
-
-        else if (transactionAmount > accountFrom.getAbsoluteLimit()) {
-            throw new IllegalArgumentException("Transaction limit has been reached");
-        }
 
         else {
             transactionRepository.save(newTransaction);
         }
+
+        // Checks for day limit and transaction limit
+        limitService.checkIfTransactionsPassDayLimit(accountFrom.getIban(), dateAndTime, user);
+        limitService.checkIfTransactionLimitHasBeenReached(transactionAmount, user);
 
         return transactionRepository.findByDate_And_Time(dateAndTime);
     }
@@ -91,13 +100,20 @@ public class TransactionService {
                 accountFrom,
                 accountTo,
                 depositAmount,
-                "Withdrawal",
+                "Deposit",
                 dateAndTime);
 
-        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(deposit.getAccountTo()).getBalance();
-        Enum activeStatus = accountFrom.getActive();
+        // Get user from this transaction
+        User user = userRepository.findByUsername(username);
 
+        // Absolute limit check before transaction
+        limitService.checkIfBalanceIsLowerThanAbsoluteLimit(accountTo);
+
+        // Add depositAmount to accountTo
         accountTo.setBalance(accountTo.getBalance() + depositAmount);
+
+        // Check if account is active
+        Enum activeStatus = accountFrom.getActive();
 
         if (activeStatus == Status.Inactive){
             throw new IllegalArgumentException("Account is inactive");
@@ -107,6 +123,9 @@ public class TransactionService {
             transactionRepository.save(newDeposit);
         }
 
+        // Checks for day limit and transaction limit
+        limitService.checkIfTransactionsPassDayLimit(accountTo.getIban(), dateAndTime, user);
+        limitService.checkIfTransactionLimitHasBeenReached(depositAmount, user);
 
         return transactionRepository.findByDate_And_Time(dateAndTime);
     }
@@ -126,24 +145,29 @@ public class TransactionService {
                 "Withdrawal",
                 dateAndTime);
 
+        // Get user from this transaction
+        User user = userRepository.findByUsername(username);
+
+        // Absolute limit check before transaction
+        limitService.checkIfBalanceIsLowerThanAbsoluteLimit(accountFrom);
+
+        // Remove withdrawalAmount from accountFrom
         accountFrom.setBalance(accountFrom.getBalance() - withdrawalAmount);
 
-
-        Double currentBalance = accountRepository.findAccountWithTransactionsByIban(withdrawal.getAccountFrom()).getBalance();
+        // Check if account is active
         Enum activeStatus = accountFrom.getActive();
 
         if (activeStatus == Status.Inactive){
             throw new IllegalArgumentException("Account is inactive");
         }
 
-        else if (currentBalance < withdrawalAmount) {
-            throw new IllegalArgumentException("Current balance is too low");
-        }
-
         else {
             transactionRepository.save(newWithdrawal);
         }
 
+        // Checks for day limit and transaction limit
+        limitService.checkIfTransactionsPassDayLimit(accountTo.getIban(), dateAndTime, user);
+        limitService.checkIfTransactionLimitHasBeenReached(withdrawalAmount, user);
 
         return transactionRepository.findByDate_And_Time(dateAndTime);
     }

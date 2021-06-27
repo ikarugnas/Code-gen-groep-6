@@ -133,9 +133,6 @@ public class AccountWithTransactions   {
   }
 
   public void setBalance(Double balance) {
-    if(balance < absoluteLimit){
-      throw new IllegalArgumentException("Balance Cannot Be Lower Than AbsoluteLimit");
-    }
     this.balance = balance;
   }
 
