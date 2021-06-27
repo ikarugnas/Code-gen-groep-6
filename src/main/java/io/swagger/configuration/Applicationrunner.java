@@ -45,7 +45,7 @@ public class Applicationrunner implements ApplicationRunner {
                         new User("test1", "test1", "testname1", "test1@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, Status.Active),
                         new User("test2", "test2", "testname2", "test2@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, Status.Active),
                         new User("test3", "test3", "testname3", "test3@gmail.com", UserRole.ROLE_Customer, 21.23, 200.00, Status.Active)
-                        );
+                );
 
         users.forEach(userRepository::save);
 
@@ -67,18 +67,18 @@ public class Applicationrunner implements ApplicationRunner {
 
 
         // create 2nd account for post transaction
-        AccountWithTransactions testAccount = new AccountWithTransactions("NL01INHO0000000004", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active, CurrencyType.EUR);
+        AccountWithTransactions testAccount = new AccountWithTransactions("NL01INHO0000000004", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 0.00, Status.Active, CurrencyType.EUR);
         accountService.createBankAccount(testAccount);
 
         // create 2nd account for post transaction
-        AccountWithTransactions testAccount2 = new AccountWithTransactions("NL01INHO0000000003", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 1000.00, Status.Active, CurrencyType.EUR);
+        AccountWithTransactions testAccount2 = new AccountWithTransactions("NL01INHO0000000003", 10000.00, AccountType.Current, userService.getUserByUsername("fendyAccount"), 0.00, Status.Active, CurrencyType.EUR);
         accountService.createBankAccount(testAccount2);
 
         // test account
         CreateAccount account2 = new CreateAccount(0.00, Status.Active, "test1", "Current", CurrencyType.EUR);
 
         // test account from burak branch
-        AccountWithTransactions account3 = new AccountWithTransactions("NL01INHO0000000002", 0.00, AccountType.Current, userService.getUserByUsername("test1"), 0.00, Status.Active, CurrencyType.EUR);
+        AccountWithTransactions account3 = new AccountWithTransactions("NL01INHO0000000002", 1000.00, AccountType.Current, userService.getUserByUsername("test1"), 0.00, Status.Active, CurrencyType.EUR);
         accountService.createBankAccount(account3);
 
         // from main
@@ -94,8 +94,9 @@ public class Applicationrunner implements ApplicationRunner {
 
         List<Transaction> transactions = Arrays.asList(
                 new Transaction("Employee", accountWithTransactions, bankAccount, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(date1.getTime())),
-                new Transaction("Employee", bankAccount, accountWithTransactions, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(date2.getTime()))
-        );
+                new Transaction("Employee", bankAccount, accountWithTransactions, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(date2.getTime())),
+                new Transaction("Employee", bankAccount, accountWithTransactions, 20.0, Transaction.TransactionTypeEnum.TRANSACTION, new Timestamp(new Date().getTime())
+                ));
 
         transactions.forEach(transactionRepository::save);
 

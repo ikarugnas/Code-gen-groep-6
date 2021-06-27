@@ -85,7 +85,6 @@ public class TransactionsApiController implements TransactionsApi {
             log.error("Iban from doesnt exist");
             return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
         }
-//        myUserDetailsService.getLoggedInUser().getUsername();
 
 
     }
